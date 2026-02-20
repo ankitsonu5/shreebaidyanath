@@ -37,8 +37,6 @@ export default function Signin() {
         },
       );
 
-      const { user } = response.data;
-
       if (response.data.success) {
         const token = response.data.token;
         const role = response.data.role;
@@ -129,7 +127,7 @@ export default function Signin() {
             {/* Button */}
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+              className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 cursor-pointer">
               Sign In
             </button>
           </form>

@@ -1,12 +1,14 @@
 "use client";
 
-import Image from "next/image";
+import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 
 export default function HomePage() {
   return (
     <>
+      <Navbar />
       {/* Banner Section Start */}
-      <section className="relative w-full h-[70vh] md:h-[calc(100vh-140px)] overflow-hidden">
+      <section className="relative w-full aspect-[16/9] md:aspect-auto md:h-[calc(100vh-140px)] overflow-hidden">
         <div className="w-full h-full relative flex items-center transition-all duration-700">
           <div className="absolute inset-0 z-0">
             <img
@@ -105,11 +107,11 @@ export default function HomePage() {
       {/* Shop By Collections End */}
 
       {/* Discount Banner */}
-      <section className="w-full">
+      <section className="w-full px-4 md:px-0 mt-6 md:mt-0">
         <img
           src="/herobanner.webp"
           alt="Ayurveda Consultation"
-          className="w-full h-auto block"
+          className="w-full h-auto block rounded-xl md:rounded-none shadow-md md:shadow-none"
           loading="lazy"
         />
       </section>
@@ -219,21 +221,21 @@ export default function HomePage() {
       {/* Herbal Juices End */}
 
       {/* Discount Banner */}
-      <section className="w-full mx-auto">
-        <div className="flex gap-5 items-center justify-center">
-          <div className="cursor-pointer">
+      <section className="w-full mx-auto px-4 md:px-0 mt-8 md:mt-0">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-5 items-center justify-center">
+          <div className="cursor-pointer w-full md:w-1/2">
             <img
               src="/offerbanner.webp"
               alt="Ayurveda Consultation"
-              className="w-full h-auto block"
+              className="w-full h-auto block rounded-xl md:rounded-none shadow-md md:shadow-none"
               loading="lazy"
             />
           </div>
-          <div className="cursor-pointer">
+          <div className="cursor-pointer w-full md:w-1/2">
             <img
               src="/offerbanner.webp"
               alt="Ayurveda Consultation"
-              className="w-full h-auto block"
+              className="w-full h-auto block rounded-xl md:rounded-none shadow-md md:shadow-none"
               loading="lazy"
             />
           </div>
@@ -498,6 +500,7 @@ export default function HomePage() {
         </div>
       </section>
       {/* Blogs Section End */}
+      <Footer />
     </>
   );
 }

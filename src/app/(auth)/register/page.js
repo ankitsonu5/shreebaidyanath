@@ -62,8 +62,6 @@ export default function Register() {
             </div>
           )}
           <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative"></div>
-
             {/* Name */}
             <div>
               <label

@@ -1,4 +1,9 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 export default function ForgotPassword() {
+  const router = useRouter();
   return (
     <>
       <div className="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -25,15 +30,16 @@ export default function ForgotPassword() {
             {/* Button */}
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+              className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 cursor-pointer">
               Send Reset Link
             </button>
           </form>
           {/* Back to login */}
-          <p className="text-center text-sm text-gray-500 mt-5">
-            Back to
+          <p
+            onClick={() => router.push("/signin")}
+            className="text-center text-sm text-gray-500 mt-5 cursor-pointer">
             <span className="text-blue-600 cursor-pointer hover:underline">
-              Login
+              Back to Login
             </span>
           </p>
         </div>
