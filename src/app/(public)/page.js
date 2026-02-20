@@ -1,27 +1,195 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 
 export default function HomePage() {
-  return (
-    <>
-      <Navbar />
-      {/* Banner Section Start */}
-      <section className="relative w-full aspect-[16/9] md:aspect-auto md:h-[calc(100vh-140px)] overflow-hidden">
-        <div className="w-full h-full relative flex items-center transition-all duration-700">
-          <div className="absolute inset-0 z-0">
-            <img
-              src="/banner.webp"
-              alt="banner"
-              className="w-full h-full object-cover animate-in fade-in zoom-in duration-1000"
-            />
+  const [banners, setBanners] = useState([]);
+  const [collections, setCollections] = useState([]);
+  const [dealProducts, setDealProducts] = useState([]);
+  const [herbalProducts, setHerbalProducts] = useState([]);
+  const [bestSellers, setBestSellers] = useState([]);
+  const [newLaunches, setNewLaunches] = useState([]);
+  const [popularProducts, setPopularProducts] = useState([]);
+  const [currentBanner, setCurrentBanner] = useState(0);
+  const [quantities, setQuantities] = useState({});
+
+  const API = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    fetchBanners();
+    fetchCollections();
+    fetchProducts();
+  }, []);
+
+  // Auto-slide banners
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % banners.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [banners]);
+
+  const fetchBanners = async () => {
+    try {
+      const res = await fetch(`${API}/banners`);
+      const data = await res.json();
+      if (data.success) setBanners(data.banners);
+    } catch (err) {
+      console.error("Banners fetch failed:", err);
+    }
+  };
+
+  const fetchCollections = async () => {
+    try {
+      const res = await fetch(`${API}/collection`);
+      const data = await res.json();
+      if (data.success) setCollections(data.collections);
+    } catch (err) {
+      console.error("Collections fetch failed:", err);
+    }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch(`${API}/products`);
+      const data = await res.json();
+      if (data.success) {
+        const all = data.products;
+        setDealProducts(all.filter((p) => p.productTag === "deal"));
+        setHerbalProducts(all.filter((p) => p.productTag === "herbal"));
+        setBestSellers(all.filter((p) => p.productTag === "bestseller"));
+        setNewLaunches(all.filter((p) => p.productTag === "new"));
+        setPopularProducts(all.filter((p) => p.productTag === "popular"));
+      }
+    } catch (err) {
+      console.error("Products fetch failed:", err);
+    }
+  };
+
+  const getImgUrl = (path) => {
+    if (!path) return "";
+    return path.startsWith("http") ? path : `${API}/${path}`;
+  };
+
+  const updateQty = (id, delta) => {
+    setQuantities((prev) => {
+      const current = prev[id] || 1;
+      const next = Math.max(1, current + delta);
+      return { ...prev, [id]: next };
+    });
+  };
+
+  // Reusable product section — rectangular card layout
+  const ProductSection = ({ title, products }) => {
+    if (products.length === 0) return null;
+    return (
+      <section className="bg-gray-50 py-10 md:py-14">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-medium text-gray-900">
+              {title}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+            {products.map((product) => (
+              <div
+                key={product._id}
+                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col">
+                <div className="w-full aspect-square bg-gray-50 overflow-hidden">
+                  <img
+                    src={getImgUrl(
+                      product.productImage && product.productImage[0],
+                    )}
+                    alt={product.productName}
+                    className="w-full h-full object-contain p-2 hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="p-3 flex flex-col flex-1">
+                  <p className="text-sm md:text-base font-semibold text-gray-800 line-clamp-2 mb-1">
+                    {product.productName}
+                  </p>
+                  <p className="text-amber-600 font-bold text-base mb-2">
+                    ₹{product.productPrice}
+                  </p>
+                  {/* Quantity Controls */}
+                  <div className="flex items-center justify-center gap-3 mb-2">
+                    <button
+                      onClick={() => updateQty(product._id, -1)}
+                      className="w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-lg font-bold text-gray-700 cursor-pointer transition">
+                      −
+                    </button>
+                    <span className="text-sm font-semibold w-6 text-center">
+                      {quantities[product._id] || 1}
+                    </span>
+                    <button
+                      onClick={() => updateQty(product._id, 1)}
+                      className="w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-lg font-bold text-gray-700 cursor-pointer transition">
+                      +
+                    </button>
+                  </div>
+                  <button className="mt-auto w-full bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold py-2 rounded-md transition-colors cursor-pointer">
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
-      {/* Banner Section End */}
+    );
+  };
 
-      {/* Baidyanath - India's Most Trusted Ayurvedic Brand Start */}
+  // Get hero and offer banners
+  const heroBanners = banners.filter((b) => b.bannerType === "hero");
+  const offerBanners = banners.filter((b) => b.bannerType === "offer");
+
+  return (
+    <>
+      <Navbar />
+
+      {/* Banner Section — Full Width */}
+      <section className="w-full">
+        {heroBanners.length > 0 && (
+          <div className="relative w-full overflow-hidden">
+            {heroBanners.map((banner, idx) => (
+              <div
+                key={banner._id}
+                className={`w-full transition-all duration-700 ${
+                  idx === currentBanner % heroBanners.length
+                    ? "relative opacity-100"
+                    : "absolute inset-0 opacity-0"
+                }`}>
+                <img
+                  src={getImgUrl(banner.bannerImage)}
+                  alt="banner"
+                  className="w-full h-auto block"
+                />
+              </div>
+            ))}
+            {heroBanners.length > 1 && (
+              <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                {heroBanners.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentBanner(idx)}
+                    className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all cursor-pointer ${
+                      idx === currentBanner % heroBanners.length
+                        ? "bg-white scale-110"
+                        : "bg-white/50"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </section>
+
+      {/* Baidyanath Section */}
       <section>
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
@@ -31,372 +199,77 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      {/* Baidyanath - India's Most Trusted Ayurvedic Brand End */}
 
-      {/* Shop By Collections Start */}
-      <section className="bg-white py-12 md:py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-              Shop By Collections
-            </h2>
-            <div className="w-20 h-1 bg-amber-600 mx-auto rounded-full"></div>
-          </div>
+      {/* Shop By Collections - Dynamic */}
+      {collections.length > 0 && (
+        <section className="bg-white py-12 md:py-20">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                Shop By Collections
+              </h2>
+              <div className="w-20 h-1 bg-amber-600 mx-auto rounded-full"></div>
+            </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 md:gap-12">
-            {[
-              {
-                name: "Immunity Booster",
-                img: "/shopbycolletions/immunitybooster.webp",
-              },
-              { name: "Pure Herbs", img: "/shopbycolletions/pure_herbs.webp" },
-              { name: "Hair Care", img: "/shopbycolletions/hair_care.webp" },
-              { name: "Remedies", img: "/shopbycolletions/remedies.webp" },
-              {
-                name: "Herbal Juices",
-                img: "/shopbycolletions/herbal_juices.webp",
-              },
-              {
-                name: "Health & Wellness",
-                img: "/shopbycolletions/health_wellness.webp",
-              },
-              { name: "Diabetes", img: "/shopbycolletions/diabetes.webp" },
-              {
-                name: "Cough & Cold",
-                img: "/shopbycolletions/cough_cold.webp",
-              },
-              {
-                name: "Classical Range",
-                img: "/shopbycolletions/classical_range.webp",
-              },
-              {
-                name: "Chyawanprash",
-                img: "/shopbycolletions/chyawanprash.webp",
-              },
-              { name: "Digestion", img: "/shopbycolletions/digestion.webp" },
-              { name: "Honey", img: "/shopbycolletions/honey.webp" },
-            ].map((collection, index) => (
-              <div
-                key={index}
-                className="group flex flex-col items-center cursor-pointer">
-                <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent group-hover:border-amber-600 transition-all duration-300 shadow-md group-hover:shadow-xl">
-                  <img
-                    src={collection.img}
-                    alt={collection.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    onError={(e) => {
-                      e.target.src = "/shopbycolletions/immunitybooster.webp"; // Fallback to existing image
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-300"></div>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 md:gap-12">
+              {collections.map((col) => (
+                <div
+                  key={col._id}
+                  className="group flex flex-col items-center cursor-pointer">
+                  <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent group-hover:border-amber-600 transition-all duration-300 shadow-md group-hover:shadow-xl">
+                    <img
+                      src={getImgUrl(
+                        col.collectionImage && col.collectionImage[0],
+                      )}
+                      alt={col.collectionName}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-300"></div>
+                  </div>
+                  <p className="text-center text-sm md:text-base font-semibold text-gray-800 group-hover:text-amber-700 transition-colors duration-300">
+                    {col.collectionName}
+                  </p>
                 </div>
-                <p className="text-center text-sm md:text-base font-semibold text-gray-800 group-hover:text-amber-700 transition-colors duration-300">
-                  {collection.name}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            <div className="mt-16 text-center">
+              <button className="px-10 py-3 bg-amber-600 text-white font-bold rounded-full hover:bg-amber-700 transition-all duration-300 shadow-lg hover:shadow-amber-200 uppercase tracking-wider text-sm cursor-pointer">
+                View All
+              </button>
+            </div>
           </div>
+        </section>
+      )}
 
-          <div className="mt-16 text-center">
-            <button className="px-10 py-3 bg-amber-600 text-white font-bold rounded-full hover:bg-amber-700 transition-all duration-300 shadow-lg hover:shadow-amber-200 uppercase tracking-wider text-sm">
-              View All
-            </button>
-          </div>
-        </div>
-      </section>
-      {/* Shop By Collections End */}
-
-      {/* Discount Banner */}
-      <section className="w-full px-4 md:px-0 mt-6 md:mt-0">
-        <img
-          src="/herobanner.webp"
-          alt="Ayurveda Consultation"
-          className="w-full h-auto block rounded-xl md:rounded-none shadow-md md:shadow-none"
-          loading="lazy"
-        />
-      </section>
-
-      {/* Deals of the Day Start */}
-      <section className="bg-white py-12 md:py-6">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-medium text-gray-900 mb-5">
-              Deals of the Day
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 md:gap-12">
-            {[
-              {
-                name: "Immunity Booster",
-                img: "/dealsofday/Chayanvit.webp",
-              },
-              { name: "Pure Herbs", img: "/dealsofday/Chyawanprash.webp" },
-              { name: "Hair Care", img: "/dealsofday/Chyawanprash.webp" },
-              { name: "Remedies", img: "/dealsofday/Chyawanprash.webp" },
-              {
-                name: "Herbal Juices",
-                img: "/dealsofday/Chyawanprash.webp",
-              },
-            ].map((collection, index) => (
-              <div
-                key={index}
-                className="group flex flex-col items-center cursor-pointer">
-                <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent">
+      {/* Offer Banners */}
+      {offerBanners.length > 0 && (
+        <section className="bg-white py-4 md:py-8">
+          <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-0">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-5 items-stretch justify-center">
+              {offerBanners.map((banner) => (
+                <div
+                  key={banner._id}
+                  className="cursor-pointer w-full sm:flex-1 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                   <img
-                    src={collection.img}
-                    alt={collection.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.src = "/dealsofday/Chayanvit.webp"; // Fallback to existing image
-                    }}
+                    src={getImgUrl(banner.bannerImage)}
+                    alt="Offer"
+                    className="w-full h-32 sm:h-40 md:h-80 object-cover"
+                    loading="lazy"
                   />
                 </div>
-                <p className="text-center text-sm md:text-base font-semibold text-gray-800">
-                  {collection.name}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+        </section>
+      )}
 
-          <div className="mt-16 text-center">
-            <button className="px-10 py-3 bg-amber-600 text-white font-bold rounded-full hover:bg-amber-700 transition-all duration-300 shadow-lg hover:shadow-amber-200 uppercase tracking-wider text-sm">
-              View All
-            </button>
-          </div>
-        </div>
-      </section>
-      {/* Deals of the Day End */}
-
-      {/* Herbal Juices Start */}
-      <section className="bg-white py-12 md:py-6">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-medium text-gray-900 mb-5">
-              Herbal Juices
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 md:gap-12">
-            {[
-              {
-                name: "Immunity Booster",
-                img: "/dealsofday/Chayanvit.webp",
-              },
-              { name: "Pure Herbs", img: "/herbaljuices/Amla_Juice.webp" },
-              { name: "Hair Care", img: "/herbaljuices/Amla_Juice.webp" },
-              { name: "Remedies", img: "/herbaljuices/Amla_Juice.webp" },
-              {
-                name: "Herbal Juices",
-                img: "/herbaljuices/Amla_Juice.webp",
-              },
-            ].map((collection, index) => (
-              <div
-                key={index}
-                className="group flex flex-col items-center cursor-pointer">
-                <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent">
-                  <img
-                    src={collection.img}
-                    alt={collection.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.src = "/herbaljuices/Amla_Juice.webp"; // Fallback to existing image
-                    }}
-                  />
-                </div>
-                <p className="text-center text-sm md:text-base font-semibold text-gray-800">
-                  {collection.name}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-16 text-center">
-            <button className="px-10 py-3 bg-amber-600 text-white font-bold rounded-full hover:bg-amber-700 transition-all duration-300 shadow-lg hover:shadow-amber-200 uppercase tracking-wider text-sm">
-              View All
-            </button>
-          </div>
-        </div>
-      </section>
-      {/* Herbal Juices End */}
-
-      {/* Discount Banner */}
-      <section className="w-full mx-auto px-4 md:px-0 mt-8 md:mt-0">
-        <div className="flex flex-col md:flex-row gap-4 md:gap-5 items-center justify-center">
-          <div className="cursor-pointer w-full md:w-1/2">
-            <img
-              src="/offerbanner.webp"
-              alt="Ayurveda Consultation"
-              className="w-full h-auto block rounded-xl md:rounded-none shadow-md md:shadow-none"
-              loading="lazy"
-            />
-          </div>
-          <div className="cursor-pointer w-full md:w-1/2">
-            <img
-              src="/offerbanner.webp"
-              alt="Ayurveda Consultation"
-              className="w-full h-auto block rounded-xl md:rounded-none shadow-md md:shadow-none"
-              loading="lazy"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Best Sellers Start */}
-      <section className="bg-white py-12 md:py-6">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-medium text-gray-900 mb-5">
-              Best Sellers
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 md:gap-12">
-            {[
-              {
-                name: "Immunity Booster",
-                img: "/bestsellers/kaishore.webp",
-              },
-              { name: "Pure Herbs", img: "/bestsellers/kaishore.webp" },
-              { name: "Hair Care", img: "/bestsellers/kaishore.webp" },
-              { name: "Remedies", img: "/bestsellers/kaishore.webp" },
-              {
-                name: "Herbal Juices",
-                img: "/bestsellers/kaishore.webp",
-              },
-            ].map((collection, index) => (
-              <div
-                key={index}
-                className="group flex flex-col items-center cursor-pointer">
-                <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent">
-                  <img
-                    src={collection.img}
-                    alt={collection.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.src = "/bestsellers/kaishore.webp"; // Fallback to existing image
-                    }}
-                  />
-                </div>
-                <p className="text-center text-sm md:text-base font-semibold text-gray-800">
-                  {collection.name}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-16 text-center">
-            <button className="px-10 py-3 bg-amber-600 text-white font-bold rounded-full hover:bg-amber-700 transition-all duration-300 shadow-lg hover:shadow-amber-200 uppercase tracking-wider text-sm">
-              View All
-            </button>
-          </div>
-        </div>
-      </section>
-      {/* Best Sellers End */}
-
-      {/* New Launches Start */}
-      <section className="bg-white py-12 md:py-6">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-medium text-gray-900 mb-5">
-              New Launches
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 md:gap-12">
-            {[
-              {
-                name: "Immunity Booster",
-                img: "/bestsellers/kaishore.webp",
-              },
-              { name: "Pure Herbs", img: "/bestsellers/kaishore.webp" },
-              { name: "Hair Care", img: "/bestsellers/kaishore.webp" },
-              { name: "Remedies", img: "/bestsellers/kaishore.webp" },
-              {
-                name: "Herbal Juices",
-                img: "/bestsellers/kaishore.webp",
-              },
-            ].map((collection, index) => (
-              <div
-                key={index}
-                className="group flex flex-col items-center cursor-pointer">
-                <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent">
-                  <img
-                    src={collection.img}
-                    alt={collection.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.src = "/bestsellers/kaishore.webp"; // Fallback to existing image
-                    }}
-                  />
-                </div>
-                <p className="text-center text-sm md:text-base font-semibold text-gray-800">
-                  {collection.name}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-16 text-center">
-            <button className="px-10 py-3 bg-amber-600 text-white font-bold rounded-full hover:bg-amber-700 transition-all duration-300 shadow-lg hover:shadow-amber-200 uppercase tracking-wider text-sm">
-              View All
-            </button>
-          </div>
-        </div>
-      </section>
-      {/* New Launches End */}
-
-      {/* Popular Products Start */}
-      <section className="bg-white py-12 md:py-6">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-medium text-gray-900 mb-5">
-              Popular Products
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 md:gap-12">
-            {[
-              {
-                name: "Immunity Booster",
-                img: "/bestsellers/kaishore.webp",
-              },
-              { name: "Pure Herbs", img: "/bestsellers/kaishore.webp" },
-              { name: "Hair Care", img: "/bestsellers/kaishore.webp" },
-              { name: "Remedies", img: "/bestsellers/kaishore.webp" },
-              {
-                name: "Herbal Juices",
-                img: "/bestsellers/kaishore.webp",
-              },
-            ].map((collection, index) => (
-              <div
-                key={index}
-                className="group flex flex-col items-center cursor-pointer">
-                <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent">
-                  <img
-                    src={collection.img}
-                    alt={collection.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.src = "/bestsellers/kaishore.webp"; // Fallback to existing image
-                    }}
-                  />
-                </div>
-                <p className="text-center text-sm md:text-base font-semibold text-gray-800">
-                  {collection.name}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-16 text-center">
-            <button className="px-10 py-3 bg-amber-600 text-white font-bold rounded-full hover:bg-amber-700 transition-all duration-300 shadow-lg hover:shadow-amber-200 uppercase tracking-wider text-sm">
-              View All
-            </button>
-          </div>
-        </div>
-      </section>
-      {/* Popular Products End */}
+      {/* Product Sections - All Dynamic */}
+      <ProductSection title="Deals of the Day" products={dealProducts} />
+      <ProductSection title="Herbal Juices" products={herbalProducts} />
+      <ProductSection title="Best Sellers" products={bestSellers} />
+      <ProductSection title="New Launches" products={newLaunches} />
+      <ProductSection title="Popular Products" products={popularProducts} />
 
       {/* Youtube Section */}
       <section className="bg-white py-12">
@@ -413,7 +286,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Blogs Section Start */}
+      {/* Blogs Section */}
       <section className="bg-white py-16 border-t border-gray-100">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-end mb-10 pb-4 border-b border-gray-100">
@@ -433,7 +306,6 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-            {/* Featured Blog - Left Side */}
             <div className="lg:col-span-8 group cursor-pointer">
               <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-6 shadow-lg">
                 <img
@@ -453,7 +325,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Blogs List - Right Side */}
             <div className="lg:col-span-4 space-y-8 divide-y divide-gray-100">
               {[
                 {
@@ -499,7 +370,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      {/* Blogs Section End */}
+
       <Footer />
     </>
   );
