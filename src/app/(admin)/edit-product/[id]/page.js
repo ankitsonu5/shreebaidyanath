@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { IoIosArrowBack } from "react-icons/io";
+import { IoClose } from "react-icons/io5";
 
 export default function EditProduct() {
   const { id } = useParams();
@@ -16,8 +17,9 @@ export default function EditProduct() {
     productCollection: "",
     productTag: "",
   });
-  const [imageFile, setImageFile] = useState(null);
-  const [preview, setPreview] = useState("");
+  const [existingImages, setExistingImages] = useState([]);
+  const [newFiles, setNewFiles] = useState([]);
+  const [newPreviews, setNewPreviews] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -58,14 +60,13 @@ export default function EditProduct() {
           productCollection: p.productCollection || "",
           productTag: p.productTag || "",
         });
-        // Set existing image preview
-        if (p.productImage && p.productImage[0]) {
-          const img = p.productImage[0];
-          setPreview(
+        if (p.productImage && p.productImage.length > 0) {
+          const imgs = p.productImage.map((img) =>
             img.startsWith("http")
               ? img
               : `${process.env.NEXT_PUBLIC_API_URL}/${img}`,
           );
+          setExistingImages(imgs);
         }
       }
     } catch (error) {
@@ -77,12 +78,25 @@ export default function EditProduct() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleImage = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-      setImageFile(file);
+  const handleImages = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      setNewFiles((prev) => [...prev, ...files]);
+      const previews = files.map((f) => URL.createObjectURL(f));
+      setNewPreviews((prev) => [...prev, ...previews]);
     }
+  };
+
+  const removeExisting = (index) => {
+    setExistingImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const removeNew = (index) => {
+    setNewFiles((prev) => prev.filter((_, i) => i !== index));
+    setNewPreviews((prev) => {
+      URL.revokeObjectURL(prev[index]);
+      return prev.filter((_, i) => i !== index);
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -95,13 +109,15 @@ export default function EditProduct() {
     formData.append("productDescription", form.productDescription);
     formData.append("productPrice", form.productPrice);
     formData.append("productStock", form.productStock);
-    formData.append("productCollection", form.productCollection);
+    if (form.productCollection) {
+      formData.append("productCollection", form.productCollection);
+    }
     if (form.productTag) {
       formData.append("productTag", form.productTag);
     }
-    if (imageFile) {
-      formData.append("productImage", imageFile);
-    }
+    newFiles.forEach((file) => {
+      formData.append("productImage", file);
+    });
 
     try {
       const res = await axios.put(
@@ -125,6 +141,11 @@ export default function EditProduct() {
       setLoading(false);
     }
   };
+
+  const allImages = [
+    ...existingImages.map((src) => ({ type: "existing", src })),
+    ...newPreviews.map((src) => ({ type: "new", src })),
+  ];
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -194,14 +215,13 @@ export default function EditProduct() {
             </div>
           </div>
 
-          {/* Collection Dropdown (Dynamic) */}
+          {/* Collection Dropdown (Optional) */}
           <div>
             <label className="block mb-2 font-medium">Collection</label>
             <select
               name="productCollection"
               value={form.productCollection}
               onChange={handleChange}
-              required
               className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer">
               <option value="">Select Collection</option>
               {collections.map((col) => (
@@ -231,26 +251,54 @@ export default function EditProduct() {
             </select>
           </div>
 
-          {/* Image */}
+          {/* Images */}
           <div>
-            <label className="block mb-2 font-medium">Product Image</label>
-            <div className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-200 bg-gray-50 mb-3">
-              {preview ? (
-                <img
-                  src={preview}
-                  alt="Preview"
-                  className="w-full h-full object-contain"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                  No image selected
-                </div>
-              )}
-            </div>
+            <label className="block mb-2 font-medium">
+              Product Images{" "}
+              <span className="text-gray-400 text-sm font-normal">
+                (first image = main image)
+              </span>
+            </label>
+
+            {/* Preview Grid */}
+            {allImages.length > 0 && (
+              <div className="grid grid-cols-4 gap-2 mb-3">
+                {allImages.map((img, i) => (
+                  <div key={i} className="relative group">
+                    <img
+                      src={img.src}
+                      alt={`Image ${i + 1}`}
+                      className={`w-full h-24 object-cover rounded-lg border-2 ${
+                        i === 0 ? "border-blue-500" : "border-gray-200"
+                      }`}
+                    />
+                    {i === 0 && (
+                      <span className="absolute top-1 left-1 bg-blue-500 text-white text-[10px] px-1.5 py-0.5 rounded font-semibold">
+                        Main
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (img.type === "existing") {
+                          removeExisting(existingImages.indexOf(img.src));
+                        } else {
+                          removeNew(newPreviews.indexOf(img.src));
+                        }
+                      }}
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                      <IoClose size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <input
               type="file"
               accept="image/*"
-              onChange={handleImage}
+              multiple
+              onChange={handleImages}
               className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:cursor-pointer transition-all"
             />
           </div>

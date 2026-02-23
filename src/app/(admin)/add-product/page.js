@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { IoIosArrowBack } from "react-icons/io";
+import { IoClose } from "react-icons/io5";
 
 export default function AddProduct() {
   const router = useRouter();
@@ -15,8 +16,8 @@ export default function AddProduct() {
     productCollection: "",
     productTag: "",
   });
-  const [imageFile, setImageFile] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [imageFiles, setImageFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -45,16 +46,29 @@ export default function AddProduct() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleImage = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-      setImageFile(file);
+  const handleImages = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      setImageFiles((prev) => [...prev, ...files]);
+      const newPreviews = files.map((f) => URL.createObjectURL(f));
+      setPreviews((prev) => [...prev, ...newPreviews]);
     }
+  };
+
+  const removeImage = (index) => {
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
+    setPreviews((prev) => {
+      URL.revokeObjectURL(prev[index]);
+      return prev.filter((_, i) => i !== index);
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (imageFiles.length === 0) {
+      alert("Please select at least one image");
+      return;
+    }
     setLoading(true);
     const token = localStorage.getItem("token");
 
@@ -63,13 +77,15 @@ export default function AddProduct() {
     formData.append("productDescription", form.productDescription);
     formData.append("productPrice", form.productPrice);
     formData.append("productStock", form.productStock);
-    formData.append("productCollection", form.productCollection);
+    if (form.productCollection) {
+      formData.append("productCollection", form.productCollection);
+    }
     if (form.productTag) {
       formData.append("productTag", form.productTag);
     }
-    if (imageFile) {
-      formData.append("productImage", imageFile);
-    }
+    imageFiles.forEach((file) => {
+      formData.append("productImage", file);
+    });
 
     try {
       const res = await axios.post(
@@ -168,14 +184,13 @@ export default function AddProduct() {
             </div>
           </div>
 
-          {/* Collection Dropdown (Dynamic) */}
+          {/* Collection Dropdown (Optional) */}
           <div>
             <label className="block mb-2 font-medium">Collection</label>
             <select
               name="productCollection"
               value={form.productCollection}
               onChange={handleChange}
-              required
               className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer">
               <option value="">Select Collection</option>
               {collections.map((col) => (
@@ -205,23 +220,45 @@ export default function AddProduct() {
             </select>
           </div>
 
-          {/* Image Upload */}
+          {/* Multiple Image Upload */}
           <div>
-            <label className="block mb-2 font-medium">Product Image</label>
+            <label className="block mb-2 font-medium">
+              Product Images{" "}
+              <span className="text-gray-400 text-sm font-normal">
+                (first image = main image)
+              </span>
+            </label>
             <input
               type="file"
               accept="image/*"
-              onChange={handleImage}
-              required
+              multiple
+              onChange={handleImages}
               className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:cursor-pointer transition-all"
             />
-            {preview && (
-              <div className="mt-3 flex justify-center">
-                <img
-                  src={preview}
-                  alt="Preview"
-                  className="max-h-40 object-contain rounded-lg border border-gray-200 bg-gray-50"
-                />
+            {previews.length > 0 && (
+              <div className="mt-3 grid grid-cols-4 gap-2">
+                {previews.map((src, i) => (
+                  <div key={i} className="relative group">
+                    <img
+                      src={src}
+                      alt={`Preview ${i + 1}`}
+                      className={`w-full h-24 object-cover rounded-lg border-2 ${
+                        i === 0 ? "border-blue-500" : "border-gray-200"
+                      }`}
+                    />
+                    {i === 0 && (
+                      <span className="absolute top-1 left-1 bg-blue-500 text-white text-[10px] px-1.5 py-0.5 rounded font-semibold">
+                        Main
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeImage(i)}
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                      <IoClose size={14} />
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
           </div>

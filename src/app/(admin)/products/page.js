@@ -107,8 +107,8 @@ export default function ProductsPage() {
                 {/* Info */}
                 <div className="p-4 bg-white">
                   <div className="flex justify-between items-start">
-                    <div className="flex-1 pr-6">
-                      <h3 className="text-lg font-semibold text-gray-800 truncate">
+                    <div className="flex-1 pr-6 w-64">
+                      <h3 className="text-lg font-semibold text-gray-800 line-clamp-2">
                         {item.productName}
                       </h3>
                       <p className="text-blue-600 font-bold mt-1">

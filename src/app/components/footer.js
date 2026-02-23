@@ -30,7 +30,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 
                     {/* Contact */}
-                    <div className="text-center sm:text-left">
+                    <div className="sm:text-left">
                         <h3 className="font-semibold mb-3 sm:mb-4 text-lg">Contact Us</h3>
                         <p className="text-sm leading-6">
                             D-21, Site-B, Ind Area, Surajpur<br />
@@ -42,7 +42,7 @@ export default function Footer() {
                     </div>
 
                     {/* About */}
-                    <div className="text-center sm:text-left">
+                    <div className="sm:text-left">
                         <h3 className="font-semibold mb-3 sm:mb-4 text-lg">About Us</h3>
                         <ul className="space-y-2 text-sm">
                             <li><Link href="#" className="hover:text-red-600">Our Story</Link></li>
@@ -56,7 +56,7 @@ export default function Footer() {
                     </div>
 
                     {/* Customer Support */}
-                    <div className="text-center sm:text-left">
+                    <div className="sm:text-left">
                         <h3 className="font-semibold mb-3 sm:mb-4 text-lg">Customer Support</h3>
                         <ul className="space-y-2 text-sm">
                             <li><Link href="#" className="hover:text-red-600">Shipping Info</Link></li>
@@ -69,16 +69,16 @@ export default function Footer() {
                     </div>
 
                     {/* App & Social */}
-                    <div className="text-center sm:text-left">
+                    <div className="sm:text-left">
                         <h3 className="font-semibold mb-3 sm:mb-4 text-lg">Download Our App</h3>
                         <img
                             src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
                             alt="Google Play"
-                            className="w-36 sm:w-40 mb-4 mx-auto sm:mx-0"
+                            className="w-36 sm:w-40 mb-4 sm:mx-0"
                         />
 
                         <h4 className="font-semibold mb-2">Follow Us</h4>
-                        <div className="flex flex-wrap justify-center sm:justify-start gap-3 sm:gap-4">
+                        <div className="flex flex-wrap sm:justify-start gap-3 sm:gap-4">
                             <Link href="#" className="hover:text-red-600">Instagram</Link>
                             <Link href="#" className="hover:text-red-600">Facebook</Link>
                             <Link href="#" className="hover:text-red-600">YouTube</Link>

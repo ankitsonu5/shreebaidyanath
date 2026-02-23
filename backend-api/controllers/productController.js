@@ -10,7 +10,7 @@ exports.createProduct = async (req, res) => {
       productCollection,
       productTag,
     } = req.body;
-    const productImage = req.file ? [req.file.path] : [];
+    const productImage = req.files ? req.files.map((f) => f.path) : [];
     const createdBy = req.user.id;
 
     const product = new Product({
@@ -19,7 +19,7 @@ exports.createProduct = async (req, res) => {
       productImage,
       productPrice,
       productStock,
-      productCollection,
+      productCollection: productCollection || undefined,
       productTag: productTag || null,
       createdBy,
     });
@@ -70,12 +70,12 @@ exports.updateProduct = async (req, res) => {
       productDescription,
       productPrice,
       productStock,
-      productCollection,
+      productCollection: productCollection || undefined,
       productTag: productTag || null,
     };
 
-    if (req.file) {
-      updataData.productImage = [req.file.path];
+    if (req.files && req.files.length > 0) {
+      updataData.productImage = req.files.map((f) => f.path);
     }
 
     const product = await Product.findByIdAndUpdate(id, updataData, {
