@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import axios from "axios";
 import Navbar from "../../../components/navbar";
 import Footer from "../../../components/footer";
 
@@ -29,8 +30,8 @@ export default function ProductsByTag() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${API}/products`);
-      const data = await res.json();
+      const res = await axios.get(`${API}/products`);
+      const data = await res.data;
       if (data.success) {
         const filtered = data.products.filter(
           (p) => p.productTag === config.tag,

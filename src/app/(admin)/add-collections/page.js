@@ -2,7 +2,6 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { IoIosArrowBack } from "react-icons/io";
 
 export default function AddCollection() {
   const router = useRouter();
@@ -58,16 +57,8 @@ export default function AddCollection() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+    <div className="flex items-center justify-center">
       <div className="bg-white w-full max-w-lg p-6 rounded-2xl shadow-lg">
-        <button
-          onClick={() => router.push("/collections")}
-          className="flex items-center gap-2 text-black-400 hover:text-gray-600 transition-colors mb-8 group">
-          <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 border border-white/10 transition-all">
-            <IoIosArrowBack />
-          </div>
-          <span className="text-sm font-medium">Back to Collections</span>
-        </button>
         <h2 className="text-2xl font-bold mb-6 text-gray-800">
           Add Collection
         </h2>

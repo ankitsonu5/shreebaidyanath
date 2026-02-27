@@ -33,7 +33,28 @@ exports.createProduct = async (req, res) => {
 
 exports.getAllProduct = async (req, res) => {
   try {
-    const products = await Product.find();
+    const { productCollection, productTag, search, sort } = req.query;
+    let filter = {};
+
+    if (productCollection) {
+      filter.productCollection = productCollection;
+    }
+    if (productTag) {
+      filter.productTag = productTag;
+    }
+    if (search) {
+      filter.productName = { $regex: search, $options: "i" };
+    }
+
+    let sortOption = {};
+    if (sort === "price_low") sortOption.productPrice = 1;
+    else if (sort === "price_high") sortOption.productPrice = -1;
+    else if (sort === "newest") sortOption._id = -1;
+
+    const products = await Product.find(filter)
+      .populate("productCollection", "collectionName")
+      .sort(sortOption);
+
     res.status(200).json({ success: true, products });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

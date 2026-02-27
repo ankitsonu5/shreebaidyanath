@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { IoIosArrowBack } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
 export default function AddProduct() {
@@ -21,12 +20,6 @@ export default function AddProduct() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
-    if (!token || role !== "admin") {
-      router.push("/signin");
-      return;
-    }
     fetchCollections();
   }, []);
 
@@ -111,17 +104,8 @@ export default function AddProduct() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div className="flex items-center justify-center">
       <div className="bg-white shadow-xl rounded-2xl w-full max-w-2xl p-8">
-        <button
-          onClick={() => router.push("/products")}
-          className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors mb-6 group cursor-pointer">
-          <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-gray-100 border border-gray-200 transition-all">
-            <IoIosArrowBack />
-          </div>
-          <span className="text-sm font-medium">Back to Products</span>
-        </button>
-
         <h2 className="text-2xl font-bold mb-6 text-gray-800">
           Add New Product
         </h2>

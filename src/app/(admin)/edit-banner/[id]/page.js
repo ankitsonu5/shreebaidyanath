@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
-import { IoIosArrowBack } from "react-icons/io";
 
 export default function EditBanner() {
   const { id } = useParams();
@@ -15,12 +14,6 @@ export default function EditBanner() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
-    if (!token || role !== "admin") {
-      router.push("/signin");
-      return;
-    }
     if (id) fetchBanner();
   }, [id]);
 
@@ -90,17 +83,8 @@ export default function EditBanner() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div className="flex items-center justify-center">
       <div className="bg-white shadow-xl rounded-2xl w-full max-w-lg p-8">
-        <button
-          onClick={() => router.push("/banners")}
-          className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors mb-6 group cursor-pointer">
-          <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-gray-100 border border-gray-200 transition-all">
-            <IoIosArrowBack />
-          </div>
-          <span className="text-sm font-medium">Back to Banners</span>
-        </button>
-
         <h2 className="text-2xl font-bold mb-6 text-gray-800">Edit Banner</h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">

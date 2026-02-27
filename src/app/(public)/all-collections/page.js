@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 
@@ -18,8 +19,8 @@ export default function CollectionsPage() {
 
   const fetchCollections = async () => {
     try {
-      const res = await fetch(`${API}/collection`);
-      const data = await res.json();
+      const res = await axios.get(`${API}/collection`);
+      const data = await res.data;
       if (data.success) setCollections(data.collections);
     } catch (err) {
       console.error("Collections fetch failed:", err);

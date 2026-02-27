@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { IoIosArrowBack } from "react-icons/io";
 import { FiEdit2 } from "react-icons/fi";
 
 export default function BannersPage() {
@@ -10,12 +9,6 @@ export default function BannersPage() {
   const [banners, setBanners] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
-    if (!token || role !== "admin") {
-      router.push("/signin");
-      return;
-    }
     fetchBanners();
   }, []);
 
@@ -88,94 +81,83 @@ export default function BannersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-6xl mx-auto p-4 md:p-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => router.push("/admindashboard")}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors group cursor-pointer">
-              <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center group-hover:bg-gray-200 border border-gray-200 transition-all shadow-sm">
-                <IoIosArrowBack />
-              </div>
-            </button>
-            <h1 className="text-2xl font-bold text-gray-800">Banners</h1>
-          </div>
-          <button
-            onClick={() => router.push("/add-banner")}
-            className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition shadow-md flex items-center gap-2 text-sm font-medium w-fit cursor-pointer">
-            <span className="text-lg">+</span> Add Banner
-          </button>
-        </div>
-
-        {banners.length === 0 ? (
-          <div className="bg-white p-10 rounded-xl shadow text-center text-gray-500">
-            No banners found. Add your first banner!
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {banners.map((banner) => (
-              <div
-                key={banner._id}
-                className={`bg-white rounded-xl shadow-sm border overflow-hidden transition-all ${
-                  banner.isActive
-                    ? "border-gray-100"
-                    : "border-red-200 opacity-60"
-                }`}>
-                <div className="h-48 w-full">
-                  <img
-                    src={getImageUrl(banner)}
-                    alt="Banner"
-                    className="w-full h-full object-contain bg-gray-50"
-                  />
-                </div>
-                <div className="p-4">
-                  {/* Top row: badges */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-sm font-medium px-3 py-1 rounded-full bg-blue-50 text-blue-700 capitalize">
-                      {banner.bannerType}
-                    </span>
-                    <span className="text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-600">
-                      Order: {banner.bannerOrder || 0}
-                    </span>
-                    <span
-                      className={`text-xs font-medium px-2 py-1 rounded-full ${
-                        banner.isActive
-                          ? "bg-green-50 text-green-700"
-                          : "bg-red-50 text-red-600"
-                      }`}>
-                      {banner.isActive ? "Active" : "Inactive"}
-                    </span>
-                  </div>
-
-                  {/* Bottom row: actions */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleToggle(banner._id)}
-                      className={`text-sm font-medium px-3 py-1.5 rounded-lg cursor-pointer transition ${
-                        banner.isActive
-                          ? "bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
-                          : "bg-green-50 text-green-700 hover:bg-green-100"
-                      }`}>
-                      {banner.isActive ? "Deactivate" : "Activate"}
-                    </button>
-                    <button
-                      onClick={() => router.push(`/edit-banner/${banner._id}`)}
-                      className="text-sm font-medium px-3 py-1.5 rounded-lg cursor-pointer bg-blue-50 text-blue-700 hover:bg-blue-100 transition flex items-center gap-1">
-                      <FiEdit2 size={14} /> Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(banner._id)}
-                      className="text-sm font-medium px-3 py-1.5 rounded-lg cursor-pointer bg-red-50 text-red-600 hover:bg-red-100 transition ml-auto">
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+    <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <h1 className="text-2xl font-bold text-gray-800">Banners</h1>
+        <button
+          onClick={() => router.push("/add-banner")}
+          className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition shadow-md flex items-center gap-2 text-sm font-medium w-fit cursor-pointer">
+          <span className="text-lg">+</span> Add Banner
+        </button>
       </div>
+
+      {banners.length === 0 ? (
+        <div className="bg-white p-10 rounded-xl shadow text-center text-gray-500">
+          No banners found. Add your first banner!
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {banners.map((banner) => (
+            <div
+              key={banner._id}
+              className={`bg-white rounded-xl shadow-sm border overflow-hidden transition-all ${
+                banner.isActive
+                  ? "border-gray-100"
+                  : "border-red-200 opacity-60"
+              }`}>
+              <div className="h-48 w-full">
+                <img
+                  src={getImageUrl(banner)}
+                  alt="Banner"
+                  className="w-full h-full object-contain bg-gray-50"
+                />
+              </div>
+              <div className="p-4">
+                {/* Top row: badges */}
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-sm font-medium px-3 py-1 rounded-full bg-blue-50 text-blue-700 capitalize">
+                    {banner.bannerType}
+                  </span>
+                  <span className="text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                    Order: {banner.bannerOrder || 0}
+                  </span>
+                  <span
+                    className={`text-xs font-medium px-2 py-1 rounded-full ${
+                      banner.isActive
+                        ? "bg-green-50 text-green-700"
+                        : "bg-red-50 text-red-600"
+                    }`}>
+                    {banner.isActive ? "Active" : "Inactive"}
+                  </span>
+                </div>
+
+                {/* Bottom row: actions */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleToggle(banner._id)}
+                    className={`text-sm font-medium px-3 py-1.5 rounded-lg cursor-pointer transition ${
+                      banner.isActive
+                        ? "bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
+                        : "bg-green-50 text-green-700 hover:bg-green-100"
+                    }`}>
+                    {banner.isActive ? "Deactivate" : "Activate"}
+                  </button>
+                  <button
+                    onClick={() => router.push(`/edit-banner/${banner._id}`)}
+                    className="text-sm font-medium px-3 py-1.5 rounded-lg cursor-pointer bg-blue-50 text-blue-700 hover:bg-blue-100 transition flex items-center gap-1">
+                    <FiEdit2 size={14} /> Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(banner._id)}
+                    className="text-sm font-medium px-3 py-1.5 rounded-lg cursor-pointer bg-red-50 text-red-600 hover:bg-red-100 transition ml-auto">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

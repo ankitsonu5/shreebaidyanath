@@ -12,7 +12,55 @@ import { useRouter } from "next/navigation";
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [user, setUser] = useState(null);
+  const [profileOpen, setProfileOpen] = useState(false);
   const router = useRouter();
+
+  const updateUser = () => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
+
+      if (
+        token &&
+        storedUser &&
+        storedUser !== "undefined" &&
+        storedUser !== "null"
+      ) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          if (parsedUser && typeof parsedUser === "object") {
+            setUser(parsedUser);
+            if (process.env.NODE_ENV === "development") {
+              console.log("Navbar: Session loaded for", parsedUser.name);
+            }
+            return;
+          }
+        } catch (err) {
+          console.error("Error parsing user data:", err);
+        }
+      }
+
+      // Fallback: If we have a token but user object is missing,
+      // we can at least show a generic profile if we want, but better to stay null
+      setUser(null);
+    } catch (err) {
+      console.error("Error accessing session data:", err);
+      setUser(null);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("user");
+    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie = "user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    setUser(null);
+    window.dispatchEvent(new Event("userUpdated"));
+    router.push("/signin");
+  };
 
   const updateCartCount = () => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -22,22 +70,31 @@ export default function Navbar() {
 
   useEffect(() => {
     updateCartCount();
+    updateUser();
     // Listen for custom cartUpdated event
     window.addEventListener("cartUpdated", updateCartCount);
+    window.addEventListener("userUpdated", updateUser);
     // Listen for storage changes from other tabs
-    window.addEventListener("storage", updateCartCount);
+    window.addEventListener("storage", () => {
+      updateCartCount();
+      updateUser();
+    });
     return () => {
       window.removeEventListener("cartUpdated", updateCartCount);
-      window.removeEventListener("storage", updateCartCount);
+      window.removeEventListener("userUpdated", updateUser);
+      window.removeEventListener("storage", () => {
+        updateCartCount();
+        updateUser();
+      });
     };
   }, []);
 
   return (
     <>
       {/* Top Black Bar */}
-      <div className="bg-black text-white text-center text-xs sm:text-sm py-2 px-4">
+      {/* <div className="bg-black text-white text-center text-xs sm:text-sm py-2 px-4">
         Extra 5% on prepaid orders. No coupon needed
-      </div>
+      </div> */}
 
       {/* Main Navbar */}
       <nav className="bg-gray-100 px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 flex items-center justify-between relative">
@@ -45,14 +102,15 @@ export default function Navbar() {
         <div
           onClick={() => router.push("/")}
           className="flex items-center cursor-pointer">
-          <Image
-            src="/logo.avif"
+          {/* <Image
+            src=""
             alt="Logo"
             width={160}
             height={50}
             className="w-[120px] sm:w-[140px] md:w-[160px] h-auto"
             priority
-          />
+          /> */}
+          <h1 className="text-2xl font-bold text-red-600">Shree Baidyanath</h1>
         </div>
 
         {/* Center Menu - Desktop */}
@@ -82,7 +140,7 @@ export default function Navbar() {
             </Link>
           </li>
           <li>
-            <Link href="#" className="hover:text-red-600">
+            <Link href="/all-products" className="hover:text-red-600">
               All Products
             </Link>
           </li>
@@ -101,10 +159,50 @@ export default function Navbar() {
           </div>
 
           <FaSearch className="cursor-pointer hover:text-red-600 text-base sm:text-lg" />
-          <FaUser
-            onClick={() => router.push("/register")}
-            className="cursor-pointer hover:text-red-600 text-base sm:text-lg"
-          />
+          {user ? (
+            <div className="relative">
+              <div
+                onClick={() => setProfileOpen(!profileOpen)}
+                className="flex items-center gap-1 cursor-pointer hover:text-red-600 text-sm font-medium">
+                <FaUser className="text-base sm:text-lg" />
+                <span className="hidden sm:inline">Profile</span>
+              </div>
+              {profileOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50 border border-gray-100">
+                  <div className="px-4 py-2 border-b border-gray-100">
+                    <p className="text-xs text-gray-400">Signed in as</p>
+                    <p className="text-sm font-bold text-gray-800 truncate">
+                      {user.name}
+                    </p>
+                  </div>
+                  <Link
+                    href="/my-orders"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    onClick={() => setProfileOpen(false)}>
+                    My Orders
+                  </Link>
+                  {user.role === "admin" && (
+                    <Link
+                      href="/admindashboard"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      onClick={() => setProfileOpen(false)}>
+                      Admin Dashboard
+                    </Link>
+                  )}
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100 mt-1 cursor-pointer">
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <FaUser
+              onClick={() => router.push("/signin")}
+              className="cursor-pointer hover:text-red-600 text-base sm:text-lg"
+            />
+          )}
           <div
             onClick={() => router.push("/cart")}
             className="relative cursor-pointer">
@@ -170,6 +268,47 @@ export default function Navbar() {
                 Blogs
               </Link>
             </li>
+            {user ? (
+              <>
+                <li>
+                  <Link
+                    href="/my-orders"
+                    className="block px-6 py-3 border-b border-gray-100 hover:bg-gray-50 hover:text-red-600"
+                    onClick={() => setMenuOpen(false)}>
+                    My Orders
+                  </Link>
+                </li>
+                {user.role === "admin" && (
+                  <li>
+                    <Link
+                      href="/admindashboard"
+                      className="block px-6 py-3 border-b border-gray-100 hover:bg-gray-50 hover:text-red-600"
+                      onClick={() => setMenuOpen(false)}>
+                      Admin Dashboard
+                    </Link>
+                  </li>
+                )}
+                <li>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setMenuOpen(false);
+                    }}
+                    className="w-full text-left px-6 py-3 border-b border-gray-100 hover:bg-red-50 text-red-600 font-medium cursor-pointer">
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <li>
+                <Link
+                  href="/signin"
+                  className="block px-6 py-3 border-b border-gray-100 hover:bg-gray-50 hover:text-red-600"
+                  onClick={() => setMenuOpen(false)}>
+                  Sign In
+                </Link>
+              </li>
+            )}
             {/* Track Order for mobile */}
             <li className="md:hidden">
               <Link

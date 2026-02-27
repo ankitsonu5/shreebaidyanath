@@ -1,11 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 
 export default function Register() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -40,7 +42,7 @@ export default function Register() {
           password: "",
           confirmPassword: "",
         });
-        router.push("/signin");
+        router.push(redirect ? `/signin?redirect=${redirect}` : "/signin");
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message);
@@ -53,6 +55,21 @@ export default function Register() {
     <>
       <div className="flex items-center justify-center h-screen">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+          <div
+            onClick={() => router.push("/")}
+            className="flex items-center justify-center cursor-pointer mb-4">
+            {/* <Image
+            src=""
+            alt="Logo"
+            width={160}
+            height={50}
+            className="w-[120px] sm:w-[140px] md:w-[160px] h-auto"
+            priority
+          /> */}
+            <h1 className="text-2xl font-bold text-red-600">
+              Shree Baidyanath
+            </h1>
+          </div>
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
             Create Account
           </h2>
@@ -146,7 +163,9 @@ export default function Register() {
             <span
               className="text-blue-600 cursor-pointer"
               onClick={() => {
-                router.push("/signin");
+                router.push(
+                  redirect ? `/signin?redirect=${redirect}` : "/signin",
+                );
               }}>
               Login
             </span>

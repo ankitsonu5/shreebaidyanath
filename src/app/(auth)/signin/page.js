@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 
 export default function Signin() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -40,34 +42,43 @@ export default function Signin() {
       if (response.data.success) {
         const token = response.data.token;
         const role = response.data.role;
+        const user = response.data.user;
 
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
+        localStorage.setItem("user", JSON.stringify(user));
+
         document.cookie = `token=${token}; path=/`;
         document.cookie = `role=${role}; path=/`;
+        document.cookie = `user=${JSON.stringify(user)}; path=/`;
+        window.dispatchEvent(new Event("userUpdated"));
 
         // Check for guest cart and merge
-        const guestCart = JSON.parse(
-          localStorage.getItem("guestCart") || '{"items":[]}',
-        );
-        if (guestCart.items.length > 0) {
+        const guestCartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+        if (guestCartItems.length > 0) {
           try {
             await axios.post(
               `${process.env.NEXT_PUBLIC_API_URL}/merge-cart`,
-              { items: guestCart.items },
+              { items: guestCartItems },
               { headers: { Authorization: token } },
             );
-            localStorage.removeItem("guestCart");
+            // After merge, typically we'd clear local cart or it might be updated by server
+            // For now, let's keep it or clear it if the server handles it.
+            // localStorage.removeItem("cart");
           } catch (mergeError) {
             console.log("Cart merge error:", mergeError);
           }
         }
 
-        if (role === "admin") {
-          router.push("/admindashboard");
-        } else {
-          router.push("/");
-        }
+        setTimeout(() => {
+          if (role === "admin") {
+            router.push("/admindashboard");
+          } else if (redirect) {
+            router.push(redirect);
+          } else {
+            router.push("/");
+          }
+        }, 100);
       }
     } catch (error) {
       alert(error.response?.data?.message || "Login failed");
@@ -79,6 +90,21 @@ export default function Signin() {
     <>
       <div className="flex items-center justify-center h-screen">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+          <div
+            onClick={() => router.push("/")}
+            className="flex items-center justify-center cursor-pointer mb-4">
+            {/* <Image
+            src=""
+            alt="Logo"
+            width={160}
+            height={50}
+            className="w-[120px] sm:w-[140px] md:w-[160px] h-auto"
+            priority
+          /> */}
+            <h1 className="text-2xl font-bold text-red-600">
+              Shree Baidyanath
+            </h1>
+          </div>
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
             Sign In
           </h2>

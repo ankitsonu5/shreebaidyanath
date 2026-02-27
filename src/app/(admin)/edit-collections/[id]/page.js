@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
-import { IoIosArrowBack } from "react-icons/io";
 
 export default function EditCollection() {
   const router = useRouter();
@@ -96,7 +95,7 @@ export default function EditCollection() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <p className="text-xl font-medium text-gray-600">
           Loading collection...
         </p>
@@ -105,18 +104,9 @@ export default function EditCollection() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+    <div className="flex items-center justify-center">
       <div className="bg-white w-full max-w-lg p-6 rounded-2xl shadow-lg border border-gray-100">
-        <button
-          onClick={() => router.push("/collections")}
-          className="flex items-center gap-2 text-gray-400 hover:text-gray-600 transition-colors mb-6 group cursor-pointer">
-          <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-gray-100 border border-gray-200 transition-all cursor-pointer">
-            <IoIosArrowBack />
-          </div>
-          <span className="text-sm font-medium cursor-pointer">Back to Collections</span>
-        </button>
-
-        <h2 className="text-2xl font-bold mb-6 cursor-pointer text-gray-800">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">
           Edit Collection
         </h2>
 

@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Navbar from "../../components/navbar";
+import Footer from "../../components/footer";
 
 export default function CartPage() {
   const router = useRouter();
@@ -46,6 +48,7 @@ export default function CartPage() {
   if (cart.length === 0) {
     return (
       <>
+      <Navbar />
       <div className="bg-white border-b border-gray-100">
           <div className="container mx-auto px-4 py-3">
             <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -62,11 +65,14 @@ export default function CartPage() {
       <div className="min-h-screen flex items-center justify-center text-xl font-semibold">
         Your Cart is Empty 🛒
       </div>
+      <Footer />
       </>
     );
   }
 
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen bg-gray-100 p-4 md:p-8">
       <div className="bg-white border-b border-gray-100 mb-1">
         <div className="container mx-auto px-4 py-3">
@@ -143,11 +149,14 @@ export default function CartPage() {
             <span>₹{totalPrice}</span>
           </div>
 
-          <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg">
+          <button onClick={() => router.push("/checkout")}
+          className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg cursor-pointer">
             Proceed to Checkout
           </button>
         </div>
       </div>
     </div>
+          <Footer />
+    </>
   );
 }

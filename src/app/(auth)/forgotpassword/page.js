@@ -8,6 +8,19 @@ export default function ForgotPassword() {
     <>
       <div className="bg-gray-100 flex items-center justify-center min-h-screen">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+          <div
+            onClick={() => router.push("/")}
+            className="flex items-center justify-center cursor-pointer mb-4">
+            {/* <Image
+            src=""
+            alt="Logo"
+            width={160}
+            height={50}
+            className="w-[120px] sm:w-[140px] md:w-[160px] h-auto"
+            priority
+          /> */}
+            <h1 className="text-2xl font-bold text-red-600">Shree Baidyanath</h1>
+          </div>
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
             Forgot Password
           </h2>

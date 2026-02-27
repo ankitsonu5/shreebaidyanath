@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function HomePage() {
   const router = useRouter();
@@ -45,8 +46,8 @@ export default function HomePage() {
 
   const fetchBanners = async () => {
     try {
-      const res = await fetch(`${API}/banners`);
-      const data = await res.json();
+      const res = await axios.get(`${API}/banners`);
+      const data = await res.data;
       if (data.success) setBanners(data.banners);
     } catch (err) {
       console.error("Banners fetch failed:", err);
@@ -55,8 +56,8 @@ export default function HomePage() {
 
   const fetchCollections = async () => {
     try {
-      const res = await fetch(`${API}/collection`);
-      const data = await res.json();
+      const res = await axios.get(`${API}/collection`);
+      const data = await res.data;
       if (data.success) setCollections(data.collections);
     } catch (err) {
       console.error("Collections fetch failed:", err);
@@ -65,8 +66,8 @@ export default function HomePage() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${API}/products`);
-      const data = await res.json();
+      const res = await axios.get(`${API}/products`);
+      const data = await res.data;
       if (data.success) {
         const all = data.products;
         setDealProducts(all.filter((p) => p.productTag === "deal"));
