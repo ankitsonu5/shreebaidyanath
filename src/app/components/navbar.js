@@ -8,13 +8,19 @@ import { FaTruck } from "react-icons/fa6";
 import { IoChevronDownOutline } from "react-icons/io5";
 import { HiMenu, HiX } from "react-icons/hi";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+// import ShopbyCollections from "./ShopbyCollections";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [user, setUser] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [collections, setCollections] = useState([]);
+  const [showCollections, setShowCollections] = useState(false);
+  const [mobCollectionsOpen, setMobCollectionsOpen] = useState(false);
   const router = useRouter();
+  const API = process.env.NEXT_PUBLIC_API_URL;
 
   const updateUser = () => {
     try {
@@ -68,6 +74,18 @@ export default function Navbar() {
     setCartCount(total);
   };
 
+  const fetchCollections = async () => {
+    if (collections.length > 0) return;
+    try {
+      const res = await axios.get(`${API}/collection`);
+      if (res.data.success) {
+        setCollections(res.data.collections);
+      }
+    } catch (err) {
+      console.error("Collections fetch failed:", err);
+    }
+  };
+
   useEffect(() => {
     updateCartCount();
     updateUser();
@@ -115,12 +133,51 @@ export default function Navbar() {
 
         {/* Center Menu - Desktop */}
         <ul className="hidden lg:flex items-center gap-6 xl:gap-6 text-[15px] font-medium text-black">
-          <li>
+          <li
+            className="relative"
+            onMouseEnter={() => {
+              setShowCollections(true);
+              fetchCollections();
+            }}
+            onMouseLeave={() => setShowCollections(false)}>
             <Link
-              href="#"
-              className="flex items-center gap-1 hover:text-red-600">
-              Shop by Collections <IoChevronDownOutline size={14} />
+              href="/all-collections"
+              className={`flex items-center gap-1 hover:text-red-600 transition-colors ${showCollections ? "text-red-600" : ""}`}>
+              Shop by Collections{" "}
+              <IoChevronDownOutline
+                size={14}
+                className={`transition-transform duration-300 ${showCollections ? "rotate-180" : ""}`}
+              />
             </Link>
+
+            {/* Dropdown Menu */}
+            {showCollections && (
+              <div className="absolute top-full left-0 mt-2 w-64 bg-white/80 backdrop-blur-md rounded-xl shadow-2xl py-4 z-50 border border-white/20 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="flex flex-col max-h-[400px] overflow-y-auto scrollbar-hide">
+                  {collections.length > 0 ? (
+                    collections.map((col) => (
+                      <Link
+                        key={col._id}
+                        href={`/all-products?collection=${col._id}`}
+                        onClick={() => setShowCollections(false)}
+                        className="px-6 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 border-l-4 border-transparent hover:border-red-600 font-medium">
+                        {col.collectionName}
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="px-6 py-4 flex items-center justify-center">
+                      <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  )}
+                  <Link
+                    href="/all-collections"
+                    onClick={() => setShowCollections(false)}
+                    className="mt-2 mx-6 py-2 text-xs text-center border-t border-gray-100 text-gray-400 hover:text-red-600 transition-colors uppercase tracking-wider font-bold">
+                    View All Collections
+                  </Link>
+                </div>
+              </div>
+            )}
           </li>
           <li>
             <Link
@@ -229,12 +286,55 @@ export default function Navbar() {
         <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
           <ul className="flex flex-col text-[15px] font-medium text-black">
             <li>
-              <Link
-                href="#"
-                className="flex items-center justify-between px-6 py-3 border-b border-gray-100 hover:bg-gray-50 hover:text-red-600"
-                onClick={() => setMenuOpen(false)}>
-                Shop by category <IoChevronDownOutline size={14} />
-              </Link>
+              <button
+                onClick={() => {
+                  setMobCollectionsOpen(!mobCollectionsOpen);
+                  fetchCollections();
+                }}
+                className="w-full flex items-center justify-between px-6 py-3 border-b border-gray-100 hover:bg-gray-50 hover:text-red-600 transition-colors">
+                <span className="font-medium text-[15px]">
+                  Shop by Collections
+                </span>
+                <IoChevronDownOutline
+                  size={16}
+                  className={`transition-transform duration-300 ${mobCollectionsOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+
+              {/* Mobile Collections List */}
+              {mobCollectionsOpen && (
+                <div className="bg-gray-50 border-b border-gray-100 animate-in slide-in-from-top-2 duration-300">
+                  <div className="flex flex-col py-2">
+                    {collections.length > 0 ? (
+                      collections.map((col) => (
+                        <Link
+                          key={col._id}
+                          href={`/all-products?collection=${col._id}`}
+                          onClick={() => {
+                            setMenuOpen(false);
+                            setMobCollectionsOpen(false);
+                          }}
+                          className="px-10 py-2.5 text-sm text-gray-600 hover:text-red-600 transition-colors border-l-4 border-transparent hover:border-red-600">
+                          {col.collectionName}
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="px-10 py-4 flex items-center gap-3">
+                        <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-sm text-gray-400">
+                          Loading collections...
+                        </span>
+                      </div>
+                    )}
+                    <Link
+                      href="/all-collections"
+                      onClick={() => setMenuOpen(false)}
+                      className="px-10 py-3 text-xs font-bold text-red-600 hover:bg-red-50 uppercase tracking-wider border-t border-gray-100 mt-2">
+                      View All Collections →
+                    </Link>
+                  </div>
+                </div>
+              )}
             </li>
             <li>
               <Link

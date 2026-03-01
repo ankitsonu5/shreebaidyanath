@@ -377,6 +377,9 @@ export default function HomePage() {
               {collections.slice(0, 4).map((col) => (
                 <div
                   key={col._id}
+                  onClick={() =>
+                    router.push(`/all-products?collection=${col._id}`)
+                  }
                   className="group flex flex-col items-center cursor-pointer">
                   <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent group-hover:border-amber-600 transition-all duration-300 shadow-md group-hover:shadow-xl">
                     <img
@@ -397,6 +400,9 @@ export default function HomePage() {
               {collections.slice(4, 12).map((col) => (
                 <div
                   key={col._id}
+                  onClick={() =>
+                    router.push(`/all-products?collection=${col._id}`)
+                  }
                   className="hidden md:flex group flex-col items-center cursor-pointer">
                   <div className="relative w-36 h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent group-hover:border-amber-600 transition-all duration-300 shadow-md group-hover:shadow-xl">
                     <img
