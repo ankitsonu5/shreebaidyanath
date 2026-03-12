@@ -19,6 +19,7 @@ export default function HomePage() {
   const [quantities, setQuantities] = useState({});
   const [showAllCollections, setShowAllCollections] = useState(false);
   const [cartItems, setCartItems] = useState({});
+  const [recentBlogs, setRecentBlogs] = useState([]);
 
   const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -26,6 +27,7 @@ export default function HomePage() {
     fetchBanners();
     fetchCollections();
     fetchProducts();
+    fetchRecentBlogs();
     // Load cart items from localStorage
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     const cartMap = {};
@@ -78,6 +80,17 @@ export default function HomePage() {
       }
     } catch (err) {
       console.error("Products fetch failed:", err);
+    }
+  };
+
+  const fetchRecentBlogs = async () => {
+    try {
+      const res = await axios.get(`${API}/blogs`);
+      if (res.data.success) {
+        setRecentBlogs(res.data.blogs.slice(0, 4));
+      }
+    } catch (err) {
+      console.error("Blogs fetch failed:", err);
     }
   };
 
@@ -303,7 +316,6 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-
       {/* Banner Section — Full Width */}
       <section className="w-full">
         {heroBanners.length > 0 && (
@@ -504,67 +516,63 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-            <div className="lg:col-span-8 group cursor-pointer">
-              <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-6 shadow-lg">
-                <img
-                  src="/banner.webp"
-                  alt="10 Morning Drinks for Weight Loss"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
-              </div>
-              <div className="space-y-4">
-                <h3 className="text-2xl md:text-4xl font-bold text-red-700 leading-tight group-hover:text-red-800 transition-colors">
-                  10 Morning Drinks for Weight Loss
-                </h3>
-                <p className="text-xl md:text-2xl font-medium text-gray-700 border-l-4 border-amber-600 pl-4 py-1">
-                  Reduce Belly Fat Naturally at Home
-                </p>
-              </div>
-            </div>
-
-            <div className="lg:col-span-4 space-y-8 divide-y divide-gray-100">
-              {[
-                {
-                  title:
-                    "Broccoli Benefits: Nutritional Value, Health Advantages & How to Eat It Right",
-                  date: "FEB 14, 2026",
-                  img: "/banner.webp",
-                },
-                {
-                  title:
-                    "Ajwain Benefits: 7 Ayurvedic Health Benefits of Carom Seeds",
-                  date: "JAN 29, 2026",
-                  img: "/banner.webp",
-                },
-                {
-                  title:
-                    "How Dimag Paushtik Rasayan Supports Memory and Brain Nourishment",
-                  date: "JAN 27, 2026",
-                  img: "/banner.webp",
-                },
-              ].map((blog, idx) => (
-                <div
-                  key={idx}
-                  className={`pt-8 first:pt-0 group cursor-pointer flex gap-4`}>
-                  <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-20 rounded-lg overflow-hidden shadow-md">
+            {recentBlogs.length > 0 ? (
+              <>
+                <div 
+                  className="lg:col-span-8 group cursor-pointer"
+                  onClick={() => router.push(`/blog/${recentBlogs[0].slug}`)}>
+                  <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-6 shadow-lg">
                     <img
-                      src={blog.img}
-                      alt={blog.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      src={getImgUrl(recentBlogs[0].image)}
+                      alt={recentBlogs[0].title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
                   </div>
-                  <div className="flex-1 space-y-2">
-                    <h4 className="text-sm md:text-md font-bold text-gray-800 leading-tight line-clamp-3 group-hover:text-amber-700 transition-colors">
-                      {blog.title}
-                    </h4>
-                    <p className="text-xs uppercase tracking-wider font-semibold text-gray-400">
-                      {blog.date}
+                  <div className="space-y-4">
+                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight group-hover:text-amber-700 transition-colors">
+                      {recentBlogs[0].title}
+                    </h3>
+                    <p className="text-lg font-medium text-gray-600 border-l-4 border-amber-600 pl-4 py-1 line-clamp-2">
+                      {recentBlogs[0].description}
                     </p>
                   </div>
                 </div>
-              ))}
-            </div>
+
+                <div className="lg:col-span-4 space-y-8 divide-y divide-gray-100">
+                  {recentBlogs.slice(1).map((blog, idx) => (
+                    <div
+                      key={blog._id}
+                      onClick={() => router.push(`/blog/${blog.slug}`)}
+                      className={`pt-8 first:pt-0 group cursor-pointer flex gap-4`}>
+                      <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-20 rounded-lg overflow-hidden shadow-md">
+                        <img
+                          src={getImgUrl(blog.image)}
+                          alt={blog.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                      </div>
+                      <div className="flex-1 space-y-2">
+                        <h4 className="text-sm md:text-md font-bold text-gray-800 leading-tight line-clamp-3 group-hover:text-amber-700 transition-colors">
+                          {blog.title}
+                        </h4>
+                        <p className="text-xs uppercase tracking-wider font-semibold text-gray-400">
+                          {new Date(blog.createdAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="col-span-12 text-center py-10 text-gray-400">
+                No blogs available at the moment.
+              </div>
+            )}
           </div>
         </div>
       </section>

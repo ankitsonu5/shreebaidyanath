@@ -11,6 +11,7 @@ const productRoutes = require("./routes/productRoutes");
 const bannerRoutes = require("./routes/bannerRoutes");
 const userRoutes = require("./routes/userRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const blogRoutes = require("./routes/blogRoutes");
 
 const path = require("path");
 
@@ -25,6 +26,7 @@ app.use("/", productRoutes);
 app.use("/", bannerRoutes);
 app.use("/", userRoutes);
 app.use("/", orderRoutes);
+app.use("/", blogRoutes);
 
 app.listen(process.env.PORT || 8080, () => {
   console.log(`Server started on port ${process.env.PORT || 8080}`);

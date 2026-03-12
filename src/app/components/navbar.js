@@ -9,7 +9,7 @@ import { IoChevronDownOutline } from "react-icons/io5";
 import { HiMenu, HiX } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-// import ShopbyCollections from "./ShopbyCollections";
+import MobileBottomNav from "./MobileBottomNav";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -115,7 +115,7 @@ export default function Navbar() {
       </div> */}
 
       {/* Main Navbar */}
-      <nav className="bg-gray-100 px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 flex items-center justify-between relative">
+      <nav className="bg-gray-100 px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 flex items-center justify-between relative sticky top-0 z-50">
         {/* Logo */}
         <div
           onClick={() => router.push("/")}
@@ -271,156 +271,14 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Hamburger Menu - mobile/tablet only */}
-          <button
-            className="lg:hidden text-2xl cursor-pointer hover:text-red-600"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu">
-            {menuOpen ? <HiX /> : <HiMenu />}
-          </button>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
-          <ul className="flex flex-col text-[15px] font-medium text-black">
-            <li>
-              <button
-                onClick={() => {
-                  setMobCollectionsOpen(!mobCollectionsOpen);
-                  fetchCollections();
-                }}
-                className="w-full flex items-center justify-between px-6 py-3 border-b border-gray-100 hover:bg-gray-50 hover:text-red-600 transition-colors">
-                <span className="font-medium text-[15px]">
-                  Shop by Collections
-                </span>
-                <IoChevronDownOutline
-                  size={16}
-                  className={`transition-transform duration-300 ${mobCollectionsOpen ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              {/* Mobile Collections List */}
-              {mobCollectionsOpen && (
-                <div className="bg-gray-50 border-b border-gray-100 animate-in slide-in-from-top-2 duration-300">
-                  <div className="flex flex-col py-2">
-                    {collections.length > 0 ? (
-                      collections.map((col) => (
-                        <Link
-                          key={col._id}
-                          href={`/all-products?collection=${col._id}`}
-                          onClick={() => {
-                            setMenuOpen(false);
-                            setMobCollectionsOpen(false);
-                          }}
-                          className="px-10 py-2.5 text-sm text-gray-600 hover:text-red-600 transition-colors border-l-4 border-transparent hover:border-red-600">
-                          {col.collectionName}
-                        </Link>
-                      ))
-                    ) : (
-                      <div className="px-10 py-4 flex items-center gap-3">
-                        <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-                        <span className="text-sm text-gray-400">
-                          Loading collections...
-                        </span>
-                      </div>
-                    )}
-                    <Link
-                      href="/all-collections"
-                      onClick={() => setMenuOpen(false)}
-                      className="px-10 py-3 text-xs font-bold text-red-600 hover:bg-red-50 uppercase tracking-wider border-t border-gray-100 mt-2">
-                      View All Collections →
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </li>
-            <li>
-              <Link
-                href="#"
-                className="flex items-center justify-between px-6 py-3 border-b border-gray-100 hover:bg-gray-50 hover:text-red-600"
-                onClick={() => setMenuOpen(false)}>
-                Shop by Solutions <IoChevronDownOutline size={14} />
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="#"
-                className="block px-6 py-3 border-b border-gray-100 hover:bg-gray-50 hover:text-red-600"
-                onClick={() => setMenuOpen(false)}>
-                Immunity Booster
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="#"
-                className="block px-6 py-3 border-b border-gray-100 hover:bg-gray-50 hover:text-red-600"
-                onClick={() => setMenuOpen(false)}>
-                All Products
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="#"
-                className="block px-6 py-3 border-b border-gray-100 hover:bg-gray-50 hover:text-red-600"
-                onClick={() => setMenuOpen(false)}>
-                Blogs
-              </Link>
-            </li>
-            {user ? (
-              <>
-                <li>
-                  <Link
-                    href="/my-orders"
-                    className="block px-6 py-3 border-b border-gray-100 hover:bg-gray-50 hover:text-red-600"
-                    onClick={() => setMenuOpen(false)}>
-                    My Orders
-                  </Link>
-                </li>
-                {user.role === "admin" && (
-                  <li>
-                    <Link
-                      href="/admindashboard"
-                      className="block px-6 py-3 border-b border-gray-100 hover:bg-gray-50 hover:text-red-600"
-                      onClick={() => setMenuOpen(false)}>
-                      Admin Dashboard
-                    </Link>
-                  </li>
-                )}
-                <li>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setMenuOpen(false);
-                    }}
-                    className="w-full text-left px-6 py-3 border-b border-gray-100 hover:bg-red-50 text-red-600 font-medium cursor-pointer">
-                    Logout
-                  </button>
-                </li>
-              </>
-            ) : (
-              <li>
-                <Link
-                  href="/signin"
-                  className="block px-6 py-3 border-b border-gray-100 hover:bg-gray-50 hover:text-red-600"
-                  onClick={() => setMenuOpen(false)}>
-                  Sign In
-                </Link>
-              </li>
-            )}
-            {/* Track Order for mobile */}
-            <li className="md:hidden">
-              <Link
-                href="#"
-                className="flex items-center gap-2 px-6 py-3 hover:bg-gray-50 hover:text-red-600"
-                onClick={() => setMenuOpen(false)}>
-                <FaTruck />
-              </Link>
-            </li>
-          </ul>
-        </div>
-      )}
+      <MobileBottomNav
+        user={user}
+        cartCount={cartCount}
+        handleLogout={handleLogout}
+      />
     </>
   );
 }

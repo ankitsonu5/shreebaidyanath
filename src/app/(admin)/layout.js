@@ -59,6 +59,12 @@ export default function AdminLayout({ children }) {
       pathname.startsWith("/edit-banner")
     )
       return "Banners";
+    if (
+      pathname.startsWith("/blogs") ||
+      pathname.startsWith("/add-blog") ||
+      pathname.startsWith("/edit-blog")
+    )
+      return "Blogs";
     return "Admin";
   };
 
@@ -130,6 +136,14 @@ export default function AdminLayout({ children }) {
               setIsSidebarOpen(false);
             }}>
             Orders
+          </li>
+          <li
+            className={navItemClass(isActiveGroup(["/blogs", "/add-blog", "/edit-blog"]))}
+            onClick={() => {
+              router.push("/blogs");
+              setIsSidebarOpen(false);
+            }}>
+            Blogs
           </li>
           <li className="rounded">
             <button

@@ -124,14 +124,14 @@ export default function Footer() {
 
           {/* App & Social */}
           <div className="sm:text-left">
-            <h3 className="font-semibold mb-3 sm:mb-4 text-lg">
+            {/* <h3 className="font-semibold mb-3 sm:mb-4 text-lg">
               Download Our App
             </h3>
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
               alt="Google Play"
               className="w-36 sm:w-40 mb-4 sm:mx-0"
-            />
+            /> */}
 
             <h4 className="font-semibold mb-2">Follow Us</h4>
             <div className="flex flex-wrap sm:justify-start gap-3 sm:gap-4">
