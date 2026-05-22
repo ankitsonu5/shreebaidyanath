@@ -5,6 +5,8 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { FaArrowRight, FaPlus, FaMinus } from "react-icons/fa";
+import { navigateTo } from "../lib/navigation";
 
 export default function HomePage() {
   const router = useRouter();
@@ -39,12 +41,26 @@ export default function HomePage() {
 
   // Auto-slide banners
   useEffect(() => {
-    if (banners.length <= 1) return;
-    const interval = setInterval(() => {
-      setCurrentBanner((prev) => (prev + 1) % banners.length);
+    const heroBanners = banners.filter((b) => b.bannerType === "hero");
+    if (heroBanners.length <= 1) return;
+
+    const currentIdx = currentBanner % heroBanners.length;
+    const currentBannerItem = heroBanners[currentIdx];
+    const isVideo = currentBannerItem ? isVideoFile(currentBannerItem.bannerImage) : false;
+
+    if (isVideo) {
+      // For videos, we don't set a timer here.
+      // The video player will call onEnded to slide to the next banner.
+      return;
+    }
+
+    // For images, set a 4-second timeout to transition
+    const timer = setTimeout(() => {
+      setCurrentBanner((prev) => (prev + 1) % heroBanners.length);
     }, 4000);
-    return () => clearInterval(interval);
-  }, [banners]);
+
+    return () => clearTimeout(timer);
+  }, [currentBanner, banners]);
 
   const fetchBanners = async () => {
     try {
@@ -99,6 +115,11 @@ export default function HomePage() {
     return path.startsWith("http") ? path : `${API}/${path}`;
   };
 
+  const isVideoFile = (path) => {
+    if (!path) return false;
+    return /\.(mp4|webm|ogg|mov|mkv)$/i.test(path);
+  };
+
   const updateQty = (id, delta) => {
     setQuantities((prev) => {
       const current = prev[id] || 1;
@@ -120,7 +141,7 @@ export default function HomePage() {
       storedCart.push({
         _id: product._id,
         name: product.productName,
-        price: product.productPrice,
+        price: product.productSellingPrice || product.productPrice,
         image:
           product.productImage && product.productImage[0]
             ? getImgUrl(product.productImage[0])
@@ -139,7 +160,9 @@ export default function HomePage() {
     // Reset quantity selector for this product
     setQuantities((prev) => ({ ...prev, [product._id]: 1 }));
     // Notify navbar to update counter
-    window.dispatchEvent(new Event("cartUpdated"));
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("cartUpdated"));
+    }
   };
 
   const updateCartQty = (product, delta) => {
@@ -159,7 +182,9 @@ export default function HomePage() {
       cartMap[item._id] = item.quantity;
     });
     setCartItems(cartMap);
-    window.dispatchEvent(new Event("cartUpdated"));
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("cartUpdated"));
+    }
   };
 
   // Tag to slug mapping for View All pages
@@ -179,128 +204,105 @@ export default function HomePage() {
     const showViewAll = products.length > mobileLimit;
     const slug = tagSlugMap[tag] || tag;
 
+    const renderCard = (product) => {
+      const selling = product.productSellingPrice || product.productPrice;
+      const mrp = product.productMrpPrice || selling;
+      const discount = mrp > selling ? Math.round(((mrp - selling) / mrp) * 100) : 0;
+
+      return (
+        <div
+          key={product._id}
+          className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col relative group">
+          
+          {/* Discount Badge */}
+          {discount > 0 && (
+            <div className="absolute top-2 left-2 z-10 bg-red-600 text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded shadow-sm">
+              {discount}% OFF
+            </div>
+          )}
+
+          <div
+            onClick={() =>
+              (window.location.href = `/product/${product._id}`)
+            }
+            className="w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer">
+            <img
+              src={getImgUrl(
+                product.productImage && product.productImage[0],
+              )}
+              alt={product.productName}
+              className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+            />
+          </div>
+          <div className="p-3 flex flex-col flex-1">
+            <p
+              onClick={() =>
+                (window.location.href = `/product/${product._id}`)
+              }
+              className="text-sm md:text-base font-semibold text-gray-800 line-clamp-2 mb-1 cursor-pointer hover:text-amber-600 transition-colors">
+              {product.productName}
+            </p>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-amber-600 font-bold text-base md:text-lg">
+                ₹{selling}
+              </span>
+              {mrp > selling && (
+                <span className="text-xs text-gray-400 line-through">
+                  ₹{mrp}
+                </span>
+              )}
+            </div>
+            {/* Quantity Controls */}
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <button
+                onClick={() => updateQty(product._id, -1)}
+                className="w-8 h-8 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition">
+                <FaMinus size={10} />
+              </button>
+              <span className="text-sm font-semibold w-6 text-center">
+                {quantities[product._id] || 1}
+              </span>
+              <button
+                onClick={() => updateQty(product._id, 1)}
+                className="w-8 h-8 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition">
+                <FaPlus size={10} />
+              </button>
+            </div>
+            <button
+              onClick={() => addToCart(product)}
+              className="mt-auto w-full bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold py-2 rounded-md transition-colors cursor-pointer">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      );
+    };
+
     return (
       <section className="bg-gray-50 py-10 md:py-14">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 relative">
-            <h2 className="text-xl md:text-4xl font-medium text-gray-900">
+            <h2 className="text-xl md:text-4xl font-medium text-gray-900 px-10">
               {title}
             </h2>
             {showViewAll && (
               <a
                 href={`/products/${slug}`}
-                className="absolute right-0 top-1/2 -translate-y-1/2 text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer text-xs md:text-base">
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer text-xs md:text-base z-10">
                 View All{" "}
                 <span className="group-hover:translate-x-1 transition-transform">
-                  →
+                  <FaArrowRight size={14} />
                 </span>
               </a>
             )}
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-            {products.slice(0, mobileLimit).map((product) => (
-              <div
-                key={product._id}
-                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col">
-                <div
-                  onClick={() =>
-                    (window.location.href = `/product/${product._id}`)
-                  }
-                  className="w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer">
-                  <img
-                    src={getImgUrl(
-                      product.productImage && product.productImage[0],
-                    )}
-                    alt={product.productName}
-                    className="w-full h-full object-contain p-2 hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-3 flex flex-col flex-1">
-                  <p
-                    onClick={() =>
-                      (window.location.href = `/product/${product._id}`)
-                    }
-                    className="text-sm md:text-base font-semibold text-gray-800 line-clamp-2 mb-1 cursor-pointer hover:text-amber-600 transition-colors">
-                    {product.productName}
-                  </p>
-                  <p className="text-amber-600 font-bold text-base mb-2">
-                    ₹{product.productPrice}
-                  </p>
-                  {/* Quantity Controls */}
-                  <div className="flex items-center justify-center gap-3 mb-2">
-                    <button
-                      onClick={() => updateQty(product._id, -1)}
-                      className="w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-lg font-bold text-gray-700 cursor-pointer transition">
-                      −
-                    </button>
-                    <span className="text-sm font-semibold w-6 text-center">
-                      {quantities[product._id] || 1}
-                    </span>
-                    <button
-                      onClick={() => updateQty(product._id, 1)}
-                      className="w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-lg font-bold text-gray-700 cursor-pointer transition">
-                      +
-                    </button>
-                  </div>
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="mt-auto w-full bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold py-2 rounded-md transition-colors cursor-pointer">
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            ))}
+            {products.slice(0, mobileLimit).map((product) => renderCard(product))}
             {/* Remaining products only visible on md+ */}
             {products.slice(mobileLimit).map((product) => (
-              <div
-                key={product._id}
-                className="hidden md:flex bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex-col">
-                <div
-                  onClick={() =>
-                    (window.location.href = `/product/${product._id}`)
-                  }
-                  className="w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer">
-                  <img
-                    src={getImgUrl(
-                      product.productImage && product.productImage[0],
-                    )}
-                    alt={product.productName}
-                    className="w-full h-full object-contain p-2 hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-3 flex flex-col flex-1">
-                  <p
-                    onClick={() =>
-                      (window.location.href = `/product/${product._id}`)
-                    }
-                    className="text-sm md:text-base font-semibold text-gray-800 line-clamp-2 mb-1 cursor-pointer hover:text-amber-600 transition-colors">
-                    {product.productName}
-                  </p>
-                  <p className="text-amber-600 font-bold text-base mb-2">
-                    ₹{product.productPrice}
-                  </p>
-                  <div className="flex items-center justify-center gap-3 mb-2">
-                    <button
-                      onClick={() => updateQty(product._id, -1)}
-                      className="w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-lg font-bold text-gray-700 cursor-pointer transition">
-                      −
-                    </button>
-                    <span className="text-sm font-semibold w-6 text-center">
-                      {quantities[product._id] || 1}
-                    </span>
-                    <button
-                      onClick={() => updateQty(product._id, 1)}
-                      className="w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-lg font-bold text-gray-700 cursor-pointer transition">
-                      +
-                    </button>
-                  </div>
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="mt-auto w-full bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold py-2 rounded-md transition-colors cursor-pointer">
-                    Add to Cart
-                  </button>
-                </div>
+              <div key={product._id} className="hidden md:flex flex-col">
+                {renderCard(product)}
               </div>
             ))}
           </div>
@@ -319,22 +321,46 @@ export default function HomePage() {
       {/* Banner Section — Full Width */}
       <section className="w-full">
         {heroBanners.length > 0 && (
-          <div className="relative w-full overflow-hidden">
-            {heroBanners.map((banner, idx) => (
-              <div
-                key={banner._id}
-                className={`w-full transition-all duration-700 ${
-                  idx === currentBanner % heroBanners.length
-                    ? "relative opacity-100"
-                    : "absolute inset-0 opacity-0"
-                }`}>
-                <img
-                  src={getImgUrl(banner.bannerImage)}
-                  alt="banner"
-                  className="w-full h-auto block"
-                />
-              </div>
-            ))}
+          <div className="relative w-full h-[220px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[500px] overflow-hidden bg-gray-100">
+            {heroBanners.map((banner, idx) => {
+              const isVideo = isVideoFile(banner.bannerImage);
+              return (
+                <div
+                  key={banner._id}
+                  className={`w-full h-full transition-all duration-700 ${
+                    idx === currentBanner % heroBanners.length
+                      ? "relative opacity-100 z-10"
+                      : "absolute inset-0 opacity-0 z-0"
+                  }`}
+                >
+                  {isVideo ? (
+                    <video
+                      src={getImgUrl(banner.bannerImage)}
+                      className="w-full h-full object-cover block"
+                      autoPlay
+                      muted
+                      playsInline
+                      controls={false}
+                      controlsList="nodownload nofullscreen noremoteplayback"
+                      disablePictureInPicture
+                      disableRemotePlayback
+                      loop={heroBanners.length <= 1}
+                      onEnded={() => {
+                        if (heroBanners.length > 1) {
+                          setCurrentBanner((prev) => (prev + 1) % heroBanners.length);
+                        }
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={getImgUrl(banner.bannerImage)}
+                      alt="banner"
+                      className="w-full h-full object-cover block"
+                    />
+                  )}
+                </div>
+              );
+            })}
             {heroBanners.length > 1 && (
               <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                 {heroBanners.map((_, idx) => (
@@ -370,16 +396,17 @@ export default function HomePage() {
         <section className="bg-white py-12 md:py-20">
           <div className="container mx-auto px-4">
             <div className="text-center mb-2 relative">
-              <h2 className="text-xl md:text-4xl font-bold text-gray-900">
+              <h2 className="text-xl md:text-4xl font-bold text-gray-900 px-10">
                 Shop By Collections
               </h2>
               <div className="w-16 md:w-20 h-1 bg-amber-600 mx-auto rounded-full mt-2"></div>
               <a
                 href="/all-collections"
-                className="absolute right-0 top-1/2 -translate-y-1/2 text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer text-xs md:text-base">
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer text-xs md:text-base z-10"
+              >
                 View All{" "}
                 <span className="group-hover:translate-x-1 transition-transform">
-                  →
+                  <FaArrowRight size={14} />
                 </span>
               </a>
             </div>
@@ -390,9 +417,10 @@ export default function HomePage() {
                 <div
                   key={col._id}
                   onClick={() =>
-                    router.push(`/all-products?collection=${col._id}`)
+                    navigateTo(router, `/all-products?collection=${col._id}`)
                   }
-                  className="group flex flex-col items-center cursor-pointer">
+                  className="group flex flex-col items-center cursor-pointer"
+                >
                   <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent group-hover:border-amber-600 transition-all duration-300 shadow-md group-hover:shadow-xl">
                     <img
                       src={getImgUrl(
@@ -413,9 +441,10 @@ export default function HomePage() {
                 <div
                   key={col._id}
                   onClick={() =>
-                    router.push(`/all-products?collection=${col._id}`)
+                    navigateTo(router, `/all-products?collection=${col._id}`)
                   }
-                  className="hidden md:flex group flex-col items-center cursor-pointer">
+                  className="hidden md:flex group flex-col items-center cursor-pointer"
+                >
                   <div className="relative w-36 h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent group-hover:border-amber-600 transition-all duration-300 shadow-md group-hover:shadow-xl">
                     <img
                       src={getImgUrl(
@@ -441,18 +470,34 @@ export default function HomePage() {
         <section className="bg-white py-4 md:py-8">
           <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-0">
             <div className="flex flex-col sm:flex-row gap-3 md:gap-5 items-stretch justify-center">
-              {offerBanners.map((banner) => (
-                <div
-                  key={banner._id}
-                  className="cursor-pointer w-full sm:flex-1 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                  <img
-                    src={getImgUrl(banner.bannerImage)}
-                    alt="Offer"
-                    className="w-full h-32 sm:h-40 md:h-80 object-cover"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
+              {offerBanners.map((banner) => {
+                const isVideo = isVideoFile(banner.bannerImage);
+                return (
+                  <div
+                    key={banner._id}
+                    className="cursor-pointer w-full sm:flex-1 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    {isVideo ? (
+                      <video
+                        src={getImgUrl(banner.bannerImage)}
+                        className="w-full h-32 sm:h-40 md:h-80 object-cover"
+                        controls
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                      />
+                    ) : (
+                      <img
+                        src={getImgUrl(banner.bannerImage)}
+                        alt="Offer"
+                        className="w-full h-32 sm:h-40 md:h-80 object-cover"
+                        loading="lazy"
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -486,12 +531,14 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto shadow-2xl rounded-2xl overflow-hidden aspect-video">
             <iframe
+              suppressHydrationWarning={true}
               className="w-full h-full"
               src="https://www.youtube.com/embed/PWoNp1q8raU"
               title="YouTube video player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen></iframe>
+              allowFullScreen
+            ></iframe>
           </div>
         </div>
       </section>
@@ -499,28 +546,30 @@ export default function HomePage() {
       {/* Blogs Section */}
       <section className="bg-white py-16 border-t border-gray-100">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-end mb-10 pb-4 border-b border-gray-100">
-            <div className="flex-1 text-center translate-x-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-                Blogs
-              </h2>
-            </div>
-            <span
-              onClick={() => router.push("/blog")}
-              className="text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer">
+          <div className="relative mb-10 pb-4 border-b border-gray-100 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 px-10">
+              Blogs
+            </h2>
+            <a
+              href="/blog"
+              className="absolute right-0 top-1/2 -translate-y-1/2 text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer z-10"
+            >
               View all{" "}
               <span className="group-hover:translate-x-1 transition-transform">
-                →
+                <FaArrowRight size={14} />
               </span>
-            </span>
+            </a>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             {recentBlogs.length > 0 ? (
               <>
-                <div 
+                <div
                   className="lg:col-span-8 group cursor-pointer"
-                  onClick={() => router.push(`/blog/${recentBlogs[0].slug}`)}>
+                  onClick={() =>
+                    navigateTo(router, `/blog/${recentBlogs[0].slug}`)
+                  }
+                >
                   <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-6 shadow-lg">
                     <img
                       src={getImgUrl(recentBlogs[0].image)}
@@ -543,8 +592,9 @@ export default function HomePage() {
                   {recentBlogs.slice(1).map((blog, idx) => (
                     <div
                       key={blog._id}
-                      onClick={() => router.push(`/blog/${blog.slug}`)}
-                      className={`pt-8 first:pt-0 group cursor-pointer flex gap-4`}>
+                      onClick={() => navigateTo(router, `/blog/${blog.slug}`)}
+                      className={`pt-8 first:pt-0 group cursor-pointer flex gap-4`}
+                    >
                       <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-20 rounded-lg overflow-hidden shadow-md">
                         <img
                           src={getImgUrl(blog.image)}
@@ -557,11 +607,14 @@ export default function HomePage() {
                           {blog.title}
                         </h4>
                         <p className="text-xs uppercase tracking-wider font-semibold text-gray-400">
-                          {new Date(blog.createdAt).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
+                          {new Date(blog.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            },
+                          )}
                         </p>
                       </div>
                     </div>

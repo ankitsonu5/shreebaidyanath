@@ -9,10 +9,12 @@ const {
   getProductById,
   updateProduct,
   deleteProduct,
+  getShopBySolutions,
 } = require("../controllers/productController");
 
 router.post("/add-product", auth, upload.array("productImage", 10), createProduct);
 router.get("/products", getAllProduct);
+router.get("/shop-by-solutions", getShopBySolutions);
 router.get("/product/:id", getProductById);
 router.put("/product/:id", auth, upload.array("productImage", 10), updateProduct);
 router.delete("/product/:id", auth, deleteProduct);

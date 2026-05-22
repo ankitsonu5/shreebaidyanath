@@ -2,6 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { navigateTo } from "../../lib/navigation";
 
 export default function AddCollection() {
   const router = useRouter();
@@ -47,7 +48,7 @@ export default function AddCollection() {
         },
       );
       alert("Collection added successfully");
-      router.push("/collections");
+      navigateTo(router, "/collections");
     } catch (error) {
       console.log(error);
       alert("Failed to add collection");

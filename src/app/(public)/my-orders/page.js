@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
+import { FaClock, FaTruck, FaCheckCircle, FaTimesCircle, FaBoxOpen } from "react-icons/fa";
+import { FaChevronRight } from "react-icons/fa";
+import { navigateTo } from "../../lib/navigation";
 
 export default function MyOrdersPage() {
   const router = useRouter();
@@ -21,7 +24,7 @@ export default function MyOrdersPage() {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        router.push("/signin");
+        navigateTo(router, "/signin", { replace: true });
         return;
       }
       const res = await axios.get(`${API}/my-orders`, {
@@ -61,10 +64,10 @@ export default function MyOrdersPage() {
   };
 
   const statusIcons = {
-    Processing: "⏳",
-    Shipped: "🚚",
-    Delivered: "✅",
-    Cancelled: "❌",
+    Processing: <FaClock className="inline-block mr-1" />,
+    Shipped: <FaTruck className="inline-block mr-1" />,
+    Delivered: <FaCheckCircle className="inline-block mr-1" />,
+    Cancelled: <FaTimesCircle className="inline-block mr-1" />,
   };
 
   return (
@@ -76,11 +79,11 @@ export default function MyOrdersPage() {
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <span
-              onClick={() => router.push("/")}
+              onClick={() => navigateTo(router, "/")}
               className="hover:text-amber-600 cursor-pointer transition-colors">
               Home
             </span>
-            <span>›</span>
+            <FaChevronRight size={10} className="text-gray-400" />
             <span className="text-gray-800 font-medium">My Orders</span>
           </div>
         </div>
@@ -96,7 +99,9 @@ export default function MyOrdersPage() {
             <div className="text-center py-20 text-gray-500">Loading...</div>
           ) : orders.length === 0 ? (
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-              <p className="text-6xl mb-4">📦</p>
+              <div className="flex justify-center mb-6">
+                <FaBoxOpen className="text-gray-200 text-7xl" />
+              </div>
               <h2 className="text-xl font-semibold text-gray-800 mb-2">
                 No orders yet
               </h2>
@@ -104,7 +109,7 @@ export default function MyOrdersPage() {
                 You haven't placed any orders yet.
               </p>
               <button
-                onClick={() => router.push("/")}
+                onClick={() => navigateTo(router, "/")}
                 className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors cursor-pointer">
                 Start Shopping
               </button>

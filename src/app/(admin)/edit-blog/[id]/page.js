@@ -3,7 +3,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
-import TiptapEditor from "../../../components/TiptapEditor";
+import dynamic from "next/dynamic";
+import { navigateTo } from "../../../lib/navigation";
+
+const TiptapEditor = dynamic(() => import("../../../components/TiptapEditor"), { 
+  ssr: false, 
+  loading: () => <div className="h-[400px] bg-gray-50 animate-pulse rounded-xl" />
+});
 
 export default function EditBlog() {
   const router = useRouter();
@@ -95,7 +101,7 @@ export default function EditBlog() {
       });
       if (res.data.success) {
         alert("Blog updated successfully!");
-        router.push("/blogs");
+        navigateTo(router, "/blogs");
       }
     } catch (err) {
       console.error(err);

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { IoClose } from "react-icons/io5";
+import { navigateTo } from "../../../lib/navigation";
 
 export default function EditProduct() {
   const { id } = useParams();
@@ -11,7 +12,8 @@ export default function EditProduct() {
   const [form, setForm] = useState({
     productName: "",
     productDescription: "",
-    productPrice: "",
+    productMrpPrice: "",
+    productSellingPrice: "",
     productStock: "",
     productCollection: "",
     productTag: "",
@@ -48,7 +50,8 @@ export default function EditProduct() {
         setForm({
           productName: p.productName || "",
           productDescription: p.productDescription || "",
-          productPrice: p.productPrice || "",
+          productMrpPrice: p.productMrpPrice || "",
+          productSellingPrice: p.productSellingPrice || "",
           productStock: p.productStock || "",
           productCollection: p.productCollection || "",
           productTag: p.productTag || "",
@@ -100,7 +103,8 @@ export default function EditProduct() {
     const formData = new FormData();
     formData.append("productName", form.productName);
     formData.append("productDescription", form.productDescription);
-    formData.append("productPrice", form.productPrice);
+    formData.append("productMrpPrice", form.productMrpPrice);
+    formData.append("productSellingPrice", form.productSellingPrice);
     formData.append("productStock", form.productStock);
     if (form.productCollection) {
       formData.append("productCollection", form.productCollection);
@@ -125,7 +129,7 @@ export default function EditProduct() {
       );
       if (res.data.success) {
         alert("Product updated successfully");
-        router.push("/products");
+        navigateTo(router, "/products");
       }
     } catch (error) {
       console.error(error);
@@ -172,13 +176,25 @@ export default function EditProduct() {
           </div>
 
           {/* Price & Stock */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block mb-2 font-medium">Price (₹)</label>
+              <label className="block mb-2 font-medium">MRP (₹)</label>
               <input
                 type="number"
-                name="productPrice"
-                value={form.productPrice}
+                name="productMrpPrice"
+                value={form.productMrpPrice}
+                onChange={handleChange}
+                required
+                min="0"
+                className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">Selling Price (₹)</label>
+              <input
+                type="number"
+                name="productSellingPrice"
+                value={form.productSellingPrice}
                 onChange={handleChange}
                 required
                 min="0"

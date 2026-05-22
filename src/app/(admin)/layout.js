@@ -1,8 +1,10 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { FaBars, FaTimes } from "react-icons/fa";
 import { MdArrowDropDown } from "react-icons/md";
+import { navigateTo } from "../lib/navigation";
 
 export default function AdminLayout({ children }) {
   const router = useRouter();
@@ -14,7 +16,7 @@ export default function AdminLayout({ children }) {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
     if (!token || role !== "admin") {
-      router.push("/signin");
+      navigateTo(router, "/signin", { replace: true });
     }
   }, []);
 
@@ -36,6 +38,26 @@ export default function AdminLayout({ children }) {
 
   const isActive = (path) => pathname === path;
   const isActiveGroup = (paths) => paths.some((p) => pathname.startsWith(p));
+  
+  const handleNavigation = (path) => {
+    try {
+      if (path === pathname) {
+        setIsSidebarOpen(false);
+        return;
+      }
+      
+      // Close sidebar first on mobile to avoid layout shifts during navigation
+      if (isSidebarOpen) {
+        setIsSidebarOpen(false);
+      }
+      
+      navigateTo(router, path);
+    } catch (error) {
+      console.error("Admin navigation error:", error);
+      // Fallback for critical failure
+      navigateTo(null, path, { forceWindowNavigation: true });
+    }
+  };
 
   // Get page title from pathname
   const getPageTitle = () => {
@@ -65,6 +87,9 @@ export default function AdminLayout({ children }) {
       pathname.startsWith("/edit-blog")
     )
       return "Blogs";
+    if (pathname.startsWith("/consultations")) return "Expert Consultations";
+    if (pathname.startsWith("/contacts")) return "Contact Inquiries";
+    if (pathname.startsWith("/comments")) return "Blog Comments";
     return "Admin";
   };
 
@@ -77,8 +102,8 @@ export default function AdminLayout({ children }) {
       {!isSidebarOpen && (
         <button
           onClick={toggleSidebar}
-          className="md:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-2 rounded shadow-lg focus:outline-none">
-          ☰
+          className="md:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-3 rounded shadow-lg focus:outline-none transition-transform active:scale-90">
+          <FaBars size={20} />
         </button>
       )}
 
@@ -94,56 +119,56 @@ export default function AdminLayout({ children }) {
         className={`fixed md:static top-0 left-0 h-full w-64 bg-blue-700 text-white p-5 transform transition-transform duration-300 ease-in-out z-40 flex-shrink-0 overflow-y-auto ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}>
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-8 border-b border-blue-600 pb-4">
           <h1 className="text-2xl font-bold">Admin Panel</h1>
           <button
             onClick={toggleSidebar}
-            className="md:hidden text-white p-1 rounded focus:outline-none">
-            ✕
+            className="md:hidden text-white p-2 hover:bg-blue-800 rounded transition-colors focus:outline-none">
+            <FaTimes size={24} />
           </button>
         </div>
         <ul className="space-y-2">
           <li
             className={navItemClass(isActive("/admindashboard"))}
-            onClick={() => {
-              router.push("/admindashboard");
-              setIsSidebarOpen(false);
-            }}>
+            onClick={() => handleNavigation("/admindashboard")}>
             Dashboard
           </li>
           <li
-            className={navItemClass(false)}
-            onClick={() => {
-              router.push("/users");
-              setIsSidebarOpen(false);
-            }}>
+            className={navItemClass(isActive("/users"))}
+            onClick={() => handleNavigation("/users")}>
             Users
           </li>
           <li
             className={navItemClass(
               isActiveGroup(["/products", "/add-product", "/edit-product"]),
             )}
-            onClick={() => {
-              router.push("/products");
-              setIsSidebarOpen(false);
-            }}>
+            onClick={() => handleNavigation("/products")}>
             Products
           </li>
           <li
             className={navItemClass(isActiveGroup(["/orders"]))}
-            onClick={() => {
-              router.push("/orders");
-              setIsSidebarOpen(false);
-            }}>
+            onClick={() => handleNavigation("/orders")}>
             Orders
           </li>
           <li
             className={navItemClass(isActiveGroup(["/blogs", "/add-blog", "/edit-blog"]))}
-            onClick={() => {
-              router.push("/blogs");
-              setIsSidebarOpen(false);
-            }}>
+            onClick={() => handleNavigation("/blogs")}>
             Blogs
+          </li>
+          <li
+            className={navItemClass(isActiveGroup(["/consultations"]))}
+            onClick={() => handleNavigation("/consultations")}>
+            Consultations
+          </li>
+          <li
+            className={navItemClass(isActiveGroup(["/contacts"]))}
+            onClick={() => handleNavigation("/contacts")}>
+            Contact Inquiries
+          </li>
+          <li
+            className={navItemClass(isActiveGroup(["/comments"]))}
+            onClick={() => handleNavigation("/comments")}>
+            Blog Comments
           </li>
           <li className="rounded">
             <button
@@ -183,10 +208,7 @@ export default function AdminLayout({ children }) {
                       ? "bg-blue-800 font-semibold"
                       : "hover:bg-blue-600"
                   }`}
-                  onClick={() => {
-                    router.push("/collections");
-                    setIsSidebarOpen(false);
-                  }}>
+                  onClick={() => handleNavigation("/collections")}>
                   Collections
                 </p>
                 <p
@@ -195,10 +217,7 @@ export default function AdminLayout({ children }) {
                       ? "bg-blue-800 font-semibold"
                       : "hover:bg-blue-600"
                   }`}
-                  onClick={() => {
-                    router.push("/banners");
-                    setIsSidebarOpen(false);
-                  }}>
+                  onClick={() => handleNavigation("/banners")}>
                   Banners
                 </p>
               </div>
@@ -218,7 +237,7 @@ export default function AdminLayout({ children }) {
                 "token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
               document.cookie =
                 "role=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
-              router.push("/signin");
+              navigateTo(router, "/signin");
             }}>
             Logout
           </li>
@@ -229,7 +248,7 @@ export default function AdminLayout({ children }) {
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Topbar */}
         <div className="bg-white shadow p-4 flex justify-between items-center sticky top-0 z-20">
-          <h2 className="text-lg md:text-xl font-semibold pl-10 md:pl-0">
+          <h2 className="text-lg md:text-xl font-semibold pl-12 md:pl-0 truncate pr-4">
             {getPageTitle()}
           </h2>
           <div className="flex items-center gap-3">
@@ -237,7 +256,7 @@ export default function AdminLayout({ children }) {
           </div>
         </div>
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-6">{children}</div>
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">{children}</div>
       </div>
     </div>
   );

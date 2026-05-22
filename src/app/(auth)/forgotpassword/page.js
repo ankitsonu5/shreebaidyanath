@@ -1,24 +1,46 @@
 "use client";
-
+ 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-
+import axios from "axios";
+import { navigateTo } from "../../lib/navigation";
+ 
 export default function ForgotPassword() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+ 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+    setError("");
+ 
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/forgot-password`,
+        { email },
+      );
+      if (res.data.success) {
+        setMessage("Reset link sent! Please check your email.");
+        setEmail("");
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+ 
   return (
     <>
       <div className="bg-gray-100 flex items-center justify-center min-h-screen">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
           <div
-            onClick={() => router.push("/")}
+            onClick={() => navigateTo(router, "/")}
             className="flex items-center justify-center cursor-pointer mb-4">
-            {/* <Image
-            src=""
-            alt="Logo"
-            width={160}
-            height={50}
-            className="w-[120px] sm:w-[140px] md:w-[160px] h-auto"
-            priority
-          /> */}
             <h1 className="text-2xl font-bold text-red-600">Shree Baidyanath</h1>
           </div>
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
@@ -27,29 +49,41 @@ export default function ForgotPassword() {
           <p className="text-center text-gray-500 text-sm mb-6">
             Enter your email to receive reset link
           </p>
-          <form className="space-y-4">
-            {/* Email */}
+ 
+          {message && (
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 text-sm font-medium">
+              {message}
+            </div>
+          )}
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm font-medium">
+              {error}
+            </div>
+          )}
+ 
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label className="block text-gray-700 font-medium mb-1">
                 Email
               </label>
               <input
                 type="email"
-                name="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            {/* Button */}
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 cursor-pointer">
-              Send Reset Link
+              disabled={loading}
+              className={`w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 cursor-pointer disabled:bg-blue-300`}>
+              {loading ? "Sending..." : "Send Reset Link"}
             </button>
           </form>
-          {/* Back to login */}
           <p
-            onClick={() => router.push("/signin")}
+            onClick={() => navigateTo(router, "/signin")}
             className="text-center text-sm text-gray-500 mt-5 cursor-pointer">
             <span className="text-blue-600 cursor-pointer hover:underline">
               Back to Login

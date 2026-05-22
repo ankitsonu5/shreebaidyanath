@@ -6,6 +6,14 @@ import axios from "axios";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 import FilterUI from "../../components/filter";
+import {
+  FaShoppingCart,
+  FaChevronRight,
+  FaMinus,
+  FaPlus,
+  FaSearch,
+} from "react-icons/fa";
+import { navigateTo } from "../../lib/navigation";
 
 function AllProductsContent() {
   const router = useRouter();
@@ -22,34 +30,49 @@ function AllProductsContent() {
     sort: searchParams.get("sort") || "",
   });
 
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const params = {};
-      if (filters.productCollection)
-        params.productCollection = filters.productCollection;
-      if (filters.productTag) params.productTag = filters.productTag;
-      if (filters.search) params.search = filters.search;
-      if (filters.sort) params.sort = filters.sort;
-
-      const query = new URLSearchParams(params).toString();
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/products${query ? `?${query}` : ""}`,
-      );
-      const data = res.data;
-      if (data.success) {
-        setProducts(data.products);
-      }
-    } catch (err) {
-      console.error("Products fetch failed:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // 1. Sync URL parameters to React state reactively whenever URL searchParams change
   useEffect(() => {
+    setFilters({
+      productCollection: searchParams.get("collection") || "",
+      productTag: searchParams.get("tag") || "",
+      search: searchParams.get("search") || "",
+      sort: searchParams.get("sort") || "",
+    });
+  }, [searchParams]);
+
+  // 2. Fetch products whenever the filter state changes (either via page inputs or via URL synchronization)
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const params = {};
+        if (filters.productCollection)
+          params.productCollection = filters.productCollection;
+        if (filters.productTag) params.productTag = filters.productTag;
+        if (filters.search) params.search = filters.search;
+        if (filters.sort) params.sort = filters.sort;
+
+        const query = new URLSearchParams(params).toString();
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/products${query ? `?${query}` : ""}`,
+        );
+        if (res.data.success) {
+          setProducts(res.data.products || []);
+        }
+      } catch (err) {
+        console.error("Products fetch failed:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProducts();
-  }, []);
+  }, [
+    filters.productCollection,
+    filters.productTag,
+    filters.search,
+    filters.sort,
+  ]);
 
   const applyFilters = () => {
     const params = {};
@@ -60,9 +83,8 @@ function AllProductsContent() {
     if (filters.sort) params.sort = filters.sort;
 
     const query = new URLSearchParams(params).toString();
-    router.push(`/all-products${query ? `?${query}` : ""}`);
+    navigateTo(router, `/all-products${query ? `?${query}` : ""}`);
     setShowMobileFilter(false);
-    fetchProducts();
   };
 
   const resetFilters = () => {
@@ -72,32 +94,9 @@ function AllProductsContent() {
       search: "",
       sort: "",
     });
-    router.push("/all-products");
-    setTimeout(() => {
-      setFilters({
-        productCollection: "",
-        productTag: "",
-        search: "",
-        sort: "",
-      });
-    }, 0);
+    navigateTo(router, "/all-products");
+    setShowMobileFilter(false);
   };
-
-  useEffect(() => {
-    if (
-      !filters.productCollection &&
-      !filters.productTag &&
-      !filters.search &&
-      !filters.sort
-    ) {
-      fetchProducts();
-    }
-  }, [
-    filters.productCollection,
-    filters.productTag,
-    filters.search,
-    filters.sort,
-  ]);
 
   const getImgUrl = (path) => {
     if (!path) return "";
@@ -121,13 +120,15 @@ function AllProductsContent() {
       (item) => item._id === product._id,
     );
 
+    const price = product.productSellingPrice || product.productPrice;
+
     if (existingIndex >= 0) {
       storedCart[existingIndex].quantity += qty;
     } else {
       storedCart.push({
         _id: product._id,
         name: product.productName,
-        price: product.productPrice,
+        price: price,
         image:
           product.productImage && product.productImage[0]
             ? getImgUrl(product.productImage[0])
@@ -138,7 +139,11 @@ function AllProductsContent() {
 
     localStorage.setItem("cart", JSON.stringify(storedCart));
     setQuantities((prev) => ({ ...prev, [product._id]: 1 }));
-    window.dispatchEvent(new Event("cartUpdated"));
+    setTimeout(() => {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("cartUpdated"));
+      }
+    }, 0);
   };
 
   return (
@@ -151,11 +156,11 @@ function AllProductsContent() {
           <div className="max-w-7xl mx-auto px-4 py-3">
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <span
-                onClick={() => router.push("/")}
+                onClick={() => navigateTo(router, "/")}
                 className="hover:text-amber-600 cursor-pointer transition-colors">
                 Home
               </span>
-              <span>›</span>
+              <FaChevronRight size={10} className="text-gray-400" />
               <span className="text-gray-800 font-medium">All Products</span>
             </div>
           </div>
@@ -237,7 +242,9 @@ function AllProductsContent() {
                 </div>
               ) : products.length === 0 ? (
                 <div className="text-center py-20 bg-white rounded-xl border border-gray-100">
-                  <div className="text-5xl mb-4">🔍</div>
+                  <div className="flex justify-center mb-4">
+                    <FaSearch size={48} className="text-gray-200" />
+                  </div>
                   <p className="text-gray-500 text-lg mb-2">
                     No products found
                   </p>
@@ -252,87 +259,110 @@ function AllProductsContent() {
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
-                  {products.map((product) => (
-                    <div
-                      key={product._id}
-                      className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col group">
-                      {/* Image */}
+                  {products.map((product) => {
+                    const selling =
+                      product.productSellingPrice || product.productPrice;
+                    const mrp = product.productMrpPrice || selling;
+                    const discount =
+                      mrp > selling
+                        ? Math.round(((mrp - selling) / mrp) * 100)
+                        : 0;
+
+                    return (
                       <div
-                        onClick={() => router.push(`/product/${product._id}`)}
-                        className="w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer relative">
-                        <img
-                          src={getImgUrl(
-                            product.productImage && product.productImage[0],
-                          )}
-                          alt={product.productName}
-                          className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-500"
-                        />
-                        {product.productStock === 0 && (
-                          <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                            <span className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                              Out of Stock
-                            </span>
+                        key={product._id}
+                        className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col group relative">
+                        {/* Discount Badge */}
+                        {discount > 0 && (
+                          <div className="absolute top-2 left-2 z-10 bg-red-600 text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded shadow-sm">
+                            {discount}% OFF
                           </div>
                         )}
-                        {product.productTag && (
-                          <span className="absolute top-2 left-2 bg-amber-600 text-white text-[10px] md:text-xs px-2 py-0.5 rounded-full font-medium capitalize">
-                            {product.productTag}
-                          </span>
-                        )}
-                      </div>
 
-                      {/* Info */}
-                      <div className="p-3 md:p-4 flex flex-col flex-1">
-                        <p
-                          onClick={() => router.push(`/product/${product._id}`)}
-                          className="text-xs md:text-sm font-semibold text-gray-800 line-clamp-2 mb-1.5 cursor-pointer hover:text-amber-600 transition-colors leading-snug">
-                          {product.productName}
-                        </p>
-
-                        {product.productCollection &&
-                          typeof product.productCollection === "object" && (
-                            <p className="text-[10px] md:text-xs text-gray-400 mb-1.5">
-                              {product.productCollection.collectionName}
-                            </p>
-                          )}
-
-                        <p className="text-amber-600 font-bold text-sm md:text-lg mb-2">
-                          ₹{product.productPrice}
-                        </p>
-
-                        {product.productStock > 0 ? (
-                          <>
-                            <div className="flex items-center justify-center gap-2 md:gap-3 mb-2">
-                              <button
-                                onClick={() => updateQty(product._id, -1)}
-                                className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-base font-bold text-gray-700 cursor-pointer transition">
-                                −
-                              </button>
-                              <span className="text-sm font-semibold w-6 text-center">
-                                {quantities[product._id] || 1}
+                        {/* Image */}
+                        <div
+                          onClick={() =>
+                            navigateTo(router, `/product/${product._id}`)
+                          }
+                          className="w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer relative">
+                          <img
+                            src={getImgUrl(
+                              product.productImage && product.productImage[0],
+                            )}
+                            alt={product.productName}
+                            className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-500"
+                          />
+                          {product.productStock === 0 && (
+                            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                              <span className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                                Out of Stock
                               </span>
-                              <button
-                                onClick={() => updateQty(product._id, 1)}
-                                className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-base font-bold text-gray-700 cursor-pointer transition">
-                                +
-                              </button>
                             </div>
+                          )}
+                        </div>
+
+                        {/* Info */}
+                        <div className="p-3 md:p-4 flex flex-col flex-1">
+                          <p
+                            onClick={() =>
+                              navigateTo(router, `/product/${product._id}`)
+                            }
+                            className="text-xs md:text-sm font-semibold text-gray-800 line-clamp-2 mb-1.5 cursor-pointer hover:text-amber-600 transition-colors leading-snug">
+                            {product.productName}
+                          </p>
+
+                          {product.productCollection &&
+                            typeof product.productCollection === "object" && (
+                              <p className="text-[10px] md:text-xs text-gray-400 mb-1.5">
+                                {product.productCollection.collectionName}
+                              </p>
+                            )}
+
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-amber-600 font-bold text-sm md:text-lg">
+                              ₹{selling}
+                            </span>
+                            {mrp > selling && (
+                              <span className="text-[10px] md:text-xs text-gray-400 line-through">
+                                ₹{mrp}
+                              </span>
+                            )}
+                          </div>
+
+                          {product.productStock > 0 ? (
+                            <>
+                              <div className="flex items-center justify-center gap-2 md:gap-3 mb-2">
+                                <button
+                                  onClick={() => updateQty(product._id, -1)}
+                                  className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition">
+                                  <FaMinus size={10} />
+                                </button>
+                                <span className="text-sm font-semibold w-6 text-center">
+                                  {quantities[product._id] || 1}
+                                </span>
+                                <button
+                                  onClick={() => updateQty(product._id, 1)}
+                                  className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition">
+                                  <FaPlus size={10} />
+                                </button>
+                              </div>
+                              <button
+                                onClick={() => addToCart(product)}
+                                className="mt-auto w-full bg-amber-600 hover:bg-amber-700 text-white text-xs md:text-sm font-semibold py-2 md:py-2.5 rounded-lg transition-colors cursor-pointer">
+                                Add to Cart
+                              </button>
+                            </>
+                          ) : (
                             <button
-                              onClick={() => addToCart(product)}
-                              className="mt-auto w-full bg-amber-600 hover:bg-amber-700 text-white text-xs md:text-sm font-semibold py-2 md:py-2.5 rounded-lg transition-colors cursor-pointer">
-                              Add to Cart
+                              disabled
+                              className="mt-auto w-full bg-gray-300 text-gray-500 text-xs md:text-sm font-semibold py-2 md:py-2.5 rounded-lg cursor-not-allowed">
+                              Out of Stock
                             </button>
-                          </>
-                        ) : (
-                          <button
-                            disabled
-                            className="mt-auto w-full bg-gray-300 text-gray-500 text-xs md:text-sm font-semibold py-2 md:py-2.5 rounded-lg cursor-not-allowed">
-                            Out of Stock
-                          </button>
-                        )}
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </main>

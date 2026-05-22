@@ -10,6 +10,7 @@ import { HiMenu, HiX } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import MobileBottomNav from "./MobileBottomNav";
+import { navigateTo } from "../lib/navigation";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -19,8 +20,19 @@ export default function Navbar() {
   const [collections, setCollections] = useState([]);
   const [showCollections, setShowCollections] = useState(false);
   const [mobCollectionsOpen, setMobCollectionsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
   const router = useRouter();
   const API = process.env.NEXT_PUBLIC_API_URL;
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigateTo(router, `/all-products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+      setSearchQuery("");
+    }
+  };
 
   const updateUser = () => {
     try {
@@ -64,14 +76,10 @@ export default function Navbar() {
     document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     document.cookie = "user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     setUser(null);
-    window.dispatchEvent(new Event("userUpdated"));
-    router.push("/signin");
-  };
-
-  const updateCartCount = () => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    const total = storedCart.reduce((sum, item) => sum + item.quantity, 0);
-    setCartCount(total);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("userUpdated"));
+    }
+    navigateTo(router, "/signin");
   };
 
   const fetchCollections = async () => {
@@ -86,24 +94,34 @@ export default function Navbar() {
     }
   };
 
+  const updateCartCount = () => {
+    try {
+      const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const total = storedCart.reduce((sum, item) => sum + item.quantity, 0);
+      setCartCount(total);
+    } catch (err) {
+      console.error("Error updating cart count:", err);
+      setCartCount(0);
+    }
+  };
+
+  const handleUpdateEvents = () => {
+    updateCartCount();
+    updateUser();
+  };
+
   useEffect(() => {
     updateCartCount();
     updateUser();
-    // Listen for custom cartUpdated event
+    
     window.addEventListener("cartUpdated", updateCartCount);
     window.addEventListener("userUpdated", updateUser);
-    // Listen for storage changes from other tabs
-    window.addEventListener("storage", () => {
-      updateCartCount();
-      updateUser();
-    });
+    window.addEventListener("storage", handleUpdateEvents);
+
     return () => {
       window.removeEventListener("cartUpdated", updateCartCount);
       window.removeEventListener("userUpdated", updateUser);
-      window.removeEventListener("storage", () => {
-        updateCartCount();
-        updateUser();
-      });
+      window.removeEventListener("storage", handleUpdateEvents);
     };
   }, []);
 
@@ -118,17 +136,18 @@ export default function Navbar() {
       <nav className="bg-gray-100 px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 flex items-center justify-between relative sticky top-0 z-50">
         {/* Logo */}
         <div
-          onClick={() => router.push("/")}
-          className="flex items-center cursor-pointer">
-          {/* <Image
-            src=""
+          onClick={() => navigateTo(router, "/")}
+          className="flex items-center cursor-pointer"
+        >
+          <Image
+            src="/logo.png"
             alt="Logo"
-            width={160}
-            height={50}
-            className="w-[120px] sm:w-[140px] md:w-[160px] h-auto"
+            width={240}
+            height={60}
+            className="w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px] h-auto rounded-lg shadow-sm"
             priority
-          /> */}
-          <h1 className="text-2xl font-bold text-red-600">Shree Baidyanath</h1>
+          />
+          {/* <h1 className="text-2xl font-bold text-red-600">Shree Baidyanath</h1> */}
         </div>
 
         {/* Center Menu - Desktop */}
@@ -139,10 +158,12 @@ export default function Navbar() {
               setShowCollections(true);
               fetchCollections();
             }}
-            onMouseLeave={() => setShowCollections(false)}>
+            onMouseLeave={() => setShowCollections(false)}
+          >
             <Link
               href="/all-collections"
-              className={`flex items-center gap-1 hover:text-red-600 transition-colors ${showCollections ? "text-red-600" : ""}`}>
+              className={`flex items-center gap-1 hover:text-red-600 transition-colors ${showCollections ? "text-red-600" : ""}`}
+            >
               Shop by Collections{" "}
               <IoChevronDownOutline
                 size={14}
@@ -152,15 +173,16 @@ export default function Navbar() {
 
             {/* Dropdown Menu */}
             {showCollections && (
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white/80 backdrop-blur-md rounded-xl shadow-2xl py-4 z-50 border border-white/20 animate-in fade-in slide-in-from-top-2 duration-300">
-                <div className="flex flex-col max-h-[400px] overflow-y-auto scrollbar-hide">
+              <div className="absolute top-full left-0 pt-2 w-64 z-50 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-2xl py-4 border border-white/20 flex flex-col max-h-[400px] overflow-y-auto scrollbar-hide">
                   {collections.length > 0 ? (
                     collections.map((col) => (
                       <Link
                         key={col._id}
                         href={`/all-products?collection=${col._id}`}
                         onClick={() => setShowCollections(false)}
-                        className="px-6 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 border-l-4 border-transparent hover:border-red-600 font-medium">
+                        className="px-6 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 border-l-4 border-transparent hover:border-red-600 font-medium"
+                      >
                         {col.collectionName}
                       </Link>
                     ))
@@ -172,7 +194,8 @@ export default function Navbar() {
                   <Link
                     href="/all-collections"
                     onClick={() => setShowCollections(false)}
-                    className="mt-2 mx-6 py-2 text-xs text-center border-t border-gray-100 text-gray-400 hover:text-red-600 transition-colors uppercase tracking-wider font-bold">
+                    className="mt-2 mx-6 py-2 text-xs text-center border-t border-gray-100 text-gray-400 hover:text-red-600 transition-colors uppercase tracking-wider font-bold"
+                  >
                     View All Collections
                   </Link>
                 </div>
@@ -181,24 +204,30 @@ export default function Navbar() {
           </li>
           <li>
             <Link
-              href="#"
-              className="flex items-center gap-1 hover:text-red-600">
-              Shop by Solutions <IoChevronDownOutline size={14} />
+              href="/shop-by-solutions"
+              className="hover:text-red-600"
+            >
+              Shop by Solutions
             </Link>
           </li>
           <li>
-            <Link href="#" className="hover:text-red-600">
+            <Link href="/consultbyExpert" className="hover:text-red-600">
               Consult by Expert
             </Link>
           </li>
           <li>
-            <Link href="#" className="hover:text-red-600">
+            <Link href="/immunity-booster" className="hover:text-red-600">
               Immunity Booster
             </Link>
           </li>
           <li>
             <Link href="/all-products" className="hover:text-red-600">
               All Products
+            </Link>
+          </li>
+          <li>
+            <Link href="/contact" className="hover:text-red-600">
+              Contact Us
             </Link>
           </li>
           <li>
@@ -210,17 +239,52 @@ export default function Navbar() {
 
         {/* Right Icons */}
         <div className="flex items-center gap-2 sm:gap-4 text-black text-lg">
-          {/* Track Order - hidden on small screens */}
-          <div className="hidden md:flex items-center gap-2 text-sm cursor-pointer hover:text-red-600">
+          {/* <div className="hidden md:flex items-center gap-2 text-sm cursor-pointer hover:text-red-600">
             <FaTruck size={20} />
-          </div>
+          </div> */}
 
-          <FaSearch className="cursor-pointer hover:text-red-600 text-base sm:text-lg" />
+          {/* Expandable Search Input */}
+          <div className="relative flex items-center">
+            {searchOpen ? (
+              <form 
+                onSubmit={handleSearchSubmit} 
+                className="absolute right-0 top-1/2 -translate-y-1/2 bg-white px-3 py-2 shadow-xl border border-gray-200 rounded-xl z-50 flex items-center gap-2 w-48 sm:w-64 animate-in fade-in zoom-in-95 duration-200"
+              >
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full bg-white text-gray-800"
+                  autoFocus
+                />
+                <button type="submit" className="text-gray-600 hover:text-red-600 cursor-pointer p-1">
+                  <FaSearch size={14} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchOpen(false);
+                    setSearchQuery("");
+                  }}
+                  className="text-gray-400 hover:text-gray-600 cursor-pointer p-1 text-sm font-bold"
+                >
+                  ✕
+                </button>
+              </form>
+            ) : (
+              <FaSearch
+                onClick={() => setSearchOpen(true)}
+                className="cursor-pointer hover:text-red-600 text-base sm:text-lg"
+              />
+            )}
+          </div>
           {user ? (
             <div className="relative">
               <div
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center gap-1 cursor-pointer hover:text-red-600 text-sm font-medium">
+                className="flex items-center gap-1 cursor-pointer hover:text-red-600 text-sm font-medium"
+              >
                 <FaUser className="text-base sm:text-lg" />
                 <span className="hidden sm:inline">Profile</span>
               </div>
@@ -235,20 +299,23 @@ export default function Navbar() {
                   <Link
                     href="/my-orders"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                    onClick={() => setProfileOpen(false)}>
+                    onClick={() => setProfileOpen(false)}
+                  >
                     My Orders
                   </Link>
                   {user.role === "admin" && (
                     <Link
                       href="/admindashboard"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                      onClick={() => setProfileOpen(false)}>
+                      onClick={() => setProfileOpen(false)}
+                    >
                       Admin Dashboard
                     </Link>
                   )}
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100 mt-1 cursor-pointer">
+                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100 mt-1 cursor-pointer"
+                  >
                     Logout
                   </button>
                 </div>
@@ -256,13 +323,14 @@ export default function Navbar() {
             </div>
           ) : (
             <FaUser
-              onClick={() => router.push("/signin")}
+              onClick={() => navigateTo(router, "/signin")}
               className="cursor-pointer hover:text-red-600 text-base sm:text-lg"
             />
           )}
           <div
-            onClick={() => router.push("/cart")}
-            className="relative cursor-pointer">
+            onClick={() => navigateTo(router, "/cart")}
+            className="relative cursor-pointer"
+          >
             <FaShoppingBag className="hover:text-red-600 text-base sm:text-lg" />
             {cartCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md animate-pulse">
@@ -270,7 +338,6 @@ export default function Navbar() {
               </span>
             )}
           </div>
-
         </div>
       </nav>
 

@@ -58,12 +58,12 @@ export default function AdminBlogsPage() {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Manage Blogs</h1>
+    <div className="p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Manage Blogs</h1>
         <Link
           href="/add-blog"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition shadow-lg">
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 transition shadow-lg w-full sm:w-auto text-sm font-medium">
           <IoAdd size={20} />
           Add New Blog
         </Link>
@@ -74,34 +74,34 @@ export default function AdminBlogsPage() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-gray-50 border-y border-gray-100">
-                <th className="p-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Image</th>
-                <th className="p-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Title</th>
-                <th className="p-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Author</th>
-                <th className="p-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Date</th>
-                <th className="p-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Status</th>
-                <th className="p-4 text-right text-xs font-bold uppercase tracking-wider text-gray-500">Actions</th>
+                <th className="p-3 sm:p-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">Image</th>
+                <th className="p-3 sm:p-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">Title</th>
+                <th className="hidden md:table-cell p-3 sm:p-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">Author</th>
+                <th className="hidden lg:table-cell p-3 sm:p-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">Date</th>
+                <th className="hidden sm:table-cell p-3 sm:p-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">Status</th>
+                <th className="p-3 sm:p-4 text-right text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {blogs.length > 0 ? (
                 blogs.map((blog) => (
                   <tr key={blog._id} className="transition hover:bg-gray-50">
-                    <td className="p-4">
+                    <td className="p-3 sm:p-4">
                       <img
                         src={blog.image.startsWith("http") ? blog.image : `${API}/${blog.image.replace(/\\/g, "/")}`}
                         alt={blog.title}
-                        className="w-16 h-12 object-cover rounded shadow-sm"
+                        className="w-12 h-10 sm:w-16 sm:h-12 object-cover rounded shadow-sm"
                       />
                     </td>
-                    <td className="p-4">
-                      <div className="text-sm font-semibold text-gray-800 truncate max-w-[200px]">{blog.title}</div>
-                      <div className="text-xs text-gray-400">/{blog.slug}</div>
+                    <td className="p-3 sm:p-4">
+                      <div className="text-xs sm:text-sm font-semibold text-gray-800 truncate max-w-[120px] sm:max-w-[200px]">{blog.title}</div>
+                      <div className="text-[10px] sm:text-xs text-gray-400 truncate max-w-[120px] sm:max-w-[200px]">/{blog.slug}</div>
                     </td>
-                    <td className="p-4 text-sm text-gray-600">{blog.author}</td>
-                    <td className="p-4 text-sm text-gray-600">
+                    <td className="hidden md:table-cell p-3 sm:p-4 text-sm text-gray-600">{blog.author}</td>
+                    <td className="hidden lg:table-cell p-3 sm:p-4 text-sm text-gray-600">
                       {new Date(blog.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="p-4">
+                    <td className="hidden sm:table-cell p-3 sm:p-4">
                       <span
                         className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${
                           blog.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
@@ -109,26 +109,26 @@ export default function AdminBlogsPage() {
                         {blog.isActive ? "Active" : "Hidden"}
                       </span>
                     </td>
-                    <td className="p-4 text-right">
-                      <div className="flex justify-end gap-2">
+                    <td className="p-3 sm:p-4 text-right">
+                      <div className="flex justify-end gap-1 sm:gap-2">
                         <Link
                           href={`/blog/${blog.slug}`}
                           target="_blank"
-                          className="p-2 text-gray-400 hover:text-blue-500 transition"
+                          className="p-1.5 sm:p-2 text-gray-400 hover:text-blue-500 transition"
                           title="View Blog">
-                          <IoEye size={18} />
+                          <IoEye size={18} className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                         </Link>
                         <Link
                           href={`/edit-blog/${blog._id}`}
-                          className="p-2 text-gray-400 hover:text-green-500 transition"
+                          className="p-1.5 sm:p-2 text-gray-400 hover:text-green-500 transition"
                           title="Edit Blog">
-                          <IoPencil size={18} />
+                          <IoPencil size={18} className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                         </Link>
                         <button
                           onClick={() => deleteBlog(blog._id)}
-                          className="p-2 text-gray-400 hover:text-red-500 transition cursor-pointer"
+                          className="p-1.5 sm:p-2 text-gray-400 hover:text-red-500 transition cursor-pointer"
                           title="Delete Blog">
-                          <IoTrash size={18} />
+                          <IoTrash size={18} className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                         </button>
                       </div>
                     </td>
@@ -136,7 +136,7 @@ export default function AdminBlogsPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="p-8 text-center text-gray-400">
+                  <td colSpan="6" className="p-8 text-center text-gray-400 text-sm">
                     No blogs found. Click "Add New Blog" to get started.
                   </td>
                 </tr>

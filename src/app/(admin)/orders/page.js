@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { FaEye, FaTrash, FaEllipsisV } from "react-icons/fa";
+import { navigateTo } from "../../lib/navigation";
 
 export default function AdminOrdersPage() {
   const router = useRouter();
@@ -130,7 +132,7 @@ export default function AdminOrdersPage() {
                   </div>
 
                   {/* Amount + Status */}
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                     <div className="text-sm text-gray-600">
                       <p>
                         {order.orderItems?.length || 0} items •{" "}
@@ -147,7 +149,7 @@ export default function AdminOrdersPage() {
                       value={order.orderStatus}
                       disabled={order.orderStatus === "Cancelled"}
                       onChange={(e) => updateStatus(order._id, e.target.value)}
-                      className={`text-sm border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 transition-all ${order.orderStatus === "Cancelled" ? "bg-gray-50 cursor-not-allowed opacity-60" : "cursor-pointer"}`}>
+                      className={`text-sm border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 transition-all w-full sm:w-auto ${order.orderStatus === "Cancelled" ? "bg-gray-50 cursor-not-allowed opacity-60" : "cursor-pointer"}`}>
                       <option value="Processing">Processing</option>
                       <option value="Shipped">Shipped</option>
                       <option value="Delivered">Delivered</option>
@@ -163,23 +165,23 @@ export default function AdminOrdersPage() {
                       setOpenMenu(openMenu === order._id ? null : order._id)
                     }
                     className="text-gray-400 hover:text-black p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer text-xl">
-                    ⋮
+                    <FaEllipsisV size={18} />
                   </button>
 
                   {openMenu === order._id && (
-                    <div className="absolute right-0 mt-1 w-36 bg-white border rounded-lg shadow-xl z-50 py-1 border-gray-200">
+                    <div className="absolute right-0 mt-1 w-44 bg-white border rounded-lg shadow-xl z-50 py-1 border-gray-200">
                       <button
                         onClick={() => {
-                          router.push(`/view-order/${order._id}`);
+                          navigateTo(router, `/view-order/${order._id}`);
                           setOpenMenu(null);
                         }}
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-50 text-sm text-gray-700 cursor-pointer">
-                        👁 View Details
+                        className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 cursor-pointer flex items-center gap-3">
+                        <FaEye className="text-blue-500" /> View Details
                       </button>
                       <button
                         onClick={() => handleDelete(order._id)}
-                        className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 text-sm font-medium border-t border-gray-100 cursor-pointer">
-                        🗑 Delete
+                        className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 text-sm font-medium border-t border-gray-100 cursor-pointer flex items-center gap-3">
+                        <FaTrash className="text-red-500" /> Delete
                       </button>
                     </div>
                   )}

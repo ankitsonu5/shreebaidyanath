@@ -1,11 +1,13 @@
 const Product = require("../models/Products");
+const Collection = require("../models/Collections");
 
 exports.createProduct = async (req, res) => {
   try {
     const {
       productName,
       productDescription,
-      productPrice,
+      productMrpPrice,
+      productSellingPrice,
       productStock,
       productCollection,
       productTag,
@@ -17,7 +19,8 @@ exports.createProduct = async (req, res) => {
       productName,
       productDescription,
       productImage,
-      productPrice,
+      productMrpPrice,
+      productSellingPrice,
       productStock,
       productCollection: productCollection || undefined,
       productTag: productTag || null,
@@ -47,8 +50,8 @@ exports.getAllProduct = async (req, res) => {
     }
 
     let sortOption = {};
-    if (sort === "price_low") sortOption.productPrice = 1;
-    else if (sort === "price_high") sortOption.productPrice = -1;
+    if (sort === "price_low") sortOption.productSellingPrice = 1;
+    else if (sort === "price_high") sortOption.productSellingPrice = -1;
     else if (sort === "newest") sortOption._id = -1;
 
     const products = await Product.find(filter)
@@ -81,7 +84,8 @@ exports.updateProduct = async (req, res) => {
     const {
       productName,
       productDescription,
-      productPrice,
+      productMrpPrice,
+      productSellingPrice,
       productStock,
       productCollection,
       productTag,
@@ -89,7 +93,8 @@ exports.updateProduct = async (req, res) => {
     const updataData = {
       productName,
       productDescription,
-      productPrice,
+      productMrpPrice,
+      productSellingPrice,
       productStock,
       productCollection: productCollection || undefined,
       productTag: productTag || null,
@@ -118,6 +123,28 @@ exports.deleteProduct = async (req, res) => {
     const { id } = req.params;
     const product = await Product.findByIdAndDelete(id);
     res.status(200).json({ success: true, product });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.getShopBySolutions = async (req, res) => {
+  try {
+    // Find collections matching "Pure Herbs" or "Herbal Juices" (case-insensitive & handles potential typos/variations)
+    const collections = await Collection.find({
+      collectionName: { $in: [/pure herbs/i, /hurb.*juice/i, /herbal.*juice/i] }
+    });
+    const collectionIds = collections.map(c => c._id);
+
+    // Get products belonging to these collections OR tagged with "herbal"
+    const products = await Product.find({
+      $or: [
+        { productCollection: { $in: collectionIds } },
+        { productTag: "herbal" }
+      ]
+    }).populate("productCollection", "collectionName");
+
+    res.status(200).json({ success: true, products });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

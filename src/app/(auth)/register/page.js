@@ -1,10 +1,10 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import axios from "axios";
 
-export default function Register() {
+function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
@@ -173,5 +173,13 @@ export default function Register() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function Register() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen"><div className="text-gray-500">Loading...</div></div>}>
+      <RegisterForm />
+    </Suspense>
   );
 }

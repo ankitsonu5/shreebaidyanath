@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FaShoppingCart, FaChevronRight, FaMinus, FaPlus } from "react-icons/fa";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
+import { navigateTo } from "../../lib/navigation";
 
 export default function CartPage() {
   const router = useRouter();
@@ -16,7 +18,11 @@ export default function CartPage() {
   const saveCart = (updatedCart) => {
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-    window.dispatchEvent(new Event("cartUpdated"));
+    setTimeout(() => {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("cartUpdated"));
+      }
+    }, 0);
   };
 
   const increaseQty = (id) => {
@@ -53,17 +59,18 @@ export default function CartPage() {
           <div className="container mx-auto px-4 py-3">
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <span
-                onClick={() => router.push("/")}
+                onClick={() => navigateTo(router, "/")}
                 className="hover:text-amber-600 cursor-pointer transition-colors">
                 Home
               </span>
-              <span>›</span>
+              <FaChevronRight size={10} className="text-gray-400" />
               <span className="text-gray-800 font-medium">Cart</span>
             </div>
           </div>
         </div>
-      <div className="min-h-screen flex items-center justify-center text-xl font-semibold">
-        Your Cart is Empty 🛒
+      <div className="min-h-screen flex flex-col items-center justify-center text-xl font-semibold gap-4 text-gray-400">
+        <FaShoppingCart size={80} className="text-gray-200" />
+        Your Cart is Empty
       </div>
       <Footer />
       </>
@@ -78,11 +85,11 @@ export default function CartPage() {
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <span
-              onClick={() => router.push("/")}
+              onClick={() => navigateTo(router, "/")}
               className="hover:text-amber-600 cursor-pointer transition-colors">
               Home
             </span>
-            <span>›</span>
+            <FaChevronRight size={10} className="text-gray-400" />
             <span className="text-gray-800 font-medium">Cart</span>
           </div>
         </div>
@@ -106,28 +113,28 @@ export default function CartPage() {
                 <h2 className="font-semibold">{item.name}</h2>
                 <p className="text-gray-600">₹{item.price}</p>
 
-                <div className="flex items-center justify-center md:justify-start gap-3 mt-2">
+                <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
                   <button
                     onClick={() => decreaseQty(item._id)}
-                    className="px-3 py-1 bg-gray-200 rounded">
-                    -
+                    className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors cursor-pointer">
+                    <FaMinus size={12} />
                   </button>
 
-                  <span>{item.quantity}</span>
+                  <span className="font-bold w-6 text-center text-lg">{item.quantity}</span>
 
                   <button
                     onClick={() => increaseQty(item._id)}
-                    className="px-3 py-1 bg-gray-200 rounded">
-                    +
+                    className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors cursor-pointer">
+                    <FaPlus size={12} />
                   </button>
                 </div>
               </div>
 
-              <div className="text-center">
-                <p className="font-semibold">₹{item.price * item.quantity}</p>
+              <div className="text-center md:text-right border-t md:border-t-0 pt-3 md:pt-0 mt-3 md:mt-0">
+                <p className="font-bold text-lg text-gray-900">₹{item.price * item.quantity}</p>
                 <button
                   onClick={() => removeItem(item._id)}
-                  className="text-red-500 text-sm mt-2">
+                  className="text-red-500 hover:text-red-700 text-sm mt-3 font-medium transition-colors cursor-pointer">
                   Remove
                 </button>
               </div>
@@ -149,7 +156,7 @@ export default function CartPage() {
             <span>₹{totalPrice}</span>
           </div>
 
-          <button onClick={() => router.push("/checkout")}
+          <button onClick={() => navigateTo(router, "/checkout")}
           className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg cursor-pointer">
             Proceed to Checkout
           </button>

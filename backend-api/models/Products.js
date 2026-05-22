@@ -14,9 +14,14 @@ const productSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  productMrpPrice: {
+    type: Number,
+  },
+  productSellingPrice: {
+    type: Number,
+  },
   productPrice: {
     type: Number,
-    required: true,
   },
   productStock: {
     type: Number,

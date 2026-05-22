@@ -1,9 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { FaCamera } from "react-icons/fa";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import TiptapEditor from "../../components/TiptapEditor";
+import dynamic from "next/dynamic";
+import { navigateTo } from "../../lib/navigation";
+
+const TiptapEditor = dynamic(() => import("../../components/TiptapEditor"), { 
+  ssr: false,
+  loading: () => <div className="h-[400px] bg-gray-50 animate-pulse rounded-xl" />
+});
 
 export default function AddBlog() {
   const router = useRouter();
@@ -21,7 +28,10 @@ export default function AddBlog() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "title" && !form.slug) {
-      const slug = value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+      const slug = value
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
       setForm({ ...form, title: value, slug });
     } else {
       setForm({ ...form, [name]: value });
@@ -72,7 +82,7 @@ export default function AddBlog() {
       });
       if (res.data.success) {
         alert("Blog published successfully!");
-        router.push("/blogs");
+        navigateTo(router, "/blogs");
       }
     } catch (err) {
       console.error(err);
@@ -85,12 +95,16 @@ export default function AddBlog() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Write New Blog</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">
+          Write New Blog
+        </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Blog Title</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Blog Title
+              </label>
               <input
                 type="text"
                 name="title"
@@ -102,7 +116,9 @@ export default function AddBlog() {
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Slug (URL)</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Slug (URL)
+              </label>
               <input
                 type="text"
                 name="slug"
@@ -116,7 +132,9 @@ export default function AddBlog() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Short Description</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Short Description
+            </label>
             <textarea
               name="description"
               rows="2"
@@ -130,7 +148,9 @@ export default function AddBlog() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Featured Image</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Featured Image
+              </label>
               <div className="relative group border-2 border-dashed border-gray-200 rounded-xl p-4 hover:border-blue-400 transition cursor-pointer">
                 <input
                   type="file"
@@ -139,17 +159,23 @@ export default function AddBlog() {
                   className="absolute inset-0 opacity-0 cursor-pointer"
                 />
                 {preview ? (
-                  <img src={preview} alt="Preview" className="w-full h-40 object-cover rounded-lg" />
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="w-full h-40 object-cover rounded-lg"
+                  />
                 ) : (
                   <div className="h-40 flex flex-col items-center justify-center text-gray-400">
-                    <span className="text-3xl mb-2">📸</span>
+                    <FaCamera size={40} className="mb-2 text-gray-300" />
                     <span className="text-sm">Click to upload image</span>
                   </div>
                 )}
               </div>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Author Name</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Author Name
+              </label>
               <input
                 type="text"
                 name="author"
@@ -161,7 +187,9 @@ export default function AddBlog() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-4">Blog Content</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-4">
+              Blog Content
+            </label>
             <TiptapEditor
               content={form.content}
               onChange={handleContentChange}

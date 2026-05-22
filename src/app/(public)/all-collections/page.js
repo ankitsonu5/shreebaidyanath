@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { FaChevronRight } from "react-icons/fa";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
+import { navigateTo } from "../../lib/navigation";
 
 export default function CollectionsPage() {
   const router = useRouter();
@@ -44,11 +46,11 @@ export default function CollectionsPage() {
           <div className="container mx-auto px-4 py-3">
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <span
-                onClick={() => router.push("/all-collections")}
+                onClick={() => navigateTo(router, "/all-collections")}
                 className="hover:text-amber-600 cursor-pointer transition-colors">
                 Collections
               </span>
-              <span>›</span>
+              <FaChevronRight size={10} className="text-gray-400" />
               <span className="text-gray-800 font-medium">All Collections</span>
             </div>
           </div>
@@ -83,7 +85,7 @@ export default function CollectionsPage() {
                 <div
                   key={col._id}
                   onClick={() =>
-                    router.push(`/all-products?collection=${col._id}`)
+                    navigateTo(router, `/all-products?collection=${col._id}`)
                   }
                   className="group flex flex-col items-center cursor-pointer">
                   <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent group-hover:border-amber-600 transition-all duration-300 shadow-md group-hover:shadow-xl">

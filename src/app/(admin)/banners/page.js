@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FiEdit2 } from "react-icons/fi";
+import { navigateTo } from "../../lib/navigation";
 
 export default function BannersPage() {
   const router = useRouter();
@@ -75,6 +76,7 @@ export default function BannersPage() {
 
   const getImageUrl = (banner) => {
     const img = banner.bannerImage;
+    if (!img) return "";
     return img.startsWith("http")
       ? img
       : `${process.env.NEXT_PUBLIC_API_URL}/${img}`;
@@ -85,7 +87,7 @@ export default function BannersPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <h1 className="text-2xl font-bold text-gray-800">Banners</h1>
         <button
-          onClick={() => router.push("/add-banner")}
+          onClick={() => navigateTo(router, "/add-banner")}
           className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition shadow-md flex items-center gap-2 text-sm font-medium w-fit cursor-pointer">
           <span className="text-lg">+</span> Add Banner
         </button>
@@ -105,12 +107,21 @@ export default function BannersPage() {
                   ? "border-gray-100"
                   : "border-red-200 opacity-60"
               }`}>
-              <div className="h-48 w-full">
-                <img
-                  src={getImageUrl(banner)}
-                  alt="Banner"
-                  className="w-full h-full object-contain bg-gray-50"
-                />
+              <div className="h-48 w-full flex items-center justify-center bg-gray-50 overflow-hidden">
+                {banner.bannerImage && /\.(mp4|webm|ogg|mov|mkv)$/i.test(banner.bannerImage) ? (
+                  <video
+                    src={getImageUrl(banner)}
+                    className="w-full h-full object-contain"
+                    controls
+                    muted
+                  />
+                ) : (
+                  <img
+                    src={getImageUrl(banner)}
+                    alt="Banner"
+                    className="w-full h-full object-contain"
+                  />
+                )}
               </div>
               <div className="p-4">
                 {/* Top row: badges */}
@@ -143,7 +154,7 @@ export default function BannersPage() {
                     {banner.isActive ? "Deactivate" : "Activate"}
                   </button>
                   <button
-                    onClick={() => router.push(`/edit-banner/${banner._id}`)}
+                    onClick={() => navigateTo(router, `/edit-banner/${banner._id}`)}
                     className="text-sm font-medium px-3 py-1.5 rounded-lg cursor-pointer bg-blue-50 text-blue-700 hover:bg-blue-100 transition flex items-center gap-1">
                     <FiEdit2 size={14} /> Edit
                   </button>

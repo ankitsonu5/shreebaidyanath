@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
+import { navigateTo } from "../../../lib/navigation";
 
 export default function EditBanner() {
   const { id } = useParams();
@@ -72,7 +73,7 @@ export default function EditBanner() {
       );
       if (res.data.success) {
         alert("Banner updated successfully");
-        router.push("/banners");
+        navigateTo(router, "/banners");
       }
     } catch (error) {
       console.error(error);
@@ -115,24 +116,32 @@ export default function EditBanner() {
           </div>
 
           <div>
-            <label className="block mb-2 font-medium">Banner Image</label>
+            <label className="block mb-2 font-medium">Banner Image or Video</label>
             {preview && (
               <div className="mb-3 flex justify-center">
-                <img
-                  src={preview}
-                  alt="Preview"
-                  className="max-h-40 object-contain rounded-lg border border-gray-200 bg-gray-50 w-full"
-                />
+                {((imageFile && imageFile.type.startsWith("video/")) || (!imageFile && preview && /\.(mp4|webm|ogg|mov|mkv)$/i.test(preview))) ? (
+                  <video
+                    src={preview}
+                    controls
+                    className="max-h-40 object-contain rounded-lg border border-gray-200 bg-gray-50 w-full"
+                  />
+                ) : (
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="max-h-40 object-contain rounded-lg border border-gray-200 bg-gray-50 w-full"
+                  />
+                )}
               </div>
             )}
             <input
               type="file"
-              accept="image/*"
+              accept="image/*,video/*"
               onChange={handleImage}
               className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:cursor-pointer transition-all"
             />
             <p className="text-xs text-gray-400 mt-1">
-              Leave empty to keep current image
+              Leave empty to keep current image or video
             </p>
           </div>
 

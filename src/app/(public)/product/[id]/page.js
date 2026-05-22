@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Navbar from "../../../components/navbar";
 import Footer from "../../../components/footer";
+import { FaChevronRight, FaMinus, FaPlus } from "react-icons/fa";
+import { navigateTo } from "../../../lib/navigation";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -50,7 +52,7 @@ export default function ProductDetail() {
       storedCart.push({
         _id: product._id,
         name: product.productName,
-        price: product.productPrice,
+        price: product.productSellingPrice || product.productPrice,
         image:
           product.productImage && product.productImage[0]
             ? getImgUrl(product.productImage[0])
@@ -60,13 +62,16 @@ export default function ProductDetail() {
     }
 
     localStorage.setItem("cart", JSON.stringify(storedCart));
-    window.dispatchEvent(new Event("cartUpdated"));
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("cartUpdated"));
+    }
     setQuantity(1);
   };
 
   const buyNow = () => {
     addToCart();
-    router.push("/cart");
+    // Use a slight delay or just navigate; the navbar will pick it up on mount or via storage event
+    navigateTo(router, "/cart");
   };
 
   if (loading) {
@@ -94,7 +99,7 @@ export default function ProductDetail() {
               The product you're looking for doesn't exist.
             </p>
             <button
-              onClick={() => router.push("/")}
+              onClick={() => navigateTo(router, "/")}
               className="px-6 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition cursor-pointer">
               Go Home
             </button>
@@ -108,6 +113,10 @@ export default function ProductDetail() {
   const images = product.productImage || [];
   const isOutOfStock = product.productStock === 0;
 
+  const selling = product.productSellingPrice || product.productPrice;
+  const mrp = product.productMrpPrice || selling;
+  const discount = mrp > selling ? Math.round(((mrp - selling) / mrp) * 100) : 0;
+
   return (
     <>
       <Navbar />
@@ -118,11 +127,11 @@ export default function ProductDetail() {
           <div className="container mx-auto px-4 py-3">
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <span
-                onClick={() => router.push("/")}
+                onClick={() => navigateTo(router, "/")}
                 className="hover:text-amber-600 cursor-pointer transition-colors">
                 Home
               </span>
-              <span>›</span>
+              <FaChevronRight size={10} className="text-gray-400" />
               <span className="text-gray-800 font-medium truncate">
                 {product.productName}
               </span>
@@ -152,6 +161,11 @@ export default function ProductDetail() {
                   {isOutOfStock && (
                     <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-lg text-sm font-semibold">
                       Out of Stock
+                    </div>
+                  )}
+                  {discount > 0 && !isOutOfStock && (
+                    <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-bold shadow-md">
+                      {discount}% OFF
                     </div>
                   )}
                 </div>
@@ -187,11 +201,23 @@ export default function ProductDetail() {
                 </h1>
 
                 {/* Price */}
-                <div className="flex items-baseline gap-3 mb-4">
-                  <span className="text-2xl md:text-3xl font-bold text-amber-600">
-                    ₹{product.productPrice}
-                  </span>
-                  <span className="text-sm text-gray-500">
+                <div className="flex flex-col gap-1 mb-4">
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-2xl md:text-3xl font-bold text-amber-600">
+                      ₹{selling}
+                    </span>
+                    {discount > 0 && (
+                      <span className="text-lg text-gray-400 line-through">
+                        ₹{mrp}
+                      </span>
+                    )}
+                  </div>
+                  {discount > 0 && (
+                    <span className="text-sm font-semibold text-green-600">
+                      You Save: ₹{mrp - selling} ({discount}%)
+                    </span>
+                  )}
+                  <span className="text-xs text-gray-500 mt-1">
                     Inclusive of all taxes
                   </span>
                 </div>
@@ -220,9 +246,9 @@ export default function ProductDetail() {
                     <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
                       Description
                     </h3>
-                    <p className="text-gray-700 leading-relaxed text-sm md:text-base">
+                    <div className="text-gray-700 leading-relaxed text-sm md:text-base whitespace-pre-wrap">
                       {product.productDescription}
-                    </p>
+                    </div>
                   </div>
                 )}
 
@@ -242,8 +268,8 @@ export default function ProductDetail() {
                           onClick={() =>
                             setQuantity((prev) => Math.max(1, prev - 1))
                           }
-                          className="w-10 h-10 flex items-center justify-center text-lg font-bold text-gray-600 hover:bg-gray-100 transition cursor-pointer">
-                          −
+                          className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition cursor-pointer">
+                          <FaMinus size={12} />
                         </button>
                         <span className="w-12 h-10 flex items-center justify-center text-base font-semibold text-gray-800 border-x border-gray-200">
                           {quantity}
@@ -254,8 +280,8 @@ export default function ProductDetail() {
                               Math.min(product.productStock, prev + 1),
                             )
                           }
-                          className="w-10 h-10 flex items-center justify-center text-lg font-bold text-gray-600 hover:bg-gray-100 transition cursor-pointer">
-                          +
+                          className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition cursor-pointer">
+                          <FaPlus size={12} />
                         </button>
                       </div>
                     </div>

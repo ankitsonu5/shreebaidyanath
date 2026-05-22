@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 
-export default function Signin() {
+function SigninForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
@@ -168,5 +168,13 @@ export default function Signin() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function Signin() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen"><div className="text-gray-500">Loading...</div></div>}>
+      <SigninForm />
+    </Suspense>
   );
 }

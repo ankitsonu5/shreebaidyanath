@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
+import { navigateTo } from "../../../lib/navigation";
 
 export default function EditCollection() {
   const router = useRouter();
@@ -83,7 +84,7 @@ export default function EditCollection() {
 
       if (res.data.success) {
         alert("Collection updated successfully!");
-        router.push("/collections");
+        navigateTo(router, "/collections");
       }
     } catch (error) {
       alert("Failed to update collection");

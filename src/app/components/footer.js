@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 
 export default function Footer() {
   return (
     <footer className="bg-gray-100 text-gray-800">
       {/* Top Newsletter Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 border-b">
+      {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 border-b">
         <div className="flex flex-col sm:flex-row items-center justify-start gap-4 sm:gap-8">
           <p className="text-base sm:text-lg text-center sm:text-left sm:ml-0 md:ml-12">
             Signup today and get 10% off on your first purchase
@@ -23,7 +24,7 @@ export default function Footer() {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Footer Links Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
@@ -32,13 +33,18 @@ export default function Footer() {
           <div className="sm:text-left">
             <h3 className="font-semibold mb-3 sm:mb-4 text-lg">Contact Us</h3>
             <p className="text-sm leading-6">
-              B.H.U, DLW Road, Sundarpur, Newada, Varanasi, Uttar Pradesh
-              221005
+              B.H.U, BLW Road, Sundarpur, Newada, Varanasi, Uttar Pradesh 221005
             </p>
             <p className="mt-3 text-sm break-all sm:break-normal">
-              support@baidyanathayurved.com
+              <a
+                href="mailto:shreebaidyanathayurvedicclinic@gmail.com"
+                className="hover:text-red-600 transition-colors"
+              >
+                shreebaidyanathayurvedicclinic@gmail.com
+              </a>
             </p>
             <p className="text-sm">+91 94735 21779</p>
+            <p className="text-sm">+91 93363 25001</p>
           </div>
 
           {/* About */}
@@ -46,8 +52,8 @@ export default function Footer() {
             <h3 className="font-semibold mb-3 sm:mb-4 text-lg">About Us</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#" className="hover:text-red-600">
-                  Our Story
+                <Link href="/" className="hover:text-red-600">
+                  Home
                 </Link>
               </li>
               <li>
@@ -56,29 +62,29 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-red-600">
+                {/* <Link href="#" className="hover:text-red-600">
                   Privacy
-                </Link>
+                </Link> */}
               </li>
               <li>
-                <Link href="#" className="hover:text-red-600">
+                {/* <Link href="#" className="hover:text-red-600">
                   Terms of Service
-                </Link>
+                </Link> */}
               </li>
               <li>
-                <Link href="#" className="hover:text-red-600">
+                {/* <Link href="#" className="hover:text-red-600">
                   Refund Policy
-                </Link>
+                </Link> */}
               </li>
               <li>
-                <Link href="#" className="hover:text-red-600">
+                <Link href="/contact" className="hover:text-red-600">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-red-600">
+                {/* <Link href="#" className="hover:text-red-600">
                   Sitemap
-                </Link>
+                </Link> */}
               </li>
             </ul>
           </div>
@@ -90,32 +96,32 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#" className="hover:text-red-600">
+                <Link href="/my-orders" className="hover:text-red-600">
                   Shipping Info
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="#" className="hover:text-red-600">
                   Refunds &amp; Returns
                 </Link>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <Link href="#" className="hover:text-red-600">
                   Terms &amp; Conditions
                 </Link>
-              </li>
+              </li> */}
               <li>
-                <Link href="#" className="hover:text-red-600">
-                  Free Doctor Consultation
+                <Link href="/consultbyExpert" className="hover:text-red-600">
+                  Consultation by Expert
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="#" className="hover:text-red-600">
                   Track Order
                 </Link>
-              </li>
+              </li> */}
               <li>
-                <Link href="#" className="hover:text-red-600">
+                <Link href="/edit-user-info" className="hover:text-red-600">
                   My Account
                 </Link>
               </li>
@@ -133,19 +139,28 @@ export default function Footer() {
               className="w-36 sm:w-40 mb-4 sm:mx-0"
             /> */}
 
-            <h4 className="font-semibold mb-2">Follow Us</h4>
+            <h4 className="font-semibold mb-3">Follow Us</h4>
             <div className="flex flex-wrap sm:justify-start gap-3 sm:gap-4">
-              <Link href="#" className="hover:text-red-600">
-                Instagram
+              <Link
+                href="https://www.instagram.com/shreebaidyanathayurveda/"
+                className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-600 hover:bg-red-600 hover:text-white transition-all shadow-sm duration-300"
+                aria-label="Instagram"
+              >
+                <FaInstagram size={30} />
               </Link>
-              <Link href="#" className="hover:text-red-600">
-                Facebook
+              <Link
+                href="https://www.facebook.com/people/Shree-Baidyanath-Ayurvedic-Clinic/61584680139773/"
+                className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-600 hover:bg-red-600 hover:text-white transition-all shadow-sm duration-300"
+                aria-label="Facebook"
+              >
+                <FaFacebook size={30} />
               </Link>
-              <Link href="#" className="hover:text-red-600">
-                YouTube
-              </Link>
-              <Link href="#" className="hover:text-red-600">
-                LinkedIn
+              <Link
+                href="https://www.youtube.com/@ShreeBaidyanathAyurvedicClinic"
+                className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-600 hover:bg-red-600 hover:text-white transition-all shadow-sm duration-300"
+                aria-label="YouTube"
+              >
+                <FaYoutube size={30} />
               </Link>
             </div>
           </div>
@@ -154,7 +169,8 @@ export default function Footer() {
 
       {/* Bottom Copyright */}
       <div className="border-t border-gray-300 py-4 text-center text-xs sm:text-sm text-gray-500 px-4">
-        © 2026 Shree Baidyanath. All rights reserved.
+        © 2026 Shree Baidyanath Ayurvedic Clinic & Retail Varanasi. All rights
+        reserved.
       </div>
     </footer>
   );

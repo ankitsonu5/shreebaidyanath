@@ -3,25 +3,75 @@
 import React from "react";
 import {
   FaHome,
-  FaThLarge,
   FaUser,
   FaShoppingCart,
   FaSignInAlt,
   FaShoppingBag,
-  FaHeart,
   FaSignOutAlt,
   FaChevronRight,
-  FaInfoCircle,
-  FaBook,
-  FaStethoscope,
-  FaShieldAlt,
-  FaBox,
-  FaSearch,
 } from "react-icons/fa";
+
+// Premium inline SVG icons to replace emojis/generic icons
+const getSvgIcon = (label) => {
+  switch (label) {
+    case "Shop by Collections":
+      return (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="7" height="7" rx="1.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <rect x="14" y="3" width="7" height="7" rx="1.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <rect x="14" y="14" width="7" height="7" rx="1.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case "Shop by Solutions":
+      return (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      );
+    case "Consult by Expert":
+      return (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.5 5v5.5a6.5 6.5 0 0013 0V5" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 12v5a3 3 0 006 0v-1" />
+          <circle cx="17" cy="11" r="2.5" strokeWidth="2" fill="none" />
+          <circle cx="4.5" cy="4" r="1" fill="currentColor" />
+          <circle cx="17.5" cy="4" r="1" fill="currentColor" />
+        </svg>
+      );
+    case "Immunity Booster":
+      return (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+      );
+    case "All Products":
+      return (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+      );
+    case "Blogs":
+      return (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      );
+    case "Track Order":
+      return (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+};
 import { IoChevronDownOutline } from "react-icons/io5";
 import { HiMenu, HiX } from "react-icons/hi";
 import { useRouter, usePathname } from "next/navigation";
 import axios from "axios";
+import { navigateTo } from "../lib/navigation";
 
 export default function MobileBottomNav({ user, cartCount, handleLogout }) {
   const router = useRouter();
@@ -102,7 +152,7 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
                   className="w-full flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm border border-gray-100">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-green-50 text-green-600 flex items-center justify-center rounded-2xl">
-                      <FaThLarge className="w-6 h-6" />
+                      {getSvgIcon("Shop by Collections")}
                     </div>
                     <span className="font-bold text-gray-800 text-lg">
                       Shop by Collections
@@ -120,8 +170,17 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
                         <button
                           key={col._id}
                           onClick={() => {
-                            router.push(`/all-products?collection=${col._id}`);
-                            setIsMenuOpen(false);
+                            try {
+                              if (col._id) {
+                                navigateTo(
+                                  router,
+                                  `/all-products?collection=${col._id}`,
+                                );
+                                setIsMenuOpen(false);
+                              }
+                            } catch (err) {
+                              console.error("Navigation error:", err);
+                            }
                           }}
                           className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white text-gray-600 font-medium transition-all group">
                           <span>{col.collectionName}</span>
@@ -135,8 +194,12 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
                     )}
                     <button
                       onClick={() => {
-                        router.push("/all-collections");
-                        setIsMenuOpen(false);
+                        try {
+                          navigateTo(router, "/all-collections");
+                          setIsMenuOpen(false);
+                        } catch (err) {
+                          console.error("Navigation error:", err);
+                        }
                       }}
                       className="w-full mt-2 p-3 text-center text-green-600 font-bold text-sm bg-green-50 rounded-xl hover:bg-green-100 transition-colors">
                       View All Collections
@@ -150,37 +213,31 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
                 {[
                   {
                     label: "Shop by Solutions",
-                    icon: FaShieldAlt,
-                    path: "#",
+                    path: "/shop-by-solutions",
                     color: "bg-blue-50 text-blue-600",
                   },
                   {
                     label: "Consult by Expert",
-                    icon: FaStethoscope,
-                    path: "#",
+                    path: "consultbyExpert",
                     color: "bg-purple-50 text-purple-600",
                   },
                   {
                     label: "Immunity Booster",
-                    icon: FaHeart,
-                    path: "#",
+                    path: "/immunity-booster",
                     color: "bg-pink-50 text-pink-600",
                   },
                   {
                     label: "All Products",
-                    icon: FaShoppingBag,
                     path: "/all-products",
                     color: "bg-orange-50 text-orange-600",
                   },
                   {
                     label: "Blogs",
-                    icon: FaBook,
                     path: "/blog",
                     color: "bg-teal-50 text-teal-600",
                   },
                   {
                     label: "Track Order",
-                    icon: FaBox,
                     path: "#",
                     color: "bg-indigo-50 text-indigo-600",
                   },
@@ -188,13 +245,19 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
                   <button
                     key={item.label}
                     onClick={() => {
-                      router.push(item.path);
-                      setIsMenuOpen(false);
+                      try {
+                        if (item.path && item.path !== "#") {
+                          navigateTo(router, item.path);
+                          setIsMenuOpen(false);
+                        }
+                      } catch (err) {
+                        console.error("Navigation error:", err);
+                      }
                     }}
                     className="flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:bg-gray-50 transition-all group">
                     <div
                       className={`w-12 h-12 ${item.color} flex items-center justify-center rounded-2xl group-hover:scale-110 transition-transform`}>
-                      <item.icon className="w-6 h-6" />
+                      {getSvgIcon(item.label)}
                     </div>
                     <span className="font-bold text-gray-700 text-lg">
                       {item.label}
@@ -230,8 +293,14 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
                 <button
                   key={option.label}
                   onClick={() => {
-                    router.push(option.path);
-                    setIsProfileMenuOpen(false);
+                    try {
+                      if (option.path) {
+                        navigateTo(router, option.path);
+                        setIsProfileMenuOpen(false);
+                      }
+                    } catch (err) {
+                      console.error("Navigation error:", err);
+                    }
                   }}
                   className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-green-50 text-gray-700 font-medium transition-colors border border-transparent hover:border-green-100">
                   <div className="w-10 h-10 bg-green-50 text-green-600 flex items-center justify-center rounded-full">
@@ -263,9 +332,17 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
             return (
               <button
                 key={item.label}
-                onClick={
-                  item.onClick || (() => item.path && router.push(item.path))
-                }
+                onClick={() => {
+                  try {
+                    if (item.onClick) {
+                      item.onClick();
+                    } else if (item.path && item.path !== "#") {
+                      navigateTo(router, item.path);
+                    }
+                  } catch (err) {
+                    console.error("Navigation error:", err);
+                  }
+                }}
                 className={`flex flex-col items-center justify-center gap-1 transition-all duration-300 relative ${
                   isActive || item.isActive
                     ? "text-green-600 scale-110"

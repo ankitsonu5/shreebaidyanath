@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 import axios from "axios";
+import { FaChevronRight } from "react-icons/fa";
+import { navigateTo } from "../../lib/navigation";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -25,14 +27,14 @@ export default function CheckoutPage() {
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     if (storedCart.length === 0) {
-      router.push("/cart");
+      navigateTo(router, "/cart", { replace: true });
       return;
     }
     setCart(storedCart);
 
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/signin?redirect=/");
+      navigateTo(router, "/signin?redirect=/", { replace: true });
       return;
     }
 
@@ -107,10 +109,12 @@ export default function CheckoutPage() {
       const res = await axios.post(`${API}/order`, orderData);
 
       if (res.data.success) {
-        alert("Order placed successfully! 🎉");
+        alert("Order placed successfully!");
         localStorage.removeItem("cart");
-        window.dispatchEvent(new Event("cartUpdated"));
-        router.push("/");
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("cartUpdated"));
+        }
+        navigateTo(router, "/");
       }
     } catch (error) {
       console.error("Error placing order:", error);
@@ -132,17 +136,17 @@ export default function CheckoutPage() {
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <span
-              onClick={() => router.push("/")}
+              onClick={() => navigateTo(router, "/")}
               className="hover:text-amber-600 cursor-pointer transition-colors">
               Home
             </span>
-            <span>›</span>
+            <FaChevronRight size={10} className="text-gray-400" />
             <span
-              onClick={() => router.push("/cart")}
+              onClick={() => navigateTo(router, "/cart")}
               className="hover:text-amber-600 cursor-pointer transition-colors">
               Cart
             </span>
-            <span>›</span>
+            <FaChevronRight size={10} className="text-gray-400" />
             <span className="text-gray-800 font-medium">Checkout</span>
           </div>
         </div>

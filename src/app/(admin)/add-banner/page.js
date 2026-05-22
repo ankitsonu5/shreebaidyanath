@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { navigateTo } from "../../lib/navigation";
 
 export default function AddBanner() {
   const router = useRouter();
@@ -43,7 +44,7 @@ export default function AddBanner() {
       );
       if (res.data.success) {
         alert("Banner added successfully");
-        router.push("/banners");
+        navigateTo(router, "/banners");
       }
     } catch (error) {
       console.error(error);
@@ -86,21 +87,29 @@ export default function AddBanner() {
           </div>
 
           <div>
-            <label className="block mb-2 font-medium">Banner Image</label>
+            <label className="block mb-2 font-medium">Banner Image or Video</label>
             <input
               type="file"
-              accept="image/*"
+              accept="image/*,video/*"
               onChange={handleImage}
               required
               className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:cursor-pointer transition-all"
             />
             {preview && (
               <div className="mt-3 flex justify-center">
-                <img
-                  src={preview}
-                  alt="Preview"
-                  className="max-h-40 object-contain rounded-lg border border-gray-200 bg-gray-50 w-full"
-                />
+                {imageFile && imageFile.type.startsWith("video/") ? (
+                  <video
+                    src={preview}
+                    controls
+                    className="max-h-40 object-contain rounded-lg border border-gray-200 bg-gray-50 w-full"
+                  />
+                ) : (
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="max-h-40 object-contain rounded-lg border border-gray-200 bg-gray-50 w-full"
+                  />
+                )}
               </div>
             )}
           </div>
