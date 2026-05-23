@@ -149,3 +149,32 @@ exports.getShopBySolutions = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.getSearchSuggestions = async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q || q.trim() === "") {
+      return res.status(200).json({ success: true, products: [], collections: [] });
+    }
+
+    const searchRegex = new RegExp(q.trim(), "i");
+
+    // Fetch up to 5 matching products
+    const products = await Product.find({ productName: { $regex: searchRegex } })
+      .select("productName productImage productSellingPrice productPrice")
+      .limit(5);
+
+    // Fetch up to 5 matching collections
+    const collections = await Collection.find({ collectionName: { $regex: searchRegex } })
+      .select("collectionName collectionImage")
+      .limit(5);
+
+    res.status(200).json({
+      success: true,
+      products,
+      collections,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

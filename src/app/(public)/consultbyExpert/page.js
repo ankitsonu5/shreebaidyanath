@@ -52,8 +52,9 @@ export default function Consult() {
           {/* Doctor Info */}
           <div className="bg-white p-6 rounded-2xl shadow-md">
             <img
-              src="/doctor.jpg"
+              src="/doctor.png"
               alt="Doctor"
+              // style={{ width: "200px", height: "200px" }}
               className="w-40 h-40 rounded-full mx-auto mb-4"
             />
             <h2 className="text-xl font-semibold text-center">
@@ -67,14 +68,14 @@ export default function Consult() {
               <div className="flex items-start gap-3">
                 <FaMapMarkerAlt className="text-green-600 mt-1 flex-shrink-0" />
                 <p>
-                  <strong>Address:</strong>Sundarpur, Newada- B.H.U, BLW Road,
+                  <strong>Address:</strong> Sundarpur, Newada- B.H.U, BLW Road,
                   Varanasi, Uttar Pradesh 221005
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <FaPhone className="text-green-600 flex-shrink-0" />
                 <p>
-                  <strong>Phone:</strong> +91 94735 21779
+                  <strong>Phone:</strong> +91 94735 21779, +91 93363 25001
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -129,11 +130,13 @@ export default function Consult() {
                 value={form.problem}
                 onChange={handleChange}
                 required
-                className="w-full p-3 border rounded-lg"></textarea>
+                className="w-full p-3 border rounded-lg"
+              ></textarea>
 
               <button
                 type="submit"
-                className="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 cursor-pointer">
+                className="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 cursor-pointer"
+              >
                 Submit Request
               </button>
             </form>
