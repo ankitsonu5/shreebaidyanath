@@ -38,20 +38,47 @@ export default function CheckoutPage() {
       return;
     }
 
-    const storedUser = localStorage.getItem("user");
-    if (storedUser && storedUser !== "undefined") {
+    // Fetch live profile details to auto-fill the form
+    const fetchUserProfile = async () => {
       try {
-        const u = JSON.parse(storedUser);
-        setFormData((prev) => ({
-          ...prev,
-          name: u.name || "",
-          email: u.email || "",
-        }));
+        const res = await axios.get(`${API}/user/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res.data.success && res.data.user) {
+          const u = res.data.user;
+          setFormData({
+            name: u.name || "",
+            email: u.email || "",
+            phone: u.phone || "",
+            address: u.address || "",
+            city: u.city || "",
+            state: u.state || "",
+            pincode: u.pincode || "",
+          });
+        }
       } catch (err) {
-        console.error("Error parsing user data:", err);
+        console.error("Error fetching user profile for checkout:", err);
+        // Fallback to localStorage if API fails
+        const storedUser = localStorage.getItem("user");
+        if (storedUser && storedUser !== "undefined") {
+          try {
+            const u = JSON.parse(storedUser);
+            setFormData((prev) => ({
+              ...prev,
+              name: u.name || "",
+              email: u.email || "",
+            }));
+          } catch (parseErr) {
+            console.error("Error parsing user data fallback:", parseErr);
+          }
+        }
       }
-    }
-  }, []);
+    };
+
+    fetchUserProfile();
+  }, [router, API]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -125,7 +152,7 @@ export default function CheckoutPage() {
   };
 
   const inputClass =
-    "w-full border border-gray-200 px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all text-sm";
+    "w-full border border-gray-200 px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all text-sm text-gray-800";
 
   return (
     <>
