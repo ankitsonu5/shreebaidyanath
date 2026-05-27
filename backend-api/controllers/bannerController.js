@@ -23,7 +23,7 @@ exports.createBanner = async (req, res) => {
 // Public — only active banners
 exports.getAllBanners = async (req, res) => {
   try {
-    const banners = await Banner.find({ isActive: true }).sort({
+    const banners = await Banner.find({ isActive: { $ne: false } }).sort({
       bannerOrder: 1,
       createdAt: -1,
     });

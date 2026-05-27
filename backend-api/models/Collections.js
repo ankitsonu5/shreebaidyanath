@@ -9,7 +9,13 @@ const collectionsSchema = new mongoose.Schema({
     collectionImage: [
         {
             type: String,
-            required: true
+            required: true,
+            set: function(val) {
+                if (typeof val === 'string') {
+                    return val.replace(/\\/g, '/');
+                }
+                return val;
+            }
         }
     ],
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User"},    

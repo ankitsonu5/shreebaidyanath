@@ -1,4 +1,9 @@
 const mongoose = require("mongoose");
+const dns = require("dns");
+
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder("ipv4first");
+}
 
 const connectDB = async () => {
   try {

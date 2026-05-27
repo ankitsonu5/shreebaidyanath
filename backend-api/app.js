@@ -26,8 +26,8 @@ const port = process.env.PORT || 8080;
 
 connectDB()
   .then(() => {
-    const seedData = require("./utils/seeder");
-    seedData();
+    // const seedData = require("./utils/seeder");
+    // seedData();
 
     const server = app.listen(port, () => {
       console.log(`Server started on port ${port}`);

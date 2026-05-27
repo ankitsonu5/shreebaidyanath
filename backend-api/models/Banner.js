@@ -4,6 +4,12 @@ const bannerSchema = new mongoose.Schema({
   bannerImage: {
     type: String,
     required: true,
+    set: function(val) {
+      if (typeof val === 'string') {
+        return val.replace(/\\/g, '/');
+      }
+      return val;
+    }
   },
   bannerType: {
     type: String,
