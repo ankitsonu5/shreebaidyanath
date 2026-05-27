@@ -1,9 +1,51 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 
 export default function Footer() {
+  const [user, setUser] = useState(null);
+
+  const updateUser = () => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
+
+      if (
+        token &&
+        storedUser &&
+        storedUser !== "undefined" &&
+        storedUser !== "null"
+      ) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          if (parsedUser && typeof parsedUser === "object") {
+            setUser(parsedUser);
+            return;
+          }
+        } catch (err) {
+          console.error("Error parsing user data in footer:", err);
+        }
+      }
+      setUser(null);
+    } catch (err) {
+      console.error("Error accessing session data in footer:", err);
+      setUser(null);
+    }
+  };
+
+  useEffect(() => {
+    updateUser();
+    window.addEventListener("userUpdated", updateUser);
+    window.addEventListener("storage", updateUser);
+
+    return () => {
+      window.removeEventListener("userUpdated", updateUser);
+      window.removeEventListener("storage", updateUser);
+    };
+  }, []);
+
   return (
     <footer className="bg-gray-100 text-gray-800">
       {/* Top Newsletter Section */}
@@ -120,11 +162,13 @@ export default function Footer() {
                   Track Order
                 </Link>
               </li> */}
-              <li>
-                <Link href="/edit-user-info" className="hover:text-red-600">
-                  My Account
-                </Link>
-              </li>
+              {user && (
+                <li>
+                  <Link href="/edit-user-info" className="hover:text-red-600">
+                    My Account
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 
