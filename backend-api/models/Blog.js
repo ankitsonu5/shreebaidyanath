@@ -16,7 +16,13 @@ const blogSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        required: true
+        required: true,
+        set: function(val) {
+            if (typeof val === 'string') {
+                return val.replace(/\\/g, '/');
+            }
+            return val;
+        }
     },
     slug: {
         type: String,

@@ -167,7 +167,7 @@ exports.createOrder = async (req, res) => {
             <div style="background-color: #f7fafc; padding: 30px 20px; text-align: center; border-top: 1px solid #edf2f7;">
               <h4 style="margin: 0 0 10px; color: #2d3748;">SUPPORT CONTACT</h4>
               <p style="margin: 5px 0; font-size: 14px; color: #4a5568;">
-                Email: <a href="mailto:support@shreebaidyanath.com" style="color: #c53030; text-decoration: none;">support@shreebaidyanath.com</a>
+                Email: <a href="mailto:support@shreebaidyanath.com" style="color: #c53030; text-decoration: none;">shreebaidyanathayurvedicclinic@gmail.com</a>
               </p>
               <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
                 <p style="margin: 0; font-size: 18px; color: #2d3748; font-weight: 600;">THANK YOU FOR YOUR PURCHASE!</p>

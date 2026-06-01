@@ -117,6 +117,7 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
 
   const profileOptions = [
     { label: "My Orders", icon: FaShoppingBag, path: "/my-orders" },
+    { label: "Edit Profile", icon: FaUser, path: "/edit-user-info" },
   ];
 
   return (
