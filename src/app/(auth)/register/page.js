@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, Suspense } from "react";
+import Image from "next/image";
 import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
@@ -61,17 +62,14 @@ function RegisterForm() {
           <div
             onClick={() => router.push("/")}
             className="flex items-center justify-center cursor-pointer mb-4">
-            {/* <Image
-            src=""
+            <Image
+            src="/logo.png"
             alt="Logo"
             width={160}
             height={50}
             className="w-[120px] sm:w-[140px] md:w-[160px] h-auto"
             priority
-          /> */}
-            <h1 className="text-2xl font-bold text-red-600">
-              Shree Baidyanath
-            </h1>
+          />
           </div>
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
             Create Account
