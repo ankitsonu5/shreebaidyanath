@@ -54,10 +54,13 @@ function ResetPasswordForm() {
     return (
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-center">
         <h2 className="text-xl font-bold text-red-600 mb-4">Invalid Link</h2>
-        <p className="text-gray-600 mb-6">The reset link is missing or invalid.</p>
+        <p className="text-gray-600 mb-6">
+          The reset link is missing or invalid.
+        </p>
         <button
           onClick={() => navigateTo(router, "/forgotpassword")}
-          className="text-blue-600 hover:underline">
+          className="text-blue-600 hover:underline"
+        >
           Go back to Forgot Password
         </button>
       </div>
@@ -68,7 +71,8 @@ function ResetPasswordForm() {
     <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
       <div
         onClick={() => navigateTo(router, "/")}
-        className="flex items-center justify-center cursor-pointer mb-4">
+        className="flex items-center justify-center cursor-pointer mb-4"
+      >
         <h1 className="text-2xl font-bold text-red-600">Shree Baidyanath</h1>
       </div>
       <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
@@ -107,7 +111,8 @@ function ResetPasswordForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none">
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
               {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
             </button>
           </div>
@@ -128,13 +133,12 @@ function ResetPasswordForm() {
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none">
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
               {showConfirmPassword ? (
-                <FaEyeSlash size={18}
-              />
+                <FaEyeSlash size={18} />
               ) : (
-                <FaEye size={18}
-              />
+                <FaEye size={18} />
               )}
             </button>
           </div>
@@ -142,7 +146,8 @@ function ResetPasswordForm() {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 cursor-pointer disabled:bg-blue-300`}>
+          className={`w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 cursor-pointer disabled:bg-blue-300`}
+        >
           {loading ? "Resetting..." : "Reset Password"}
         </button>
       </form>

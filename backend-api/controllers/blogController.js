@@ -11,7 +11,7 @@ exports.createBlog = async (req, res) => {
       description,
       slug,
       image,
-      author
+      author,
     });
 
     await blog.save();
@@ -43,7 +43,9 @@ exports.getBlogBySlug = async (req, res) => {
   try {
     const blog = await Blog.findOne({ slug: req.params.slug });
     if (!blog) {
-      return res.status(404).json({ success: false, message: "Blog not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
     }
     res.status(200).json({ success: true, blog });
   } catch (error) {
@@ -67,7 +69,9 @@ exports.updateBlog = async (req, res) => {
 
     const blog = await Blog.findByIdAndUpdate(id, updateData, { new: true });
     if (!blog) {
-      return res.status(404).json({ success: false, message: "Blog not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
     }
     res.status(200).json({ success: true, blog });
   } catch (error) {
@@ -80,9 +84,13 @@ exports.deleteBlog = async (req, res) => {
     const { id } = req.params;
     const blog = await Blog.findByIdAndDelete(id);
     if (!blog) {
-      return res.status(404).json({ success: false, message: "Blog not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
     }
-    res.status(200).json({ success: true, message: "Blog deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Blog deleted successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

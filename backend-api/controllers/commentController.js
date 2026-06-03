@@ -10,7 +10,8 @@ exports.createComment = async (req, res) => {
     if (!name || !email || !comment) {
       return res.status(400).json({
         success: false,
-        message: "Please fill in all required fields: name, email, and comment.",
+        message:
+          "Please fill in all required fields: name, email, and comment.",
       });
     }
 
@@ -59,7 +60,10 @@ exports.getBlogComments = async (req, res) => {
       });
     }
 
-    const comments = await Comment.find({ blogId: blog._id, isActive: true }).sort({
+    const comments = await Comment.find({
+      blogId: blog._id,
+      isActive: true,
+    }).sort({
       createdAt: -1,
     });
 

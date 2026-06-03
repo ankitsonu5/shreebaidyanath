@@ -82,16 +82,23 @@ export default function AdminUsersPage() {
 
             <tbody>
               {users.map((user) => {
-                const isSelf = 
-                  (currentUser?._id && user._id && currentUser._id === user._id) || 
-                  (currentUser?.id && user._id && currentUser.id === user._id) ||
-                  (currentUser?._id && user.id && currentUser._id === user.id) ||
+                const isSelf =
+                  (currentUser?._id &&
+                    user._id &&
+                    currentUser._id === user._id) ||
+                  (currentUser?.id &&
+                    user._id &&
+                    currentUser.id === user._id) ||
+                  (currentUser?._id &&
+                    user.id &&
+                    currentUser._id === user.id) ||
                   (currentUser?.id && user.id && currentUser.id === user.id);
 
                 return (
                   <tr
                     key={user._id}
-                    className="border-b transition hover:bg-gray-50">
+                    className="border-b transition hover:bg-gray-50"
+                  >
                     <td className="p-3 sm:p-4 text-sm font-medium">
                       {user.name}
                       {isSelf && (
@@ -105,7 +112,8 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="p-3 sm:p-4 text-sm">
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${user.role === "admin" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"}`}>
+                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${user.role === "admin" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"}`}
+                      >
                         {user.role}
                       </span>
                     </td>
@@ -122,14 +130,16 @@ export default function AdminUsersPage() {
                             });
                           }
                         }}
-                        className="px-3 py-1 rounded text-xs sm:text-sm shadow-sm transition bg-blue-600 text-white hover:bg-blue-700 active:scale-95 cursor-pointer">
+                        className="px-3 py-1 rounded text-xs sm:text-sm shadow-sm transition bg-blue-600 text-white hover:bg-blue-700 active:scale-95 cursor-pointer"
+                      >
                         View
                       </button>
 
                       <button
                         onClick={() => deleteUser(user._id)}
                         disabled={isSelf}
-                        className={`px-3 py-1 rounded text-xs sm:text-sm shadow-sm transition ${isSelf ? "bg-gray-100 text-gray-300 cursor-not-allowed" : "bg-red-600 text-white hover:bg-red-700 active:scale-95 cursor-pointer"}`}>
+                        className={`px-3 py-1 rounded text-xs sm:text-sm shadow-sm transition ${isSelf ? "bg-gray-100 text-gray-300 cursor-not-allowed" : "bg-red-600 text-white hover:bg-red-700 active:scale-95 cursor-pointer"}`}
+                      >
                         Delete
                       </button>
                     </td>

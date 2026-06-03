@@ -157,7 +157,8 @@ function AllProductsContent() {
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <span
                 onClick={() => navigateTo(router, "/")}
-                className="hover:text-amber-600 cursor-pointer transition-colors">
+                className="hover:text-amber-600 cursor-pointer transition-colors"
+              >
                 Home
               </span>
               <FaChevronRight size={10} className="text-gray-400" />
@@ -172,7 +173,8 @@ function AllProductsContent() {
           style={{
             background:
               "linear-gradient(135deg, #fffbeb 0%, #ffffff 50%, #fef3c7 100%)",
-          }}>
+          }}
+        >
           <div className="max-w-7xl mx-auto px-4 text-center">
             <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">
               All Products
@@ -188,12 +190,14 @@ function AllProductsContent() {
         <div className="md:hidden bg-white border-b border-gray-100 px-4 py-3">
           <button
             onClick={() => setShowMobileFilter(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-amber-50 text-amber-700 rounded-lg border border-amber-200 text-sm font-medium cursor-pointer hover:bg-amber-100 transition-colors">
+            className="flex items-center gap-2 px-4 py-2.5 bg-amber-50 text-amber-700 rounded-lg border border-amber-200 text-sm font-medium cursor-pointer hover:bg-amber-100 transition-colors"
+          >
             <svg
               className="w-4 h-4"
               fill="none"
               stroke="currentColor"
-              viewBox="0 0 24 24">
+              viewBox="0 0 24 24"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -253,7 +257,8 @@ function AllProductsContent() {
                   </p>
                   <button
                     onClick={resetFilters}
-                    className="px-6 py-2.5 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition cursor-pointer font-medium">
+                    className="px-6 py-2.5 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition cursor-pointer font-medium"
+                  >
                     Clear Filters
                   </button>
                 </div>
@@ -271,7 +276,8 @@ function AllProductsContent() {
                     return (
                       <div
                         key={product._id}
-                        className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col group relative">
+                        className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col group relative"
+                      >
                         {/* Discount Badge */}
                         {discount > 0 && (
                           <div className="absolute top-2 left-2 z-10 bg-red-600 text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded shadow-sm">
@@ -284,7 +290,8 @@ function AllProductsContent() {
                           onClick={() =>
                             navigateTo(router, `/product/${product._id}`)
                           }
-                          className="w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer relative">
+                          className="w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer relative"
+                        >
                           <img
                             src={getImgUrl(
                               product.productImage && product.productImage[0],
@@ -307,7 +314,8 @@ function AllProductsContent() {
                             onClick={() =>
                               navigateTo(router, `/product/${product._id}`)
                             }
-                            className="text-xs md:text-sm font-semibold text-gray-800 line-clamp-2 mb-1.5 cursor-pointer hover:text-amber-600 transition-colors leading-snug">
+                            className="text-xs md:text-sm font-semibold text-gray-800 line-clamp-2 mb-1.5 cursor-pointer hover:text-amber-600 transition-colors leading-snug"
+                          >
                             {product.productName}
                           </p>
 
@@ -334,7 +342,8 @@ function AllProductsContent() {
                               <div className="flex items-center justify-center gap-2 md:gap-3 mb-2">
                                 <button
                                   onClick={() => updateQty(product._id, -1)}
-                                  className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition">
+                                  className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition"
+                                >
                                   <FaMinus size={10} />
                                 </button>
                                 <span className="text-sm font-semibold w-6 text-center">
@@ -342,20 +351,23 @@ function AllProductsContent() {
                                 </span>
                                 <button
                                   onClick={() => updateQty(product._id, 1)}
-                                  className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition">
+                                  className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition"
+                                >
                                   <FaPlus size={10} />
                                 </button>
                               </div>
                               <button
                                 onClick={() => addToCart(product)}
-                                className="mt-auto w-full bg-amber-600 hover:bg-amber-700 text-white text-xs md:text-sm font-semibold py-2 md:py-2.5 rounded-lg transition-colors cursor-pointer">
+                                className="mt-auto w-full bg-amber-600 hover:bg-amber-700 text-white text-xs md:text-sm font-semibold py-2 md:py-2.5 rounded-lg transition-colors cursor-pointer"
+                              >
                                 Add to Cart
                               </button>
                             </>
                           ) : (
                             <button
                               disabled
-                              className="mt-auto w-full bg-gray-300 text-gray-500 text-xs md:text-sm font-semibold py-2 md:py-2.5 rounded-lg cursor-not-allowed">
+                              className="mt-auto w-full bg-gray-300 text-gray-500 text-xs md:text-sm font-semibold py-2 md:py-2.5 rounded-lg cursor-not-allowed"
+                            >
                               Out of Stock
                             </button>
                           )}
@@ -375,7 +387,8 @@ function AllProductsContent() {
             {/* Backdrop */}
             <div
               className="absolute inset-0 bg-black bg-opacity-50 transition-opacity"
-              onClick={() => setShowMobileFilter(false)}></div>
+              onClick={() => setShowMobileFilter(false)}
+            ></div>
 
             {/* Drawer */}
             <div className="absolute left-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl overflow-y-auto">
@@ -384,12 +397,14 @@ function AllProductsContent() {
                 <h3 className="text-lg font-bold text-gray-900">Filters</h3>
                 <button
                   onClick={() => setShowMobileFilter(false)}
-                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors cursor-pointer">
+                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
+                >
                   <svg
                     className="w-5 h-5 text-gray-500"
                     fill="none"
                     stroke="currentColor"
-                    viewBox="0 0 24 24">
+                    viewBox="0 0 24 24"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -426,7 +441,8 @@ export default function AllProducts() {
         <div className="flex justify-center items-center min-h-screen">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-600"></div>
         </div>
-      }>
+      }
+    >
       <AllProductsContent />
     </Suspense>
   );

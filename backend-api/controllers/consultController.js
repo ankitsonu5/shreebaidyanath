@@ -106,9 +106,13 @@ exports.deleteConsultation = async (req, res) => {
     const { id } = req.params;
     const consultation = await Consult.findByIdAndDelete(id);
     if (!consultation) {
-      return res.status(404).json({ success: false, message: "Consultation not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Consultation not found" });
     }
-    res.status(200).json({ success: true, message: "Consultation deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Consultation deleted successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

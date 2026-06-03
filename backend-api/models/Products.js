@@ -12,12 +12,12 @@ const productSchema = new mongoose.Schema({
     {
       type: String,
       required: true,
-      set: function(val) {
-        if (typeof val === 'string') {
-          return val.replace(/\\/g, '/');
+      set: function (val) {
+        if (typeof val === "string") {
+          return val.replace(/\\/g, "/");
         }
         return val;
-      }
+      },
     },
   ],
   productMrpPrice: {

@@ -32,11 +32,16 @@ export default function Consult() {
           problem: "",
         });
       } else {
-        alert("Failed to submit request: " + (res.data.message || "Unknown error"));
+        alert(
+          "Failed to submit request: " + (res.data.message || "Unknown error"),
+        );
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to submit request: " + (error.response?.data?.message || error.message));
+      alert(
+        "Failed to submit request: " +
+          (error.response?.data?.message || error.message),
+      );
     }
   };
 

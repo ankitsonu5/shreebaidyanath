@@ -7,9 +7,17 @@ import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
-import { 
-  FaBold, FaItalic, FaUnderline, FaListUl, 
-  FaListOl, FaLink, FaImage, FaUndo, FaRedo, FaCode
+import {
+  FaBold,
+  FaItalic,
+  FaUnderline,
+  FaListUl,
+  FaListOl,
+  FaLink,
+  FaImage,
+  FaUndo,
+  FaRedo,
+  FaCode,
 } from "react-icons/fa";
 
 const MenuBar = ({ editor }) => {
@@ -145,8 +153,8 @@ export default function TiptapEditor({ content, onChange }) {
   return (
     <div className="border border-gray-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 transition-all bg-white shadow-sm">
       <MenuBar editor={editor} />
-      <EditorContent 
-        editor={editor} 
+      <EditorContent
+        editor={editor}
         className="prose max-w-none p-4 min-h-[400px] outline-none"
       />
     </div>

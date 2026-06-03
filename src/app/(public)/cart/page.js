@@ -1,7 +1,12 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaShoppingCart, FaChevronRight, FaMinus, FaPlus } from "react-icons/fa";
+import {
+  FaShoppingCart,
+  FaChevronRight,
+  FaMinus,
+  FaPlus,
+} from "react-icons/fa";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 import { navigateTo } from "../../lib/navigation";
@@ -54,13 +59,14 @@ export default function CartPage() {
   if (cart.length === 0) {
     return (
       <>
-      <Navbar />
-      <div className="bg-white border-b border-gray-100">
+        <Navbar />
+        <div className="bg-white border-b border-gray-100">
           <div className="container mx-auto px-4 py-3">
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <span
                 onClick={() => navigateTo(router, "/")}
-                className="hover:text-amber-600 cursor-pointer transition-colors">
+                className="hover:text-amber-600 cursor-pointer transition-colors"
+              >
                 Home
               </span>
               <FaChevronRight size={10} className="text-gray-400" />
@@ -68,102 +74,113 @@ export default function CartPage() {
             </div>
           </div>
         </div>
-      <div className="min-h-screen flex flex-col items-center justify-center text-xl font-semibold gap-4 text-gray-400">
-        <FaShoppingCart size={80} className="text-gray-200" />
-        Your Cart is Empty
-      </div>
-      <Footer />
+        <div className="min-h-screen flex flex-col items-center justify-center text-xl font-semibold gap-4 text-gray-400">
+          <FaShoppingCart size={80} className="text-gray-200" />
+          Your Cart is Empty
+        </div>
+        <Footer />
       </>
     );
   }
 
   return (
     <>
-    <Navbar />
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-      <div className="bg-white border-b border-gray-100 mb-1">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center gap-2 text-sm text-gray-500">
-            <span
-              onClick={() => navigateTo(router, "/")}
-              className="hover:text-amber-600 cursor-pointer transition-colors">
-              Home
-            </span>
-            <FaChevronRight size={10} className="text-gray-400" />
-            <span className="text-gray-800 font-medium">Cart</span>
+      <Navbar />
+      <div className="min-h-screen bg-gray-100 p-4 md:p-8">
+        <div className="bg-white border-b border-gray-100 mb-1">
+          <div className="container mx-auto px-4 py-3">
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <span
+                onClick={() => navigateTo(router, "/")}
+                className="hover:text-amber-600 cursor-pointer transition-colors"
+              >
+                Home
+              </span>
+              <FaChevronRight size={10} className="text-gray-400" />
+              <span className="text-gray-800 font-medium">Cart</span>
+            </div>
           </div>
         </div>
-      </div>
-      <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
+        <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        {/* Cart Items */}
-        <div className="md:col-span-2 space-y-4">
-          {cart.map((item) => (
-            <div
-              key={item._id}
-              className="bg-white p-4 rounded-xl shadow flex flex-col md:flex-row gap-4 items-center">
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-24 h-24 object-cover rounded-lg"
-              />
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Cart Items */}
+          <div className="md:col-span-2 space-y-4">
+            {cart.map((item) => (
+              <div
+                key={item._id}
+                className="bg-white p-4 rounded-xl shadow flex flex-col md:flex-row gap-4 items-center"
+              >
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-24 h-24 object-cover rounded-lg"
+                />
 
-              <div className="flex-1 text-center md:text-left">
-                <h2 className="font-semibold">{item.name}</h2>
-                <p className="text-gray-600">₹{item.price}</p>
+                <div className="flex-1 text-center md:text-left">
+                  <h2 className="font-semibold">{item.name}</h2>
+                  <p className="text-gray-600">₹{item.price}</p>
 
-                <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
+                  <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
+                    <button
+                      onClick={() => decreaseQty(item._id)}
+                      className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors cursor-pointer"
+                    >
+                      <FaMinus size={12} />
+                    </button>
+
+                    <span className="font-bold w-6 text-center text-lg">
+                      {item.quantity}
+                    </span>
+
+                    <button
+                      onClick={() => increaseQty(item._id)}
+                      className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors cursor-pointer"
+                    >
+                      <FaPlus size={12} />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="text-center md:text-right border-t md:border-t-0 pt-3 md:pt-0 mt-3 md:mt-0">
+                  <p className="font-bold text-lg text-gray-900">
+                    ₹{item.price * item.quantity}
+                  </p>
                   <button
-                    onClick={() => decreaseQty(item._id)}
-                    className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors cursor-pointer">
-                    <FaMinus size={12} />
-                  </button>
-
-                  <span className="font-bold w-6 text-center text-lg">{item.quantity}</span>
-
-                  <button
-                    onClick={() => increaseQty(item._id)}
-                    className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors cursor-pointer">
-                    <FaPlus size={12} />
+                    onClick={() => removeItem(item._id)}
+                    className="text-red-500 hover:text-red-700 text-sm mt-3 font-medium transition-colors cursor-pointer"
+                  >
+                    Remove
                   </button>
                 </div>
               </div>
+            ))}
+          </div>
 
-              <div className="text-center md:text-right border-t md:border-t-0 pt-3 md:pt-0 mt-3 md:mt-0">
-                <p className="font-bold text-lg text-gray-900">₹{item.price * item.quantity}</p>
-                <button
-                  onClick={() => removeItem(item._id)}
-                  className="text-red-500 hover:text-red-700 text-sm mt-3 font-medium transition-colors cursor-pointer">
-                  Remove
-                </button>
-              </div>
+          {/* Summary */}
+          <div className="bg-white p-6 rounded-xl shadow h-fit">
+            <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+
+            <div className="flex justify-between mb-2">
+              <span>Total Items:</span>
+              <span>{cart.reduce((t, item) => t + item.quantity, 0)}</span>
             </div>
-          ))}
-        </div>
 
-        {/* Summary */}
-        <div className="bg-white p-6 rounded-xl shadow h-fit">
-          <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+            <div className="flex justify-between font-bold text-lg mb-4">
+              <span>Total Price:</span>
+              <span>₹{totalPrice}</span>
+            </div>
 
-          <div className="flex justify-between mb-2">
-            <span>Total Items:</span>
-            <span>{cart.reduce((t, item) => t + item.quantity, 0)}</span>
+            <button
+              onClick={() => navigateTo(router, "/checkout")}
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg cursor-pointer"
+            >
+              Proceed to Checkout
+            </button>
           </div>
-
-          <div className="flex justify-between font-bold text-lg mb-4">
-            <span>Total Price:</span>
-            <span>₹{totalPrice}</span>
-          </div>
-
-          <button onClick={() => navigateTo(router, "/checkout")}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg cursor-pointer">
-            Proceed to Checkout
-          </button>
         </div>
       </div>
-    </div>
-          <Footer />
+      <Footer />
     </>
   );
 }

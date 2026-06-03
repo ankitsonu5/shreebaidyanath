@@ -190,7 +190,9 @@ export default function EditProduct() {
               />
             </div>
             <div>
-              <label className="block mb-2 font-medium">Selling Price (₹)</label>
+              <label className="block mb-2 font-medium">
+                Selling Price (₹)
+              </label>
               <input
                 type="number"
                 name="productSellingPrice"
@@ -222,7 +224,8 @@ export default function EditProduct() {
               name="productCollection"
               value={form.productCollection}
               onChange={handleChange}
-              className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer">
+              className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
+            >
               <option value="">Select Collection</option>
               {collections.map((col) => (
                 <option key={col._id} value={col._id}>
@@ -241,7 +244,8 @@ export default function EditProduct() {
               name="productTag"
               value={form.productTag}
               onChange={handleChange}
-              className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer">
+              className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
+            >
               <option value="">None</option>
               <option value="deal">Deals of the Day</option>
               <option value="bestseller">Best Seller</option>
@@ -286,7 +290,8 @@ export default function EditProduct() {
                           removeNew(newPreviews.indexOf(img.src));
                         }
                       }}
-                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                    >
                       <IoClose size={14} />
                     </button>
                   </div>
@@ -306,7 +311,8 @@ export default function EditProduct() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-semibold transition cursor-pointer disabled:bg-blue-300 disabled:cursor-not-allowed">
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-semibold transition cursor-pointer disabled:bg-blue-300 disabled:cursor-not-allowed"
+          >
             {loading ? "Updating..." : "Update Product"}
           </button>
         </form>

@@ -6,9 +6,11 @@ import { useRouter, useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { navigateTo } from "../../../lib/navigation";
 
-const TiptapEditor = dynamic(() => import("../../../components/TiptapEditor"), { 
-  ssr: false, 
-  loading: () => <div className="h-[400px] bg-gray-50 animate-pulse rounded-xl" />
+const TiptapEditor = dynamic(() => import("../../../components/TiptapEditor"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[400px] bg-gray-50 animate-pulse rounded-xl" />
+  ),
 });
 
 export default function EditBlog() {
@@ -47,7 +49,11 @@ export default function EditBlog() {
               author: blog.author,
               isActive: blog.isActive,
             });
-            setPreview(blog.image.startsWith("http") ? blog.image : `${API}/${blog.image.replace(/\\/g, "/")}`);
+            setPreview(
+              blog.image.startsWith("http")
+                ? blog.image
+                : `${API}/${blog.image.replace(/\\/g, "/")}`,
+            );
           }
         }
       } catch (err) {
@@ -116,12 +122,16 @@ export default function EditBlog() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Edit Blog Post</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">
+          Edit Blog Post
+        </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Blog Title</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Blog Title
+              </label>
               <input
                 type="text"
                 name="title"
@@ -132,7 +142,9 @@ export default function EditBlog() {
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Slug (URL)</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Slug (URL)
+              </label>
               <input
                 type="text"
                 name="slug"
@@ -145,7 +157,9 @@ export default function EditBlog() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Short Description</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Short Description
+            </label>
             <textarea
               name="description"
               rows="2"
@@ -158,7 +172,9 @@ export default function EditBlog() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Featured Image</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Featured Image
+              </label>
               <div className="relative group border-2 border-dashed border-gray-200 rounded-xl p-4 hover:border-blue-400 transition cursor-pointer">
                 <input
                   type="file"
@@ -166,12 +182,20 @@ export default function EditBlog() {
                   onChange={handleImage}
                   className="absolute inset-0 opacity-0 cursor-pointer"
                 />
-                {preview && <img src={preview} alt="Preview" className="w-full h-40 object-cover rounded-lg" />}
+                {preview && (
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="w-full h-40 object-cover rounded-lg"
+                  />
+                )}
               </div>
             </div>
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Author Name</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Author Name
+                </label>
                 <input
                   type="text"
                   name="author"
@@ -189,7 +213,10 @@ export default function EditBlog() {
                   onChange={handleChange}
                   className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
-                <label htmlFor="isActive" className="text-sm font-semibold text-gray-700">
+                <label
+                  htmlFor="isActive"
+                  className="text-sm font-semibold text-gray-700"
+                >
                   Published (Visible to public)
                 </label>
               </div>
@@ -197,7 +224,9 @@ export default function EditBlog() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-4">Blog Content</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-4">
+              Blog Content
+            </label>
             <TiptapEditor
               content={form.content}
               onChange={handleContentChange}
@@ -208,7 +237,8 @@ export default function EditBlog() {
             <button
               type="submit"
               disabled={saving}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 disabled:bg-blue-300 disabled:cursor-not-allowed">
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 disabled:bg-blue-300 disabled:cursor-not-allowed"
+            >
               {saving ? "Saving Changes..." : "Update Blog Post"}
             </button>
           </div>

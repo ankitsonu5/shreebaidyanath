@@ -65,7 +65,8 @@ export default function AddBanner() {
             <select
               value={bannerType}
               onChange={(e) => setBannerType(e.target.value)}
-              className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer">
+              className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
+            >
               <option value="hero">Hero Banner (Main)</option>
               <option value="offer">Offer Banner</option>
             </select>
@@ -87,7 +88,9 @@ export default function AddBanner() {
           </div>
 
           <div>
-            <label className="block mb-2 font-medium">Banner Image or Video</label>
+            <label className="block mb-2 font-medium">
+              Banner Image or Video
+            </label>
             <input
               type="file"
               accept="image/*,video/*"
@@ -117,7 +120,8 @@ export default function AddBanner() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-semibold transition cursor-pointer disabled:bg-blue-300 disabled:cursor-not-allowed">
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-semibold transition cursor-pointer disabled:bg-blue-300 disabled:cursor-not-allowed"
+          >
             {loading ? "Uploading..." : "Add Banner"}
           </button>
         </form>

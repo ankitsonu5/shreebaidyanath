@@ -22,7 +22,10 @@ export default function Navbar() {
   const [mobCollectionsOpen, setMobCollectionsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
-  const [suggestions, setSuggestions] = useState({ products: [], collections: [] });
+  const [suggestions, setSuggestions] = useState({
+    products: [],
+    collections: [],
+  });
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const searchRef = useRef(null);
@@ -32,7 +35,10 @@ export default function Navbar() {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigateTo(router, `/all-products?search=${encodeURIComponent(searchQuery.trim())}`);
+      navigateTo(
+        router,
+        `/all-products?search=${encodeURIComponent(searchQuery.trim())}`,
+      );
       setSearchOpen(false);
       setSearchQuery("");
       setShowSuggestions(false);
@@ -41,9 +47,7 @@ export default function Navbar() {
 
   const getImgUrl = (path) => {
     if (!path) return "";
-    return path.startsWith("http")
-      ? path
-      : `${API}/${path}`;
+    return path.startsWith("http") ? path : `${API}/${path}`;
   };
 
   // Debounced suggestions fetching
@@ -58,7 +62,9 @@ export default function Navbar() {
       setLoadingSuggestions(true);
       setShowSuggestions(true);
       try {
-        const res = await axios.get(`${API}/search/suggest?q=${encodeURIComponent(searchQuery.trim())}`);
+        const res = await axios.get(
+          `${API}/search/suggest?q=${encodeURIComponent(searchQuery.trim())}`,
+        );
         if (res.data.success) {
           setSuggestions({
             products: res.data.products || [],
@@ -168,7 +174,7 @@ export default function Navbar() {
   useEffect(() => {
     updateCartCount();
     updateUser();
-    
+
     window.addEventListener("cartUpdated", updateCartCount);
     window.addEventListener("userUpdated", updateUser);
     window.addEventListener("storage", handleUpdateEvents);
@@ -258,10 +264,7 @@ export default function Navbar() {
             )}
           </li>
           <li>
-            <Link
-              href="/shop-by-solutions"
-              className="hover:text-red-600"
-            >
+            <Link href="/shop-by-solutions" className="hover:text-red-600">
               Shop by Solutions
             </Link>
           </li>
@@ -301,8 +304,8 @@ export default function Navbar() {
           {/* Expandable Search Input */}
           <div ref={searchRef} className="relative flex items-center">
             {searchOpen ? (
-              <form 
-                onSubmit={handleSearchSubmit} 
+              <form
+                onSubmit={handleSearchSubmit}
                 className="absolute right-0 top-1/2 -translate-y-1/2 bg-white px-3 py-2 shadow-xl border border-gray-200 rounded-xl z-50 flex items-center gap-2 w-48 sm:w-64 animate-in fade-in zoom-in-95 duration-200"
               >
                 <input
@@ -310,11 +313,16 @@ export default function Navbar() {
                   placeholder="Search products..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => { if (searchQuery.trim()) setShowSuggestions(true); }}
+                  onFocus={() => {
+                    if (searchQuery.trim()) setShowSuggestions(true);
+                  }}
                   className="px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full bg-white text-gray-800"
                   autoFocus
                 />
-                <button type="submit" className="text-gray-600 hover:text-red-600 cursor-pointer p-1">
+                <button
+                  type="submit"
+                  className="text-gray-600 hover:text-red-600 cursor-pointer p-1"
+                >
                   <FaSearch size={14} />
                 </button>
                 <button
@@ -330,12 +338,14 @@ export default function Navbar() {
                 </button>
 
                 {/* Auto Suggestions Dropdown */}
-                {showSuggestions && (searchQuery.trim().length > 0) && (
+                {showSuggestions && searchQuery.trim().length > 0 && (
                   <div className="absolute right-0 top-full mt-3 w-64 sm:w-80 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                     {loadingSuggestions ? (
                       <div className="flex items-center justify-center py-8 gap-2">
                         <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-                        <span className="text-xs text-gray-500 font-medium">Searching...</span>
+                        <span className="text-xs text-gray-500 font-medium">
+                          Searching...
+                        </span>
                       </div>
                     ) : (
                       <div className="max-h-[380px] overflow-y-auto scrollbar-hide py-3 flex flex-col text-left">
@@ -351,7 +361,10 @@ export default function Navbar() {
                                 <div
                                   key={col._id}
                                   onClick={() => {
-                                    navigateTo(router, `/all-products?collection=${col._id}`);
+                                    navigateTo(
+                                      router,
+                                      `/all-products?collection=${col._id}`,
+                                    );
                                     setSearchOpen(false);
                                     setSearchQuery("");
                                     setShowSuggestions(false);
@@ -359,7 +372,9 @@ export default function Navbar() {
                                   className="px-4 py-2 text-xs md:text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 cursor-pointer font-medium border-l-4 border-transparent hover:border-red-600 flex items-center justify-between"
                                 >
                                   <span>{col.collectionName}</span>
-                                  <span className="text-[10px] text-gray-400 font-normal">Collection</span>
+                                  <span className="text-[10px] text-gray-400 font-normal">
+                                    Collection
+                                  </span>
                                 </div>
                               ))}
                             </div>
@@ -387,7 +402,10 @@ export default function Navbar() {
                                 >
                                   <div className="w-9 h-9 bg-gray-50 rounded-lg overflow-hidden border border-gray-100 p-1 flex-shrink-0 flex items-center justify-center">
                                     <img
-                                      src={getImgUrl(prod.productImage && prod.productImage[0])}
+                                      src={getImgUrl(
+                                        prod.productImage &&
+                                          prod.productImage[0],
+                                      )}
                                       alt={prod.productName}
                                       className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                                     />
@@ -397,7 +415,9 @@ export default function Navbar() {
                                       {prod.productName}
                                     </p>
                                     <p className="text-[10px] md:text-xs text-red-600 font-bold mt-0.5">
-                                      ₹{prod.productSellingPrice || prod.productPrice}
+                                      ₹
+                                      {prod.productSellingPrice ||
+                                        prod.productPrice}
                                     </p>
                                   </div>
                                 </div>
@@ -407,11 +427,12 @@ export default function Navbar() {
                         )}
 
                         {/* No matches */}
-                        {suggestions.collections.length === 0 && suggestions.products.length === 0 && (
-                          <div className="px-4 py-6 text-center text-xs md:text-sm text-gray-400 font-medium">
-                            No matches found for "{searchQuery}"
-                          </div>
-                        )}
+                        {suggestions.collections.length === 0 &&
+                          suggestions.products.length === 0 && (
+                            <div className="px-4 py-6 text-center text-xs md:text-sm text-gray-400 font-medium">
+                              No matches found for "{searchQuery}"
+                            </div>
+                          )}
 
                         {/* View all search results */}
                         <div

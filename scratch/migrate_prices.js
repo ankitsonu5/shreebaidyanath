@@ -17,8 +17,8 @@ async function migrate() {
         { productSellingPrice: { $exists: false } },
         { productSellingPrice: null },
         { productMrpPrice: { $exists: false } },
-        { productMrpPrice: null }
-      ]
+        { productMrpPrice: null },
+      ],
     });
 
     console.log(`Found ${products.length} products to migrate`);
@@ -32,7 +32,7 @@ async function migrate() {
       if (!product.productMrpPrice && product.productPrice) {
         product.productMrpPrice = product.productPrice;
       }
-      
+
       await product.save();
       console.log(`Migrated: ${product.productName}`);
     }

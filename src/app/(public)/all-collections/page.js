@@ -47,7 +47,8 @@ export default function CollectionsPage() {
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <span
                 onClick={() => navigateTo(router, "/all-collections")}
-                className="hover:text-amber-600 cursor-pointer transition-colors">
+                className="hover:text-amber-600 cursor-pointer transition-colors"
+              >
                 Collections
               </span>
               <FaChevronRight size={10} className="text-gray-400" />
@@ -87,7 +88,8 @@ export default function CollectionsPage() {
                   onClick={() =>
                     navigateTo(router, `/all-products?collection=${col._id}`)
                   }
-                  className="group flex flex-col items-center cursor-pointer">
+                  className="group flex flex-col items-center cursor-pointer"
+                >
                   <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent group-hover:border-amber-600 transition-all duration-300 shadow-md group-hover:shadow-xl">
                     <img
                       src={getImgUrl(

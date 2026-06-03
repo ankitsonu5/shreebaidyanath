@@ -100,7 +100,8 @@ export default function ProductDetail() {
             </p>
             <button
               onClick={() => navigateTo(router, "/")}
-              className="px-6 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition cursor-pointer">
+              className="px-6 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition cursor-pointer"
+            >
               Go Home
             </button>
           </div>
@@ -115,7 +116,8 @@ export default function ProductDetail() {
 
   const selling = product.productSellingPrice || product.productPrice;
   const mrp = product.productMrpPrice || selling;
-  const discount = mrp > selling ? Math.round(((mrp - selling) / mrp) * 100) : 0;
+  const discount =
+    mrp > selling ? Math.round(((mrp - selling) / mrp) * 100) : 0;
 
   return (
     <>
@@ -128,7 +130,8 @@ export default function ProductDetail() {
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <span
                 onClick={() => navigateTo(router, "/")}
-                className="hover:text-amber-600 cursor-pointer transition-colors">
+                className="hover:text-amber-600 cursor-pointer transition-colors"
+              >
                 Home
               </span>
               <FaChevronRight size={10} className="text-gray-400" />
@@ -181,7 +184,8 @@ export default function ProductDetail() {
                           selectedImage === idx
                             ? "border-amber-500 shadow-md"
                             : "border-gray-200 hover:border-gray-300"
-                        }`}>
+                        }`}
+                      >
                         <img
                           src={getImgUrl(img)}
                           alt={`${product.productName} ${idx + 1}`}
@@ -268,7 +272,8 @@ export default function ProductDetail() {
                           onClick={() =>
                             setQuantity((prev) => Math.max(1, prev - 1))
                           }
-                          className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition cursor-pointer">
+                          className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition cursor-pointer"
+                        >
                           <FaMinus size={12} />
                         </button>
                         <span className="w-12 h-10 flex items-center justify-center text-base font-semibold text-gray-800 border-x border-gray-200">
@@ -280,7 +285,8 @@ export default function ProductDetail() {
                               Math.min(product.productStock, prev + 1),
                             )
                           }
-                          className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition cursor-pointer">
+                          className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition cursor-pointer"
+                        >
                           <FaPlus size={12} />
                         </button>
                       </div>
@@ -290,12 +296,14 @@ export default function ProductDetail() {
                     <div className="flex gap-3">
                       <button
                         onClick={addToCart}
-                        className="flex-1 py-3 px-6 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md active:scale-[0.98]">
+                        className="flex-1 py-3 px-6 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md active:scale-[0.98]"
+                      >
                         Add to Cart
                       </button>
                       <button
                         onClick={buyNow}
-                        className="flex-1 py-3 px-6 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-xl transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md active:scale-[0.98]">
+                        className="flex-1 py-3 px-6 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-xl transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md active:scale-[0.98]"
+                      >
                         Buy Now
                       </button>
                     </div>
@@ -306,7 +314,8 @@ export default function ProductDetail() {
                   <div className="mt-6">
                     <button
                       disabled
-                      className="w-full py-3 px-6 bg-gray-300 text-gray-500 font-semibold rounded-xl cursor-not-allowed">
+                      className="w-full py-3 px-6 bg-gray-300 text-gray-500 font-semibold rounded-xl cursor-not-allowed"
+                    >
                       Out of Stock
                     </button>
                   </div>

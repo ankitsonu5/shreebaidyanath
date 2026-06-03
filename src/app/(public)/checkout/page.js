@@ -164,13 +164,15 @@ export default function CheckoutPage() {
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <span
               onClick={() => navigateTo(router, "/")}
-              className="hover:text-amber-600 cursor-pointer transition-colors">
+              className="hover:text-amber-600 cursor-pointer transition-colors"
+            >
               Home
             </span>
             <FaChevronRight size={10} className="text-gray-400" />
             <span
               onClick={() => navigateTo(router, "/cart")}
-              className="hover:text-amber-600 cursor-pointer transition-colors">
+              className="hover:text-amber-600 cursor-pointer transition-colors"
+            >
               Cart
             </span>
             <FaChevronRight size={10} className="text-gray-400" />
@@ -311,7 +313,8 @@ export default function CheckoutPage() {
                     {cart.map((item) => (
                       <div
                         key={item._id}
-                        className="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
+                        className="flex items-center gap-4 py-4 first:pt-0 last:pb-0"
+                      >
                         <img
                           src={item.image}
                           alt={item.name}
@@ -360,7 +363,8 @@ export default function CheckoutPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full mt-6 bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition-colors cursor-pointer disabled:bg-amber-300 disabled:cursor-not-allowed">
+                    className="w-full mt-6 bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition-colors cursor-pointer disabled:bg-amber-300 disabled:cursor-not-allowed"
+                  >
                     {loading ? "Placing Order..." : "Place Order"}
                   </button>
 

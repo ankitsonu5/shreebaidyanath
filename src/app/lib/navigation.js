@@ -5,7 +5,10 @@ import { startTransition } from "react";
 const MOBILE_NAV_MEDIA_QUERY = "(max-width: 768px)";
 
 function shouldUseWindowNavigation() {
-  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+  if (
+    typeof window === "undefined" ||
+    typeof window.matchMedia !== "function"
+  ) {
     return false;
   }
 
@@ -18,8 +21,7 @@ export function navigateTo(router, path, options = {}) {
   }
 
   const { replace = false, forceWindowNavigation } = options;
-  const fallbackToWindow =
-    forceWindowNavigation ?? shouldUseWindowNavigation();
+  const fallbackToWindow = forceWindowNavigation ?? shouldUseWindowNavigation();
 
   if (fallbackToWindow || !router) {
     if (replace) {

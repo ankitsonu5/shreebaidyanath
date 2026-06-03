@@ -41,13 +41,14 @@ export default function ContactUs() {
   const validateForm = () => {
     if (!form.name.trim()) return "Please enter your name.";
     if (!form.email.trim()) return "Please enter your email.";
-    
+
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(form.email.trim())) return "Please enter a valid email address.";
+    if (!emailRegex.test(form.email.trim()))
+      return "Please enter a valid email address.";
 
     if (!form.mobile.trim()) return "Please enter your phone number.";
-    
+
     // Phone validation
     const phoneRegex = /^[0-9\s\-\+\(\)]{10,15}$/;
     if (!phoneRegex.test(form.mobile.trim().replace(/\s+/g, ""))) {
@@ -79,7 +80,8 @@ export default function ContactUs() {
         setAlertState({
           show: true,
           type: "success",
-          message: "Thank you! Your inquiry has been submitted successfully. We will get back to you shortly.",
+          message:
+            "Thank you! Your inquiry has been submitted successfully. We will get back to you shortly.",
         });
         setForm({
           name: "",
@@ -92,7 +94,8 @@ export default function ContactUs() {
         setAlertState({
           show: true,
           type: "error",
-          message: res.data.message || "Failed to submit request. Please try again.",
+          message:
+            res.data.message || "Failed to submit request. Please try again.",
         });
       }
     } catch (error) {
@@ -100,7 +103,9 @@ export default function ContactUs() {
       setAlertState({
         show: true,
         type: "error",
-        message: error.response?.data?.message || "Something went wrong. Please check your network connection and try again.",
+        message:
+          error.response?.data?.message ||
+          "Something went wrong. Please check your network connection and try again.",
       });
     } finally {
       setLoading(false);

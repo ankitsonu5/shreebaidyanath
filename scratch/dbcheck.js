@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 require("dotenv").config({ path: "../backend-api/.env" });
 
-const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/shreebaidyanath";
+const MONGO_URI =
+  process.env.MONGO_URI || "mongodb://localhost:27017/shreebaidyanath";
 
 async function checkDb() {
   try {
@@ -12,14 +13,24 @@ async function checkDb() {
     // Fetch all collections in database
     const db = mongoose.connection.db;
     const collectionsList = await db.listCollections().toArray();
-    console.log("Database collections:", collectionsList.map(c => c.name));
+    console.log(
+      "Database collections:",
+      collectionsList.map((c) => c.name),
+    );
 
     // Get Collections data
     try {
       const CollectionSchema = new mongoose.Schema({}, { strict: false });
-      const DBCollection = mongoose.model("Collection", CollectionSchema, "collections");
+      const DBCollection = mongoose.model(
+        "Collection",
+        CollectionSchema,
+        "collections",
+      );
       const cols = await DBCollection.find({});
-      console.log("\nSaved Collections:", cols.map(c => ({ id: c._id, name: c.collectionName || c.name })));
+      console.log(
+        "\nSaved Collections:",
+        cols.map((c) => ({ id: c._id, name: c.collectionName || c.name })),
+      );
     } catch (e) {
       console.log("Error querying collections:", e.message);
     }
@@ -46,7 +57,6 @@ async function checkDb() {
     } catch (e) {
       console.log("Error querying products:", e.message);
     }
-
   } catch (error) {
     console.error("Database connection failed:", error);
   } finally {

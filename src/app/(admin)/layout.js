@@ -38,19 +38,19 @@ export default function AdminLayout({ children }) {
 
   const isActive = (path) => pathname === path;
   const isActiveGroup = (paths) => paths.some((p) => pathname.startsWith(p));
-  
+
   const handleNavigation = (path) => {
     try {
       if (path === pathname) {
         setIsSidebarOpen(false);
         return;
       }
-      
+
       // Close sidebar first on mobile to avoid layout shifts during navigation
       if (isSidebarOpen) {
         setIsSidebarOpen(false);
       }
-      
+
       navigateTo(router, path);
     } catch (error) {
       console.error("Admin navigation error:", error);
@@ -102,7 +102,8 @@ export default function AdminLayout({ children }) {
       {!isSidebarOpen && (
         <button
           onClick={toggleSidebar}
-          className="md:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-3 rounded shadow-lg focus:outline-none transition-transform active:scale-90">
+          className="md:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-3 rounded shadow-lg focus:outline-none transition-transform active:scale-90"
+        >
           <FaBars size={20} />
         </button>
       )}
@@ -111,63 +112,76 @@ export default function AdminLayout({ children }) {
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-30 md:hidden transition-opacity"
-          onClick={toggleSidebar}></div>
+          onClick={toggleSidebar}
+        ></div>
       )}
 
       {/* Sidebar */}
       <div
         className={`fixed md:static top-0 left-0 h-full w-64 bg-blue-700 text-white p-5 transform transition-transform duration-300 ease-in-out z-40 flex-shrink-0 overflow-y-auto ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}>
+        }`}
+      >
         <div className="flex justify-between items-center mb-8 border-b border-blue-600 pb-4">
           <h1 className="text-2xl font-bold">Admin Panel</h1>
           <button
             onClick={toggleSidebar}
-            className="md:hidden text-white p-2 hover:bg-blue-800 rounded transition-colors focus:outline-none">
+            className="md:hidden text-white p-2 hover:bg-blue-800 rounded transition-colors focus:outline-none"
+          >
             <FaTimes size={24} />
           </button>
         </div>
         <ul className="space-y-2">
           <li
             className={navItemClass(isActive("/admindashboard"))}
-            onClick={() => handleNavigation("/admindashboard")}>
+            onClick={() => handleNavigation("/admindashboard")}
+          >
             Dashboard
           </li>
           <li
             className={navItemClass(isActive("/users"))}
-            onClick={() => handleNavigation("/users")}>
+            onClick={() => handleNavigation("/users")}
+          >
             Users
           </li>
           <li
             className={navItemClass(
               isActiveGroup(["/products", "/add-product", "/edit-product"]),
             )}
-            onClick={() => handleNavigation("/products")}>
+            onClick={() => handleNavigation("/products")}
+          >
             Products
           </li>
           <li
             className={navItemClass(isActiveGroup(["/orders"]))}
-            onClick={() => handleNavigation("/orders")}>
+            onClick={() => handleNavigation("/orders")}
+          >
             Orders
           </li>
           <li
-            className={navItemClass(isActiveGroup(["/blogs", "/add-blog", "/edit-blog"]))}
-            onClick={() => handleNavigation("/blogs")}>
+            className={navItemClass(
+              isActiveGroup(["/blogs", "/add-blog", "/edit-blog"]),
+            )}
+            onClick={() => handleNavigation("/blogs")}
+          >
             Blogs
           </li>
           <li
             className={navItemClass(isActiveGroup(["/consultations"]))}
-            onClick={() => handleNavigation("/consultations")}>
+            onClick={() => handleNavigation("/consultations")}
+          >
             Consultations
           </li>
           <li
             className={navItemClass(isActiveGroup(["/contacts"]))}
-            onClick={() => handleNavigation("/contacts")}>
+            onClick={() => handleNavigation("/contacts")}
+          >
             Contact Inquiries
           </li>
           <li
             className={navItemClass(isActiveGroup(["/comments"]))}
-            onClick={() => handleNavigation("/comments")}>
+            onClick={() => handleNavigation("/comments")}
+          >
             Blog Comments
           </li>
           <li className="rounded">
@@ -184,7 +198,8 @@ export default function AdminLayout({ children }) {
                 ])
                   ? "bg-blue-800 font-semibold"
                   : "hover:bg-blue-600"
-              }`}>
+              }`}
+            >
               <div className="flex items-center justify-between">
                 Masters
                 <MdArrowDropDown
@@ -208,7 +223,8 @@ export default function AdminLayout({ children }) {
                       ? "bg-blue-800 font-semibold"
                       : "hover:bg-blue-600"
                   }`}
-                  onClick={() => handleNavigation("/collections")}>
+                  onClick={() => handleNavigation("/collections")}
+                >
                   Collections
                 </p>
                 <p
@@ -217,7 +233,8 @@ export default function AdminLayout({ children }) {
                       ? "bg-blue-800 font-semibold"
                       : "hover:bg-blue-600"
                   }`}
-                  onClick={() => handleNavigation("/banners")}>
+                  onClick={() => handleNavigation("/banners")}
+                >
                   Banners
                 </p>
               </div>
@@ -225,7 +242,8 @@ export default function AdminLayout({ children }) {
           </li>
           <li
             className={navItemClass(false)}
-            onClick={() => setIsSidebarOpen(false)}>
+            onClick={() => setIsSidebarOpen(false)}
+          >
             Settings
           </li>
           <li
@@ -238,7 +256,8 @@ export default function AdminLayout({ children }) {
               document.cookie =
                 "role=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
               navigateTo(router, "/signin");
-            }}>
+            }}
+          >
             Logout
           </li>
         </ul>

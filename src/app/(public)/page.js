@@ -46,7 +46,9 @@ export default function HomePage() {
 
     const currentIdx = currentBanner % heroBanners.length;
     const currentBannerItem = heroBanners[currentIdx];
-    const isVideo = currentBannerItem ? isVideoFile(currentBannerItem.bannerImage) : false;
+    const isVideo = currentBannerItem
+      ? isVideoFile(currentBannerItem.bannerImage)
+      : false;
 
     if (isVideo) {
       // For videos, we don't set a timer here.
@@ -207,13 +209,14 @@ export default function HomePage() {
     const renderCard = (product) => {
       const selling = product.productSellingPrice || product.productPrice;
       const mrp = product.productMrpPrice || selling;
-      const discount = mrp > selling ? Math.round(((mrp - selling) / mrp) * 100) : 0;
+      const discount =
+        mrp > selling ? Math.round(((mrp - selling) / mrp) * 100) : 0;
 
       return (
         <div
           key={product._id}
-          className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col relative group">
-          
+          className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col relative group"
+        >
           {/* Discount Badge */}
           {discount > 0 && (
             <div className="absolute top-2 left-2 z-10 bg-red-600 text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded shadow-sm">
@@ -222,24 +225,20 @@ export default function HomePage() {
           )}
 
           <div
-            onClick={() =>
-              (window.location.href = `/product/${product._id}`)
-            }
-            className="w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer">
+            onClick={() => (window.location.href = `/product/${product._id}`)}
+            className="w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer"
+          >
             <img
-              src={getImgUrl(
-                product.productImage && product.productImage[0],
-              )}
+              src={getImgUrl(product.productImage && product.productImage[0])}
               alt={product.productName}
               className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
             />
           </div>
           <div className="p-3 flex flex-col flex-1">
             <p
-              onClick={() =>
-                (window.location.href = `/product/${product._id}`)
-              }
-              className="text-sm md:text-base font-semibold text-gray-800 line-clamp-2 mb-1 cursor-pointer hover:text-amber-600 transition-colors">
+              onClick={() => (window.location.href = `/product/${product._id}`)}
+              className="text-sm md:text-base font-semibold text-gray-800 line-clamp-2 mb-1 cursor-pointer hover:text-amber-600 transition-colors"
+            >
               {product.productName}
             </p>
             <div className="flex items-center gap-2 mb-2">
@@ -256,7 +255,8 @@ export default function HomePage() {
             <div className="flex items-center justify-center gap-3 mb-2">
               <button
                 onClick={() => updateQty(product._id, -1)}
-                className="w-8 h-8 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition">
+                className="w-8 h-8 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition"
+              >
                 <FaMinus size={10} />
               </button>
               <span className="text-sm font-semibold w-6 text-center">
@@ -264,13 +264,15 @@ export default function HomePage() {
               </span>
               <button
                 onClick={() => updateQty(product._id, 1)}
-                className="w-8 h-8 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition">
+                className="w-8 h-8 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition"
+              >
                 <FaPlus size={10} />
               </button>
             </div>
             <button
               onClick={() => addToCart(product)}
-              className="mt-auto w-full bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold py-2 rounded-md transition-colors cursor-pointer">
+              className="mt-auto w-full bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold py-2 rounded-md transition-colors cursor-pointer"
+            >
               Add to Cart
             </button>
           </div>
@@ -288,7 +290,8 @@ export default function HomePage() {
             {showViewAll && (
               <a
                 href={`/products/${slug}`}
-                className="absolute right-0 top-1/2 -translate-y-1/2 text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer text-xs md:text-base z-10">
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer text-xs md:text-base z-10"
+              >
                 View All{" "}
                 <span className="group-hover:translate-x-1 transition-transform">
                   <FaArrowRight size={14} />
@@ -298,7 +301,9 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-            {products.slice(0, mobileLimit).map((product) => renderCard(product))}
+            {products
+              .slice(0, mobileLimit)
+              .map((product) => renderCard(product))}
             {/* Remaining products only visible on md+ */}
             {products.slice(mobileLimit).map((product) => (
               <div key={product._id} className="hidden md:flex flex-col">
@@ -347,7 +352,9 @@ export default function HomePage() {
                       loop={heroBanners.length <= 1}
                       onEnded={() => {
                         if (heroBanners.length > 1) {
-                          setCurrentBanner((prev) => (prev + 1) % heroBanners.length);
+                          setCurrentBanner(
+                            (prev) => (prev + 1) % heroBanners.length,
+                          );
                         }
                       }}
                     />
