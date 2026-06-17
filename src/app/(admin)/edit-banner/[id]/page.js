@@ -94,7 +94,8 @@ export default function EditBanner() {
             <select
               value={bannerType}
               onChange={(e) => setBannerType(e.target.value)}
-              className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer">
+              className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
+            >
               <option value="hero">Hero Banner (Main)</option>
               <option value="offer">Offer Banner</option>
             </select>
@@ -116,10 +117,15 @@ export default function EditBanner() {
           </div>
 
           <div>
-            <label className="block mb-2 font-medium">Banner Image or Video</label>
+            <label className="block mb-2 font-medium">
+              Banner Image or Video
+            </label>
             {preview && (
               <div className="mb-3 flex justify-center">
-                {((imageFile && imageFile.type.startsWith("video/")) || (!imageFile && preview && /\.(mp4|webm|ogg|mov|mkv)$/i.test(preview))) ? (
+                {(imageFile && imageFile.type.startsWith("video/")) ||
+                (!imageFile &&
+                  preview &&
+                  /\.(mp4|webm|ogg|mov|mkv)$/i.test(preview)) ? (
                   <video
                     src={preview}
                     controls
@@ -148,7 +154,8 @@ export default function EditBanner() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-semibold transition cursor-pointer disabled:bg-blue-300 disabled:cursor-not-allowed">
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-semibold transition cursor-pointer disabled:bg-blue-300 disabled:cursor-not-allowed"
+          >
             {loading ? "Updating..." : "Update Banner"}
           </button>
         </form>

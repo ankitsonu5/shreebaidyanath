@@ -49,7 +49,8 @@ export default function FilterUI({
         <h3 className="text-lg font-bold text-gray-900">Filters</h3>
         <button
           onClick={resetFilters}
-          className="text-xs text-amber-600 hover:text-amber-700 font-medium cursor-pointer transition-colors">
+          className="text-xs text-amber-600 hover:text-amber-700 font-medium cursor-pointer transition-colors"
+        >
           Clear All
         </button>
       </div>
@@ -89,7 +90,8 @@ export default function FilterUI({
           {collections.map((col) => (
             <label
               key={col._id}
-              className="flex items-center gap-2.5 p-1.5 rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
+              className="flex items-center gap-2.5 p-1.5 rounded-md hover:bg-gray-50 cursor-pointer transition-colors"
+            >
               <input
                 type="radio"
                 name="collection"
@@ -121,7 +123,8 @@ export default function FilterUI({
                 (filters.productTag || "") === tag.value
                   ? "bg-amber-600 text-white shadow-sm"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}>
+              }`}
+            >
               {tag.label}
             </button>
           ))}
@@ -136,7 +139,8 @@ export default function FilterUI({
         <select
           value={filters.sort || ""}
           onChange={(e) => setFilters({ ...filters, sort: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent cursor-pointer transition">
+          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent cursor-pointer transition"
+        >
           {sortOptions.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
@@ -148,7 +152,8 @@ export default function FilterUI({
       {/* Apply Button */}
       <button
         onClick={applyFilters}
-        className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2.5 rounded-lg transition-colors cursor-pointer shadow-sm">
+        className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2.5 rounded-lg transition-colors cursor-pointer shadow-sm"
+      >
         Apply Filters
       </button>
     </div>

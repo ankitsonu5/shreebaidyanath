@@ -16,24 +16,93 @@ const getSvgIcon = (label) => {
   switch (label) {
     case "Shop by Collections":
       return (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <rect x="3" y="3" width="7" height="7" rx="1.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          <rect x="14" y="3" width="7" height="7" rx="1.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          <rect x="3" y="14" width="7" height="7" rx="1.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          <rect x="14" y="14" width="7" height="7" rx="1.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            x="3"
+            y="3"
+            width="7"
+            height="7"
+            rx="1.5"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <rect
+            x="14"
+            y="3"
+            width="7"
+            height="7"
+            rx="1.5"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <rect
+            x="3"
+            y="14"
+            width="7"
+            height="7"
+            rx="1.5"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <rect
+            x="14"
+            y="14"
+            width="7"
+            height="7"
+            rx="1.5"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       );
     case "Shop by Solutions":
       return (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+          />
         </svg>
       );
     case "Consult by Expert":
       return (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.5 5v5.5a6.5 6.5 0 0013 0V5" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 12v5a3 3 0 006 0v-1" />
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M4.5 5v5.5a6.5 6.5 0 0013 0V5"
+          />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M11 12v5a3 3 0 006 0v-1"
+          />
           <circle cx="17" cy="11" r="2.5" strokeWidth="2" fill="none" />
           <circle cx="4.5" cy="4" r="1" fill="currentColor" />
           <circle cx="17.5" cy="4" r="1" fill="currentColor" />
@@ -41,26 +110,70 @@ const getSvgIcon = (label) => {
       );
     case "Immunity Booster":
       return (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+          />
         </svg>
       );
     case "All Products":
       return (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+          />
         </svg>
       );
     case "Blogs":
       return (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+          />
         </svg>
       );
     case "Track Order":
       return (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+          />
         </svg>
       );
     default:
@@ -140,7 +253,8 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
               </div>
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="p-3 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-500 transition-colors">
+                className="p-3 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-500 transition-colors"
+              >
                 <HiX className="w-6 h-6" />
               </button>
             </div>
@@ -150,7 +264,8 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
               <div className="bg-gray-50 rounded-3xl p-2 border border-gray-100">
                 <button
                   onClick={() => setIsCollectionsOpen(!isCollectionsOpen)}
-                  className="w-full flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm border border-gray-100">
+                  className="w-full flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm border border-gray-100"
+                >
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-green-50 text-green-600 flex items-center justify-center rounded-2xl">
                       {getSvgIcon("Shop by Collections")}
@@ -183,7 +298,8 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
                               console.error("Navigation error:", err);
                             }
                           }}
-                          className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white text-gray-600 font-medium transition-all group">
+                          className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white text-gray-600 font-medium transition-all group"
+                        >
                           <span>{col.collectionName}</span>
                           <FaChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </button>
@@ -202,7 +318,8 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
                           console.error("Navigation error:", err);
                         }
                       }}
-                      className="w-full mt-2 p-3 text-center text-green-600 font-bold text-sm bg-green-50 rounded-xl hover:bg-green-100 transition-colors">
+                      className="w-full mt-2 p-3 text-center text-green-600 font-bold text-sm bg-green-50 rounded-xl hover:bg-green-100 transition-colors"
+                    >
                       View All Collections
                     </button>
                   </div>
@@ -255,9 +372,11 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
                         console.error("Navigation error:", err);
                       }
                     }}
-                    className="flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:bg-gray-50 transition-all group">
+                    className="flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:bg-gray-50 transition-all group"
+                  >
                     <div
-                      className={`w-12 h-12 ${item.color} flex items-center justify-center rounded-2xl group-hover:scale-110 transition-transform`}>
+                      className={`w-12 h-12 ${item.color} flex items-center justify-center rounded-2xl group-hover:scale-110 transition-transform`}
+                    >
                       {getSvgIcon(item.label)}
                     </div>
                     <span className="font-bold text-gray-700 text-lg">
@@ -284,7 +403,8 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
               <h3 className="text-lg font-bold text-gray-800">My Account</h3>
               <button
                 onClick={() => setIsProfileMenuOpen(false)}
-                className="p-2 bg-gray-100 rounded-full text-gray-500">
+                className="p-2 bg-gray-100 rounded-full text-gray-500"
+              >
                 <HiX className="w-5 h-5" />
               </button>
             </div>
@@ -303,7 +423,8 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
                       console.error("Navigation error:", err);
                     }
                   }}
-                  className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-green-50 text-gray-700 font-medium transition-colors border border-transparent hover:border-green-100">
+                  className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-green-50 text-gray-700 font-medium transition-colors border border-transparent hover:border-green-100"
+                >
                   <div className="w-10 h-10 bg-green-50 text-green-600 flex items-center justify-center rounded-full">
                     <option.icon className="w-5 h-5" />
                   </div>
@@ -315,7 +436,8 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
                   handleLogout();
                   setIsProfileMenuOpen(false);
                 }}
-                className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-red-50 text-red-500 font-medium transition-colors border border-transparent hover:border-red-100">
+                className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-red-50 text-red-500 font-medium transition-colors border border-transparent hover:border-red-100"
+              >
                 <div className="w-10 h-10 bg-red-50 text-red-500 flex items-center justify-center rounded-full">
                   <FaSignOutAlt className="w-5 h-5" />
                 </div>
@@ -348,7 +470,8 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
                   isActive || item.isActive
                     ? "text-green-600 scale-110"
                     : "text-gray-500 hover:text-green-500"
-                }`}>
+                }`}
+              >
                 <div className="relative">
                   <item.icon
                     className={`w-5 h-5 ${isActive ? "fill-green-50" : ""}`}

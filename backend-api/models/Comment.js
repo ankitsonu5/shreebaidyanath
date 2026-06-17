@@ -32,7 +32,7 @@ const commentSchema = new mongoose.Schema(
       default: true, // Auto-approve comments by default for standard organic interaction, can be moderated/deleted by admin
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Comment", commentSchema);

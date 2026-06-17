@@ -42,7 +42,9 @@ export default function BlogPage() {
         <div className="bg-gray-50 min-h-screen flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600 font-medium">Discovering Ayurvedic wisdom...</p>
+            <p className="mt-4 text-gray-600 font-medium">
+              Discovering Ayurvedic wisdom...
+            </p>
           </div>
         </div>
         <Footer />
@@ -53,7 +55,7 @@ export default function BlogPage() {
   // Pagination calculations
   const totalBlogs = blogs.length;
   const totalPages = Math.ceil(totalBlogs / blogsPerPage);
-  
+
   // Slice current page blogs
   const indexOfLastBlog = currentPage * blogsPerPage;
   const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
@@ -63,11 +65,11 @@ export default function BlogPage() {
   const getPaginationGroup = () => {
     let start = Math.max(1, currentPage - 2);
     let end = Math.min(totalPages, start + 4);
-    
+
     if (end - start < 4) {
       start = Math.max(1, end - 4);
     }
-    
+
     const pages = [];
     for (let i = start; i <= end; i++) {
       pages.push(i);
@@ -89,16 +91,24 @@ export default function BlogPage() {
 
       <div className="bg-gray-50 min-h-screen pb-16">
         {/* Banner Section */}
-        <div 
+        <div
           className="relative bg-cover bg-center py-16 px-4 text-center overflow-hidden shadow-md text-white"
-          style={{ backgroundImage: "linear-gradient(to right, rgba(180, 83, 9, 0.5), rgba(120, 53, 4, 0.5), rgba(66, 32, 6, 0.1)), url('/blogbanner.jpg')" }}
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, rgba(180, 83, 9, 0.5), rgba(120, 53, 4, 0.5), rgba(66, 32, 6, 0.1)), url('/blogbanner.jpg')",
+          }}
         >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.08)_0%,transparent_70%)]"></div>
           <div className="max-w-4xl mx-auto relative z-10">
-            <span className="text-amber-400 font-bold uppercase tracking-widest text-xs">Shree Baidyanath Knowledge Center</span>
-            <h1 className="text-4xl md:text-5xl font-extrabold mt-3 tracking-tight">Our Ayurvedic Blog</h1>
+            <span className="text-amber-400 font-bold uppercase tracking-widest text-xs">
+              Shree Baidyanath Knowledge Center
+            </span>
+            <h1 className="text-4xl md:text-5xl font-extrabold mt-3 tracking-tight">
+              Our Ayurvedic Blog
+            </h1>
             <p className="text-amber-100/80 mt-4 max-w-xl mx-auto text-base leading-relaxed">
-              Explore timeless wisdom, home remedies, and lifestyle practices for holistic health, immune vitality, and longevity.
+              Explore timeless wisdom, home remedies, and lifestyle practices
+              for holistic health, immune vitality, and longevity.
             </p>
           </div>
         </div>
@@ -111,11 +121,15 @@ export default function BlogPage() {
                 <div
                   key={blog._id}
                   className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100/80 flex flex-col group h-full cursor-pointer"
-                  onClick={() => navigateTo(router, `/blog/${blog.slug}`)}>
-                  
+                  onClick={() => navigateTo(router, `/blog/${blog.slug}`)}
+                >
                   <div className="relative overflow-hidden h-56 w-full">
                     <img
-                      src={blog.image.startsWith("http") ? blog.image : `${API}/${blog.image.replace(/\\/g, "/")}`}
+                      src={
+                        blog.image.startsWith("http")
+                          ? blog.image
+                          : `${API}/${blog.image.replace(/\\/g, "/")}`
+                      }
                       alt={blog.title}
                       className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -144,8 +158,10 @@ export default function BlogPage() {
                       <Link
                         href={`/blog/${blog.slug}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="text-amber-700 font-extrabold text-sm flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
-                        Read More <FaArrowRight size={12} className="text-amber-600" />
+                        className="text-amber-700 font-extrabold text-sm flex items-center gap-1.5 group-hover:gap-2.5 transition-all"
+                      >
+                        Read More{" "}
+                        <FaArrowRight size={12} className="text-amber-600" />
                       </Link>
                     </div>
                   </div>
@@ -153,7 +169,9 @@ export default function BlogPage() {
               ))
             ) : (
               <div className="col-span-full text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
-                <p className="text-gray-500 text-lg font-medium">No blog posts found at the moment.</p>
+                <p className="text-gray-500 text-lg font-medium">
+                  No blog posts found at the moment.
+                </p>
               </div>
             )}
           </div>
@@ -161,7 +179,10 @@ export default function BlogPage() {
           {/* Centered Premium Pagination Widget */}
           {totalPages > 1 && (
             <div className="mt-16 flex justify-center">
-              <nav className="flex items-center gap-2 bg-white px-4 py-3 rounded-full border border-gray-100 shadow-sm" aria-label="Pagination">
+              <nav
+                className="flex items-center gap-2 bg-white px-4 py-3 rounded-full border border-gray-100 shadow-sm"
+                aria-label="Pagination"
+              >
                 {/* Left Arrow */}
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
@@ -171,7 +192,8 @@ export default function BlogPage() {
                       ? "text-gray-300 cursor-not-allowed"
                       : "text-gray-600 hover:bg-amber-50 hover:text-amber-800 cursor-pointer"
                   }`}
-                  aria-label="Previous Page">
+                  aria-label="Previous Page"
+                >
                   <FaChevronLeft size={14} />
                 </button>
 
@@ -185,7 +207,8 @@ export default function BlogPage() {
                         currentPage === page
                           ? "bg-amber-600 text-white shadow-md shadow-amber-600/20 scale-105"
                           : "text-gray-600 hover:bg-amber-50 hover:text-amber-800"
-                      }`}>
+                      }`}
+                    >
                       {page}
                     </button>
                   ))}
@@ -200,7 +223,8 @@ export default function BlogPage() {
                       ? "text-gray-300 cursor-not-allowed"
                       : "text-gray-600 hover:bg-amber-50 hover:text-amber-800 cursor-pointer"
                   }`}
-                  aria-label="Next Page">
+                  aria-label="Next Page"
+                >
                   <FaChevronRight size={14} />
                 </button>
               </nav>

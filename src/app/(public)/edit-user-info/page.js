@@ -38,7 +38,7 @@ export default function EditProfile() {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         if (res.data.success && res.data.user) {
@@ -92,17 +92,17 @@ export default function EditProfile() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (res.data.success && res.data.user) {
         setMessage("Profile updated successfully!");
-        
+
         // Also update local storage user object so navbar name updates
         const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
         storedUser.name = res.data.user.name;
         localStorage.setItem("user", JSON.stringify(storedUser));
-        
+
         // Trigger event so navbar updates instantly
         if (typeof window !== "undefined") {
           window.dispatchEvent(new Event("userUpdated"));
@@ -110,7 +110,10 @@ export default function EditProfile() {
       }
     } catch (err) {
       console.error("Update profile error:", err);
-      setError(err.response?.data?.message || "Failed to update profile. Please try again.");
+      setError(
+        err.response?.data?.message ||
+          "Failed to update profile. Please try again.",
+      );
     } finally {
       setSaving(false);
     }
@@ -122,7 +125,9 @@ export default function EditProfile() {
         <Navbar />
         <div className="flex flex-col items-center justify-center min-h-[60vh] bg-gray-50">
           <div className="w-12 h-12 border-4 border-amber-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-gray-500 font-medium animate-pulse">Loading profile...</p>
+          <p className="text-gray-500 font-medium animate-pulse">
+            Loading profile...
+          </p>
         </div>
         <Footer />
       </>
@@ -136,7 +141,9 @@ export default function EditProfile() {
         <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
           <div className="bg-amber-600 px-6 py-8 text-center text-white">
             <h1 className="text-2xl sm:text-3xl font-bold">My Account</h1>
-            <p className="text-amber-100 text-sm mt-2">View and update your profile information</p>
+            <p className="text-amber-100 text-sm mt-2">
+              View and update your profile information
+            </p>
           </div>
 
           <div className="p-6 sm:p-10">
@@ -156,7 +163,10 @@ export default function EditProfile() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Name */}
                 <div className="sm:col-span-2">
-                  <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-1">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-semibold text-gray-700 mb-1"
+                  >
                     Full Name
                   </label>
                   <input
@@ -173,7 +183,10 @@ export default function EditProfile() {
 
                 {/* Email (Read Only) */}
                 <div className="sm:col-span-2">
-                  <label htmlFor="email" className="block text-sm font-semibold text-gray-500 mb-1">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-semibold text-gray-500 mb-1"
+                  >
                     Email Address (Cannot be changed)
                   </label>
                   <input
@@ -188,7 +201,10 @@ export default function EditProfile() {
 
                 {/* Phone */}
                 <div className="sm:col-span-2">
-                  <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-1">
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-semibold text-gray-700 mb-1"
+                  >
                     Phone Number
                   </label>
                   <input
@@ -204,7 +220,10 @@ export default function EditProfile() {
 
                 {/* Address */}
                 <div className="sm:col-span-2">
-                  <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-1">
+                  <label
+                    htmlFor="address"
+                    className="block text-sm font-semibold text-gray-700 mb-1"
+                  >
                     Street Address
                   </label>
                   <textarea
@@ -220,7 +239,10 @@ export default function EditProfile() {
 
                 {/* City */}
                 <div>
-                  <label htmlFor="city" className="block text-sm font-semibold text-gray-700 mb-1">
+                  <label
+                    htmlFor="city"
+                    className="block text-sm font-semibold text-gray-700 mb-1"
+                  >
                     City
                   </label>
                   <input
@@ -236,7 +258,10 @@ export default function EditProfile() {
 
                 {/* State */}
                 <div>
-                  <label htmlFor="state" className="block text-sm font-semibold text-gray-700 mb-1">
+                  <label
+                    htmlFor="state"
+                    className="block text-sm font-semibold text-gray-700 mb-1"
+                  >
                     State
                   </label>
                   <input
@@ -252,7 +277,10 @@ export default function EditProfile() {
 
                 {/* Pincode */}
                 <div className="sm:col-span-2">
-                  <label htmlFor="pincode" className="block text-sm font-semibold text-gray-700 mb-1">
+                  <label
+                    htmlFor="pincode"
+                    className="block text-sm font-semibold text-gray-700 mb-1"
+                  >
                     Pincode / Postal Code
                   </label>
                   <input

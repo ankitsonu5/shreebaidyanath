@@ -62,7 +62,8 @@ export default function ProductsPage() {
         <h1 className="text-2xl font-bold text-gray-800">Products</h1>
         <button
           onClick={() => navigateTo(router, "/add-product")}
-          className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition shadow-md flex items-center gap-2 text-sm font-medium w-fit cursor-pointer">
+          className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition shadow-md flex items-center gap-2 text-sm font-medium w-fit cursor-pointer"
+        >
           <span className="text-lg">+</span> Add Product
         </button>
       </div>
@@ -77,7 +78,8 @@ export default function ProductsPage() {
           {products.map((item) => (
             <div
               key={item._id}
-              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-0 relative group border border-gray-100">
+              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-0 relative group border border-gray-100"
+            >
               {/* Image */}
               <div className="h-48 w-full relative overflow-hidden rounded-t-xl">
                 <img
@@ -90,14 +92,22 @@ export default function ProductsPage() {
               {/* Info */}
               <div className="p-4 bg-white">
                 <div className="flex justify-between items-start">
-                    <div className="flex-1 min-w-0 pr-6">
-                      <h3 className="text-lg font-semibold text-gray-800 line-clamp-2">
-                        {item.productName}
-                      </h3>
+                  <div className="flex-1 min-w-0 pr-6">
+                    <h3 className="text-lg font-semibold text-gray-800 line-clamp-2">
+                      {item.productName}
+                    </h3>
                     <div className="mt-1 flex items-center gap-2">
-                      <span className="text-blue-600 font-bold">₹{item.productSellingPrice || item.productPrice}</span>
-                      {(item.productMrpPrice || (item.productSellingPrice && item.productMrpPrice)) && (
-                        <span className="text-xs text-gray-400 line-through">₹{item.productMrpPrice || item.productSellingPrice || item.productPrice}</span>
+                      <span className="text-blue-600 font-bold">
+                        ₹{item.productSellingPrice || item.productPrice}
+                      </span>
+                      {(item.productMrpPrice ||
+                        (item.productSellingPrice && item.productMrpPrice)) && (
+                        <span className="text-xs text-gray-400 line-through">
+                          ₹
+                          {item.productMrpPrice ||
+                            item.productSellingPrice ||
+                            item.productPrice}
+                        </span>
                       )}
                     </div>
                     <p className="text-sm text-gray-500 mt-1">
@@ -107,7 +117,8 @@ export default function ProductsPage() {
                           item.productStock > 0
                             ? "text-green-600 font-medium"
                             : "text-red-600 font-medium"
-                        }>
+                        }
+                      >
                         {item.productStock > 0
                           ? item.productStock
                           : "Out of Stock"}
@@ -121,7 +132,8 @@ export default function ProductsPage() {
                       onClick={() =>
                         setOpenMenu(openMenu === item._id ? null : item._id)
                       }
-                      className="text-gray-400 hover:text-black p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer">
+                      className="text-gray-400 hover:text-black p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
+                    >
                       <FaEllipsisV size={16} />
                     </button>
 
@@ -131,12 +143,14 @@ export default function ProductsPage() {
                           onClick={() =>
                             navigateTo(router, `/edit-product/${item._id}`)
                           }
-                          className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 cursor-pointer flex items-center gap-3">
+                          className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 cursor-pointer flex items-center gap-3"
+                        >
                           <FaEdit className="text-blue-500" /> Edit
                         </button>
                         <button
                           onClick={() => handleDelete(item._id)}
-                          className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 text-sm font-medium border-t border-gray-100 cursor-pointer flex items-center gap-3">
+                          className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 text-sm font-medium border-t border-gray-100 cursor-pointer flex items-center gap-3"
+                        >
                           <FaTrash className="text-red-500" /> Delete
                         </button>
                       </div>

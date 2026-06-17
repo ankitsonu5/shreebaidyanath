@@ -215,7 +215,8 @@ export default function HomePage() {
       return (
         <div
           key={product._id}
-          className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col relative group">
+          className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col relative group"
+        >
           {/* Discount Badge */}
           {discount > 0 && (
             <div className="absolute top-2 left-2 z-10 bg-red-600 text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded shadow-sm">
@@ -225,7 +226,8 @@ export default function HomePage() {
 
           <div
             onClick={() => (window.location.href = `/product/${product._id}`)}
-            className="w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer">
+            className="w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer"
+          >
             <img
               src={getImgUrl(product.productImage && product.productImage[0])}
               alt={product.productName}
@@ -235,7 +237,8 @@ export default function HomePage() {
           <div className="p-3 flex flex-col flex-1">
             <p
               onClick={() => (window.location.href = `/product/${product._id}`)}
-              className="text-sm md:text-base font-semibold text-gray-800 line-clamp-2 mb-1 cursor-pointer hover:text-amber-600 transition-colors">
+              className="text-sm md:text-base font-semibold text-gray-800 line-clamp-2 mb-1 cursor-pointer hover:text-amber-600 transition-colors"
+            >
               {product.productName}
             </p>
             <div className="flex items-center gap-2 mb-2">
@@ -252,7 +255,8 @@ export default function HomePage() {
             <div className="flex items-center justify-center gap-3 mb-2">
               <button
                 onClick={() => updateQty(product._id, -1)}
-                className="w-8 h-8 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition">
+                className="w-8 h-8 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition"
+              >
                 <FaMinus size={10} />
               </button>
               <span className="text-sm font-semibold w-6 text-center">
@@ -260,13 +264,15 @@ export default function HomePage() {
               </span>
               <button
                 onClick={() => updateQty(product._id, 1)}
-                className="w-8 h-8 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition">
+                className="w-8 h-8 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer transition"
+              >
                 <FaPlus size={10} />
               </button>
             </div>
             <button
               onClick={() => addToCart(product)}
-              className="mt-auto w-full bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold py-2 rounded-md transition-colors cursor-pointer">
+              className="mt-auto w-full bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold py-2 rounded-md transition-colors cursor-pointer"
+            >
               Add to Cart
             </button>
           </div>
@@ -284,7 +290,8 @@ export default function HomePage() {
             {showViewAll && (
               <a
                 href={`/products/${slug}`}
-                className="absolute right-0 top-1/2 -translate-y-1/2 text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer text-xs md:text-base z-10">
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer text-xs md:text-base z-10"
+              >
                 View All{" "}
                 <span className="group-hover:translate-x-1 transition-transform">
                   <FaArrowRight size={14} />
@@ -329,7 +336,8 @@ export default function HomePage() {
                     idx === currentBanner % heroBanners.length
                       ? "relative opacity-100 z-10"
                       : "absolute inset-0 opacity-0 z-0"
-                  }`}>
+                  }`}
+                >
                   {isVideo ? (
                     <video
                       src={getImgUrl(banner.bannerImage)}
@@ -401,7 +409,8 @@ export default function HomePage() {
               <div className="w-16 md:w-20 h-1 bg-amber-600 mx-auto rounded-full mt-2"></div>
               <a
                 href="/all-collections"
-                className="absolute right-0 top-1/2 -translate-y-1/2 text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer text-xs md:text-base z-10">
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer text-xs md:text-base z-10"
+              >
                 View All{" "}
                 <span className="group-hover:translate-x-1 transition-transform">
                   <FaArrowRight size={14} />
@@ -417,7 +426,8 @@ export default function HomePage() {
                   onClick={() =>
                     navigateTo(router, `/all-products?collection=${col._id}`)
                   }
-                  className="group flex flex-col items-center cursor-pointer">
+                  className="group flex flex-col items-center cursor-pointer"
+                >
                   <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent group-hover:border-amber-600 transition-all duration-300 shadow-md group-hover:shadow-xl">
                     <img
                       src={getImgUrl(
@@ -440,7 +450,8 @@ export default function HomePage() {
                   onClick={() =>
                     navigateTo(router, `/all-products?collection=${col._id}`)
                   }
-                  className="hidden md:flex group flex-col items-center cursor-pointer">
+                  className="hidden md:flex group flex-col items-center cursor-pointer"
+                >
                   <div className="relative w-36 h-36 rounded-full overflow-hidden mb-4 border-2 border-transparent group-hover:border-amber-600 transition-all duration-300 shadow-md group-hover:shadow-xl">
                     <img
                       src={getImgUrl(
@@ -471,7 +482,8 @@ export default function HomePage() {
                 return (
                   <div
                     key={banner._id}
-                    className="cursor-pointer w-full sm:flex-1 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    className="cursor-pointer w-full sm:flex-1 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                  >
                     {isVideo ? (
                       <video
                         src={getImgUrl(banner.bannerImage)}
@@ -532,7 +544,8 @@ export default function HomePage() {
               title="YouTube video player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen></iframe>
+              allowFullScreen
+            ></iframe>
           </div>
         </div>
       </section>
@@ -546,7 +559,8 @@ export default function HomePage() {
             </h2>
             <a
               href="/blog"
-              className="absolute right-0 top-1/2 -translate-y-1/2 text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer z-10">
+              className="absolute right-0 top-1/2 -translate-y-1/2 text-amber-600 font-semibold hover:underline flex items-center gap-1 group cursor-pointer z-10"
+            >
               View all{" "}
               <span className="group-hover:translate-x-1 transition-transform">
                 <FaArrowRight size={14} />
@@ -561,7 +575,8 @@ export default function HomePage() {
                   className="lg:col-span-8 group cursor-pointer"
                   onClick={() =>
                     navigateTo(router, `/blog/${recentBlogs[0].slug}`)
-                  }>
+                  }
+                >
                   <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-6 shadow-lg">
                     <img
                       src={getImgUrl(recentBlogs[0].image)}
@@ -585,7 +600,8 @@ export default function HomePage() {
                     <div
                       key={blog._id}
                       onClick={() => navigateTo(router, `/blog/${blog.slug}`)}
-                      className={`pt-8 first:pt-0 group cursor-pointer flex gap-4`}>
+                      className={`pt-8 first:pt-0 group cursor-pointer flex gap-4`}
+                    >
                       <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-20 rounded-lg overflow-hidden shadow-md">
                         <img
                           src={getImgUrl(blog.image)}

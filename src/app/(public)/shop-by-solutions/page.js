@@ -94,7 +94,9 @@ export default function ShopBySolutions() {
                 Home
               </span>
               <FaChevronRight size={10} className="text-gray-400" />
-              <span className="text-gray-800 font-medium">Shop by Solutions</span>
+              <span className="text-gray-800 font-medium">
+                Shop by Solutions
+              </span>
             </div>
           </div>
         </div>
@@ -106,7 +108,8 @@ export default function ShopBySolutions() {
               Shop by Solutions
             </h1>
             <p className="text-gray-500 text-sm md:text-base max-w-xl mx-auto mb-4">
-              Explore our premium range of highly effective and 100% natural herbal solutions.
+              Explore our premium range of highly effective and 100% natural
+              herbal solutions.
             </p>
             <div className="w-20 h-1 bg-amber-600 mx-auto rounded-full"></div>
           </div>
@@ -120,7 +123,9 @@ export default function ShopBySolutions() {
             </div>
           ) : products.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100 max-w-lg mx-auto p-8">
-              <p className="text-gray-400 text-lg mb-6">No solutions products added yet.</p>
+              <p className="text-gray-400 text-lg mb-6">
+                No solutions products added yet.
+              </p>
               <button
                 onClick={() => navigateTo(router, "/")}
                 className="px-6 py-2.5 bg-amber-600 text-white font-semibold rounded-lg hover:bg-amber-700 transition cursor-pointer shadow-md"
@@ -135,9 +140,7 @@ export default function ShopBySolutions() {
                   product.productSellingPrice || product.productPrice;
                 const mrp = product.productMrpPrice || selling;
                 const discount =
-                  mrp > selling
-                    ? Math.round(((mrp - selling) / mrp) * 100)
-                    : 0;
+                  mrp > selling ? Math.round(((mrp - selling) / mrp) * 100) : 0;
 
                 return (
                   <div

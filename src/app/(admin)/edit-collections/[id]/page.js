@@ -167,7 +167,8 @@ export default function EditCollection() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold uppercase tracking-wider hover:bg-blue-700 transition shadow-lg disabled:bg-blue-300 disabled:cursor-not-allowed cursor-pointer">
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold uppercase tracking-wider hover:bg-blue-700 transition shadow-lg disabled:bg-blue-300 disabled:cursor-not-allowed cursor-pointer"
+          >
             {loading ? "Updating..." : "Update Collection"}
           </button>
         </form>

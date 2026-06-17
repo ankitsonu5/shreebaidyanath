@@ -198,7 +198,8 @@ export default function Navbar() {
         {/* Logo */}
         <div
           onClick={() => navigateTo(router, "/")}
-          className="flex items-center cursor-pointer">
+          className="flex items-center cursor-pointer"
+        >
           <Image
             src="/logo.png"
             alt="Logo"
@@ -218,10 +219,12 @@ export default function Navbar() {
               setShowCollections(true);
               fetchCollections();
             }}
-            onMouseLeave={() => setShowCollections(false)}>
+            onMouseLeave={() => setShowCollections(false)}
+          >
             <Link
               href="/all-collections"
-              className={`flex items-center gap-1 hover:text-red-600 transition-colors ${showCollections ? "text-red-600" : ""}`}>
+              className={`flex items-center gap-1 hover:text-red-600 transition-colors ${showCollections ? "text-red-600" : ""}`}
+            >
               Shop by Collections{" "}
               <IoChevronDownOutline
                 size={14}
@@ -239,7 +242,8 @@ export default function Navbar() {
                         key={col._id}
                         href={`/all-products?collection=${col._id}`}
                         onClick={() => setShowCollections(false)}
-                        className="px-6 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 border-l-4 border-transparent hover:border-red-600 font-medium">
+                        className="px-6 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 border-l-4 border-transparent hover:border-red-600 font-medium"
+                      >
                         {col.collectionName}
                       </Link>
                     ))
@@ -251,7 +255,8 @@ export default function Navbar() {
                   <Link
                     href="/all-collections"
                     onClick={() => setShowCollections(false)}
-                    className="mt-2 mx-6 py-2 text-xs text-center border-t border-gray-100 text-gray-400 hover:text-red-600 transition-colors uppercase tracking-wider font-bold">
+                    className="mt-2 mx-6 py-2 text-xs text-center border-t border-gray-100 text-gray-400 hover:text-red-600 transition-colors uppercase tracking-wider font-bold"
+                  >
                     View All Collections
                   </Link>
                 </div>
@@ -301,7 +306,8 @@ export default function Navbar() {
             {searchOpen ? (
               <form
                 onSubmit={handleSearchSubmit}
-                className="absolute right-0 top-1/2 -translate-y-1/2 bg-white px-3 py-2 shadow-xl border border-gray-200 rounded-xl z-50 flex items-center gap-2 w-48 sm:w-64 animate-in fade-in zoom-in-95 duration-200">
+                className="absolute right-0 top-1/2 -translate-y-1/2 bg-white px-3 py-2 shadow-xl border border-gray-200 rounded-xl z-50 flex items-center gap-2 w-48 sm:w-64 animate-in fade-in zoom-in-95 duration-200"
+              >
                 <input
                   type="text"
                   placeholder="Search products..."
@@ -315,7 +321,8 @@ export default function Navbar() {
                 />
                 <button
                   type="submit"
-                  className="text-gray-600 hover:text-red-600 cursor-pointer p-1">
+                  className="text-gray-600 hover:text-red-600 cursor-pointer p-1"
+                >
                   <FaSearch size={14} />
                 </button>
                 <button
@@ -325,7 +332,8 @@ export default function Navbar() {
                     setSearchQuery("");
                     setShowSuggestions(false);
                   }}
-                  className="text-gray-400 hover:text-gray-600 cursor-pointer p-1 text-sm font-bold">
+                  className="text-gray-400 hover:text-gray-600 cursor-pointer p-1 text-sm font-bold"
+                >
                   ✕
                 </button>
 
@@ -361,7 +369,8 @@ export default function Navbar() {
                                     setSearchQuery("");
                                     setShowSuggestions(false);
                                   }}
-                                  className="px-4 py-2 text-xs md:text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 cursor-pointer font-medium border-l-4 border-transparent hover:border-red-600 flex items-center justify-between">
+                                  className="px-4 py-2 text-xs md:text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 cursor-pointer font-medium border-l-4 border-transparent hover:border-red-600 flex items-center justify-between"
+                                >
                                   <span>{col.collectionName}</span>
                                   <span className="text-[10px] text-gray-400 font-normal">
                                     Collection
@@ -389,7 +398,8 @@ export default function Navbar() {
                                     setSearchQuery("");
                                     setShowSuggestions(false);
                                   }}
-                                  className="px-4 py-2 flex items-center gap-3 hover:bg-red-50 transition-colors cursor-pointer group">
+                                  className="px-4 py-2 flex items-center gap-3 hover:bg-red-50 transition-colors cursor-pointer group"
+                                >
                                   <div className="w-9 h-9 bg-gray-50 rounded-lg overflow-hidden border border-gray-100 p-1 flex-shrink-0 flex items-center justify-center">
                                     <img
                                       src={getImgUrl(
@@ -430,7 +440,8 @@ export default function Navbar() {
                             handleSearchSubmit(e);
                             setShowSuggestions(false);
                           }}
-                          className="mt-2 mx-4 py-2 border-t border-gray-100 text-center text-[10px] md:text-xs font-bold text-gray-400 hover:text-red-600 cursor-pointer uppercase tracking-wider transition-colors">
+                          className="mt-2 mx-4 py-2 border-t border-gray-100 text-center text-[10px] md:text-xs font-bold text-gray-400 hover:text-red-600 cursor-pointer uppercase tracking-wider transition-colors"
+                        >
                           View all results for "{searchQuery}"
                         </div>
                       </div>
@@ -449,7 +460,8 @@ export default function Navbar() {
             <div className="relative">
               <div
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center gap-1 cursor-pointer hover:text-red-600 text-sm font-medium">
+                className="flex items-center gap-1 cursor-pointer hover:text-red-600 text-sm font-medium"
+              >
                 <FaUser className="text-base sm:text-lg" />
                 <span className="hidden sm:inline">Profile</span>
               </div>
@@ -464,26 +476,30 @@ export default function Navbar() {
                   <Link
                     href="/my-orders"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                    onClick={() => setProfileOpen(false)}>
+                    onClick={() => setProfileOpen(false)}
+                  >
                     My Orders
                   </Link>
                   <Link
                     href="/edit-user-info"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                    onClick={() => setProfileOpen(false)}>
+                    onClick={() => setProfileOpen(false)}
+                  >
                     Edit Profile
                   </Link>
                   {user.role === "admin" && (
                     <Link
                       href="/admindashboard"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                      onClick={() => setProfileOpen(false)}>
+                      onClick={() => setProfileOpen(false)}
+                    >
                       Admin Dashboard
                     </Link>
                   )}
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100 mt-1 cursor-pointer">
+                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100 mt-1 cursor-pointer"
+                  >
                     Logout
                   </button>
                 </div>
@@ -497,7 +513,8 @@ export default function Navbar() {
           )}
           <div
             onClick={() => navigateTo(router, "/cart")}
-            className="relative cursor-pointer">
+            className="relative cursor-pointer"
+          >
             <FaShoppingBag className="hover:text-red-600 text-base sm:text-lg" />
             {cartCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md animate-pulse">

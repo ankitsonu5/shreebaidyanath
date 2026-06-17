@@ -5,7 +5,13 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
-import { FaShoppingCart, FaPlus, FaMinus, FaHeart, FaShieldAlt } from "react-icons/fa";
+import {
+  FaShoppingCart,
+  FaPlus,
+  FaMinus,
+  FaHeart,
+  FaShieldAlt,
+} from "react-icons/fa";
 import { navigateTo } from "../../lib/navigation";
 
 export default function ImmunityBoosterPage() {
@@ -30,13 +36,17 @@ export default function ImmunityBoosterPage() {
         const collections = colRes.data.collections || [];
         // Find the "Immunity Booster" collection (case-insensitive)
         const immunityCol = collections.find(
-          c => c.collectionName && c.collectionName.toLowerCase() === "immunity booster"
+          (c) =>
+            c.collectionName &&
+            c.collectionName.toLowerCase() === "immunity booster",
         );
 
         if (immunityCol) {
           setCollectionInfo(immunityCol);
           // 2. Fetch products in this collection
-          const prodRes = await axios.get(`${API}/products?productCollection=${immunityCol._id}`);
+          const prodRes = await axios.get(
+            `${API}/products?productCollection=${immunityCol._id}`,
+          );
           if (prodRes.data.success) {
             setProducts(prodRes.data.products || []);
           }
@@ -47,11 +57,15 @@ export default function ImmunityBoosterPage() {
           if (prodRes.data.success) {
             const allProducts = prodRes.data.products || [];
             const filtered = allProducts.filter(
-              p =>
-                (p.productName && p.productName.toLowerCase().includes("immunity")) ||
-                (p.productDescription && p.productDescription.toLowerCase().includes("immunity")) ||
-                (p.productName && p.productName.toLowerCase().includes("kumbhprash")) ||
-                (p.productName && p.productName.toLowerCase().includes("basant"))
+              (p) =>
+                (p.productName &&
+                  p.productName.toLowerCase().includes("immunity")) ||
+                (p.productDescription &&
+                  p.productDescription.toLowerCase().includes("immunity")) ||
+                (p.productName &&
+                  p.productName.toLowerCase().includes("kumbhprash")) ||
+                (p.productName &&
+                  p.productName.toLowerCase().includes("basant")),
             );
             setProducts(filtered);
           }
@@ -66,9 +80,7 @@ export default function ImmunityBoosterPage() {
 
   const getImgUrl = (path) => {
     if (!path) return "";
-    return path.startsWith("http")
-      ? path
-      : `${API}/${path}`;
+    return path.startsWith("http") ? path : `${API}/${path}`;
   };
 
   const updateQty = (id, delta) => {
@@ -83,7 +95,7 @@ export default function ImmunityBoosterPage() {
     const qty = quantities[product._id] || 1;
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     const existingIndex = storedCart.findIndex(
-      (item) => item._id === product._id
+      (item) => item._id === product._id,
     );
 
     const price = product.productSellingPrice || product.productPrice;
@@ -106,7 +118,7 @@ export default function ImmunityBoosterPage() {
     localStorage.setItem("cart", JSON.stringify(storedCart));
     setQuantities((prev) => ({ ...prev, [product._id]: 1 }));
     alert(`${product.productName} added to cart!`);
-    
+
     // Dispatch cart updated event to refresh count in Navbar
     setTimeout(() => {
       if (typeof window !== "undefined") {
@@ -120,16 +132,18 @@ export default function ImmunityBoosterPage() {
       <Navbar />
       <div className="min-h-screen bg-[#fcfbf7] pb-16">
         {/* Luxury Hero Banner */}
-        <div 
-          className="relative bg-gradient-to-r from-emerald-950 via-emerald-900 to-amber-950 text-white overflow-hidden py-16 md:py-24 px-6 md:px-12 border-b border-amber-500/20"
-        >
+        <div className="relative bg-gradient-to-r from-emerald-950 via-emerald-900 to-amber-950 text-white overflow-hidden py-16 md:py-24 px-6 md:px-12 border-b border-amber-500/20">
           {/* Decorative shapes */}
           <div className="absolute right-0 bottom-0 top-0 w-1/2 opacity-15 pointer-events-none">
-            <svg viewBox="0 0 100 100" fill="currentColor" className="text-amber-300 w-full h-full object-cover">
+            <svg
+              viewBox="0 0 100 100"
+              fill="currentColor"
+              className="text-amber-300 w-full h-full object-cover"
+            >
               <path d="M50 0 C65 20 80 40 100 50 C80 60 65 80 50 100 C35 80 20 60 0 50 C20 40 35 20 50 0 Z" />
             </svg>
           </div>
-          
+
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-8 relative z-10">
             <div className="flex-1 space-y-6 text-center md:text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-800/80 border border-emerald-500/30 text-amber-300 text-xs font-semibold uppercase tracking-wider">
@@ -139,17 +153,27 @@ export default function ImmunityBoosterPage() {
                 Shield Your Health with Ayurveda
               </h1>
               <p className="text-emerald-100/90 text-sm md:text-lg max-w-xl font-light leading-relaxed">
-                Elevate your body's natural defenses. Discover Shree Baidyanath's premium range of Immunity Boosters, crafted meticulously with time-tested organic herbs, pure honey, and Swarna Bhasma (Gold).
+                Elevate your body's natural defenses. Discover Shree
+                Baidyanath's premium range of Immunity Boosters, crafted
+                meticulously with time-tested organic herbs, pure honey, and
+                Swarna Bhasma (Gold).
               </p>
               <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full mx-auto md:mx-0"></div>
             </div>
-            
+
             {/* Banner graphics */}
             <div className="hidden md:flex justify-center items-center flex-shrink-0 w-80 h-80 rounded-full border-4 border-amber-500/20 bg-emerald-900/50 p-6 shadow-2xl relative">
-              <div className="absolute inset-4 rounded-full border border-amber-500/10 animate-spin" style={{ animationDuration: '20s' }}></div>
-              <img 
-                src={collectionInfo?.collectionImage?.[0] ? getImgUrl(collectionInfo.collectionImage[0]) : "/shopbycolletions/immunitybooster.webp"}
-                alt="Immunity Booster Collections" 
+              <div
+                className="absolute inset-4 rounded-full border border-amber-500/10 animate-spin"
+                style={{ animationDuration: "20s" }}
+              ></div>
+              <img
+                src={
+                  collectionInfo?.collectionImage?.[0]
+                    ? getImgUrl(collectionInfo.collectionImage[0])
+                    : "/shopbycolletions/immunitybooster.webp"
+                }
+                alt="Immunity Booster Collections"
                 className="w-full h-full object-contain rounded-full shadow-inner"
               />
             </div>
@@ -160,24 +184,40 @@ export default function ImmunityBoosterPage() {
         <div className="max-w-6xl mx-auto px-4 -mt-8 relative z-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white p-6 rounded-2xl shadow-xl border border-gray-100/80">
             <div className="flex items-start gap-4 p-2 border-b md:border-b-0 md:border-r border-gray-100">
-              <span className="w-12 h-12 bg-amber-50 text-amber-700 rounded-xl flex items-center justify-center flex-shrink-0 text-xl font-bold">01</span>
+              <span className="w-12 h-12 bg-amber-50 text-amber-700 rounded-xl flex items-center justify-center flex-shrink-0 text-xl font-bold">
+                01
+              </span>
               <div>
-                <h4 className="font-semibold text-gray-900">Enriched with Gold (Swarna)</h4>
-                <p className="text-xs text-gray-500 mt-0.5">Gold particles boost cellular immunity and promote longevity.</p>
+                <h4 className="font-semibold text-gray-900">
+                  Enriched with Gold (Swarna)
+                </h4>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Gold particles boost cellular immunity and promote longevity.
+                </p>
               </div>
             </div>
             <div className="flex items-start gap-4 p-2 border-b md:border-b-0 md:border-r border-gray-100">
-              <span className="w-12 h-12 bg-emerald-50 text-emerald-700 rounded-xl flex items-center justify-center flex-shrink-0 text-xl font-bold">02</span>
+              <span className="w-12 h-12 bg-emerald-50 text-emerald-700 rounded-xl flex items-center justify-center flex-shrink-0 text-xl font-bold">
+                02
+              </span>
               <div>
-                <h4 className="font-semibold text-gray-900">100% Natural Active Herbs</h4>
-                <p className="text-xs text-gray-500 mt-0.5">Sourced ethically from organic farms directly to clinic.</p>
+                <h4 className="font-semibold text-gray-900">
+                  100% Natural Active Herbs
+                </h4>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Sourced ethically from organic farms directly to clinic.
+                </p>
               </div>
             </div>
             <div className="flex items-start gap-4 p-2">
-              <span className="w-12 h-12 bg-amber-50 text-amber-700 rounded-xl flex items-center justify-center flex-shrink-0 text-xl font-bold">03</span>
+              <span className="w-12 h-12 bg-amber-50 text-amber-700 rounded-xl flex items-center justify-center flex-shrink-0 text-xl font-bold">
+                03
+              </span>
               <div>
                 <h4 className="font-semibold text-gray-900">Vaidya Approved</h4>
-                <p className="text-xs text-gray-500 mt-0.5">Formulations clinically recommended by Ayurvedic Doctors.</p>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Formulations clinically recommended by Ayurvedic Doctors.
+                </p>
               </div>
             </div>
           </div>
@@ -190,7 +230,9 @@ export default function ImmunityBoosterPage() {
               Our Premium Immunity Boosters
             </h2>
             <p className="text-sm text-gray-500">
-              {loading ? "Loading products..." : `Showing ${products.length} elite product(s)`}
+              {loading
+                ? "Loading products..."
+                : `Showing ${products.length} elite product(s)`}
             </p>
           </div>
 
@@ -203,11 +245,14 @@ export default function ImmunityBoosterPage() {
               <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4 text-amber-600">
                 <FaShieldAlt size={28} />
               </div>
-              <h3 className="text-lg font-bold text-gray-800">No Products Available</h3>
+              <h3 className="text-lg font-bold text-gray-800">
+                No Products Available
+              </h3>
               <p className="text-gray-500 text-sm mt-1 mb-6">
-                Our immunity booster products are currently restocking. Please check back shortly or explore other solutions!
+                Our immunity booster products are currently restocking. Please
+                check back shortly or explore other solutions!
               </p>
-              <button 
+              <button
                 onClick={() => navigateTo(router, "/all-products")}
                 className="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-950 text-white rounded-lg transition-colors cursor-pointer text-sm font-semibold"
               >
@@ -217,9 +262,11 @@ export default function ImmunityBoosterPage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {products.map((product) => {
-                const selling = product.productSellingPrice || product.productPrice;
+                const selling =
+                  product.productSellingPrice || product.productPrice;
                 const mrp = product.productMrpPrice || selling;
-                const discount = mrp > selling ? Math.round(((mrp - selling) / mrp) * 100) : 0;
+                const discount =
+                  mrp > selling ? Math.round(((mrp - selling) / mrp) * 100) : 0;
 
                 return (
                   <div
@@ -232,7 +279,7 @@ export default function ImmunityBoosterPage() {
                         {discount}% OFF
                       </div>
                     )}
-                    
+
                     {/* Wishlist Button */}
                     <button className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm border border-gray-100 text-gray-400 hover:text-red-500 hover:scale-110 flex items-center justify-center transition cursor-pointer">
                       <FaHeart size={14} />
@@ -240,11 +287,17 @@ export default function ImmunityBoosterPage() {
 
                     {/* Image */}
                     <div
-                      onClick={() => navigateTo(router, `/product/${product._id}`)}
+                      onClick={() =>
+                        navigateTo(router, `/product/${product._id}`)
+                      }
                       className="w-full aspect-[4/3] bg-gradient-to-b from-gray-50/50 to-white overflow-hidden cursor-pointer relative flex items-center justify-center p-4 border-b border-gray-50"
                     >
                       <img
-                        src={product.productImage && product.productImage[0] ? getImgUrl(product.productImage[0]) : ""}
+                        src={
+                          product.productImage && product.productImage[0]
+                            ? getImgUrl(product.productImage[0])
+                            : ""
+                        }
                         alt={product.productName}
                         className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500 p-2"
                       />
@@ -260,14 +313,17 @@ export default function ImmunityBoosterPage() {
                     {/* Info */}
                     <div className="p-5 flex flex-col flex-1">
                       <h3
-                        onClick={() => navigateTo(router, `/product/${product._id}`)}
+                        onClick={() =>
+                          navigateTo(router, `/product/${product._id}`)
+                        }
                         className="text-base font-bold text-gray-900 line-clamp-2 mb-1.5 cursor-pointer hover:text-emerald-800 transition-colors leading-snug min-h-[44px]"
                       >
                         {product.productName}
                       </h3>
 
                       <p className="text-xs text-gray-500 leading-relaxed line-clamp-3 mb-4 flex-1">
-                        {product.productDescription || "Premium Ayurvedic formulation to rejuvenate health, support immunity, and promote overall wellness."}
+                        {product.productDescription ||
+                          "Premium Ayurvedic formulation to rejuvenate health, support immunity, and promote overall wellness."}
                       </p>
 
                       <div className="flex items-baseline gap-2 mb-4 border-t border-gray-50 pt-4">
@@ -301,7 +357,7 @@ export default function ImmunityBoosterPage() {
                               <FaPlus size={10} />
                             </button>
                           </div>
-                          
+
                           {/* Add to Cart button */}
                           <button
                             onClick={() => addToCart(product)}

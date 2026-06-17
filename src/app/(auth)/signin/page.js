@@ -95,9 +95,16 @@ function SigninForm() {
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
           <div
             onClick={() => router.push("/")}
+<<<<<<< HEAD
+            className="flex items-center justify-center cursor-pointer mb-4"
+          >
+            {/* <Image
+            src=""
+=======
             className="flex items-center justify-center cursor-pointer mb-4">
             <Image
             src="/logo.png"
+>>>>>>> b0dd3c5a17da578c15f8296a40a244119b217317
             alt="Logo"
             width={160}
             height={50}
@@ -113,7 +120,8 @@ function SigninForm() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-gray-700 font-medium mb-1">
+                className="block text-gray-700 font-medium mb-1"
+              >
                 Email
               </label>
               <input
@@ -130,7 +138,8 @@ function SigninForm() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-gray-700 font-medium mb-1">
+                className="block text-gray-700 font-medium mb-1"
+              >
                 Password
               </label>
               <div className="relative">
@@ -146,22 +155,29 @@ function SigninForm() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none cursor-pointer">
-                  {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none cursor-pointer"
+                >
+                  {showPassword ? (
+                    <FaEyeSlash size={18} />
+                  ) : (
+                    <FaEye size={18} />
+                  )}
                 </button>
               </div>
             </div>
             <div className="flex justify-end">
               <a
                 href="/forgotpassword"
-                className="text-sm text-blue-600 hover:underline">
+                className="text-sm text-blue-600 hover:underline"
+              >
                 Forgot password?
               </a>
             </div>
             {/* Button */}
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 cursor-pointer">
+              className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 cursor-pointer"
+            >
               Sign In
             </button>
           </form>
@@ -169,7 +185,8 @@ function SigninForm() {
             Don't have account?{" "}
             <span
               onClick={() => router.push("/register")}
-              className="text-blue-600 cursor-pointer">
+              className="text-blue-600 cursor-pointer"
+            >
               Register
             </span>
           </p>
@@ -181,7 +198,13 @@ function SigninForm() {
 
 export default function Signin() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-screen"><div className="text-gray-500">Loading...</div></div>}>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-gray-500">Loading...</div>
+        </div>
+      }
+    >
       <SigninForm />
     </Suspense>
   );

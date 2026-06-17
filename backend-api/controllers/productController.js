@@ -132,16 +132,18 @@ exports.getShopBySolutions = async (req, res) => {
   try {
     // Find collections matching "Pure Herbs" or "Herbal Juices" (case-insensitive & handles potential typos/variations)
     const collections = await Collection.find({
-      collectionName: { $in: [/pure herbs/i, /hurb.*juice/i, /herbal.*juice/i] }
+      collectionName: {
+        $in: [/pure herbs/i, /hurb.*juice/i, /herbal.*juice/i],
+      },
     });
-    const collectionIds = collections.map(c => c._id);
+    const collectionIds = collections.map((c) => c._id);
 
     // Get products belonging to these collections OR tagged with "herbal"
     const products = await Product.find({
       $or: [
         { productCollection: { $in: collectionIds } },
-        { productTag: "herbal" }
-      ]
+        { productTag: "herbal" },
+      ],
     }).populate("productCollection", "collectionName");
 
     res.status(200).json({ success: true, products });
@@ -154,18 +156,24 @@ exports.getSearchSuggestions = async (req, res) => {
   try {
     const { q } = req.query;
     if (!q || q.trim() === "") {
-      return res.status(200).json({ success: true, products: [], collections: [] });
+      return res
+        .status(200)
+        .json({ success: true, products: [], collections: [] });
     }
 
     const searchRegex = new RegExp(q.trim(), "i");
 
     // Fetch up to 5 matching products
-    const products = await Product.find({ productName: { $regex: searchRegex } })
+    const products = await Product.find({
+      productName: { $regex: searchRegex },
+    })
       .select("productName productImage productSellingPrice productPrice")
       .limit(5);
 
     // Fetch up to 5 matching collections
-    const collections = await Collection.find({ collectionName: { $regex: searchRegex } })
+    const collections = await Collection.find({
+      collectionName: { $regex: searchRegex },
+    })
       .select("collectionName collectionImage")
       .limit(5);
 

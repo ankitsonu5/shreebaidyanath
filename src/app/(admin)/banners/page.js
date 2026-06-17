@@ -88,7 +88,8 @@ export default function BannersPage() {
         <h1 className="text-2xl font-bold text-gray-800">Banners</h1>
         <button
           onClick={() => navigateTo(router, "/add-banner")}
-          className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition shadow-md flex items-center gap-2 text-sm font-medium w-fit cursor-pointer">
+          className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition shadow-md flex items-center gap-2 text-sm font-medium w-fit cursor-pointer"
+        >
           <span className="text-lg">+</span> Add Banner
         </button>
       </div>
@@ -106,9 +107,11 @@ export default function BannersPage() {
                 banner.isActive
                   ? "border-gray-100"
                   : "border-red-200 opacity-60"
-              }`}>
+              }`}
+            >
               <div className="h-48 w-full flex items-center justify-center bg-gray-50 overflow-hidden">
-                {banner.bannerImage && /\.(mp4|webm|ogg|mov|mkv)$/i.test(banner.bannerImage) ? (
+                {banner.bannerImage &&
+                /\.(mp4|webm|ogg|mov|mkv)$/i.test(banner.bannerImage) ? (
                   <video
                     src={getImageUrl(banner)}
                     className="w-full h-full object-contain"
@@ -137,7 +140,8 @@ export default function BannersPage() {
                       banner.isActive
                         ? "bg-green-50 text-green-700"
                         : "bg-red-50 text-red-600"
-                    }`}>
+                    }`}
+                  >
                     {banner.isActive ? "Active" : "Inactive"}
                   </span>
                 </div>
@@ -150,17 +154,22 @@ export default function BannersPage() {
                       banner.isActive
                         ? "bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
                         : "bg-green-50 text-green-700 hover:bg-green-100"
-                    }`}>
+                    }`}
+                  >
                     {banner.isActive ? "Deactivate" : "Activate"}
                   </button>
                   <button
-                    onClick={() => navigateTo(router, `/edit-banner/${banner._id}`)}
-                    className="text-sm font-medium px-3 py-1.5 rounded-lg cursor-pointer bg-blue-50 text-blue-700 hover:bg-blue-100 transition flex items-center gap-1">
+                    onClick={() =>
+                      navigateTo(router, `/edit-banner/${banner._id}`)
+                    }
+                    className="text-sm font-medium px-3 py-1.5 rounded-lg cursor-pointer bg-blue-50 text-blue-700 hover:bg-blue-100 transition flex items-center gap-1"
+                  >
                     <FiEdit2 size={14} /> Edit
                   </button>
                   <button
                     onClick={() => handleDelete(banner._id)}
-                    className="text-sm font-medium px-3 py-1.5 rounded-lg cursor-pointer bg-red-50 text-red-600 hover:bg-red-100 transition ml-auto">
+                    className="text-sm font-medium px-3 py-1.5 rounded-lg cursor-pointer bg-red-50 text-red-600 hover:bg-red-100 transition ml-auto"
+                  >
                     Delete
                   </button>
                 </div>

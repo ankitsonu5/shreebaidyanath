@@ -9,7 +9,8 @@ exports.createContact = async (req, res) => {
     if (!name || !email || !(mobile || phone) || !subject || !message) {
       return res.status(400).json({
         success: false,
-        message: "Please provide all required fields: name, email, mobile, subject, message.",
+        message:
+          "Please provide all required fields: name, email, mobile, subject, message.",
       });
     }
 
@@ -53,7 +54,10 @@ exports.createContact = async (req, res) => {
         })
           .then(() => console.log("Admin contact email sent (background)."))
           .catch((err) =>
-            console.error("ADMIN CONTACT EMAIL FAILED (background):", err.message),
+            console.error(
+              "ADMIN CONTACT EMAIL FAILED (background):",
+              err.message,
+            ),
           );
       }
     } catch (error) {
@@ -87,9 +91,16 @@ exports.createContact = async (req, res) => {
           subject: "Thank you for contacting Shree Baidyanath",
           html: customerHtml,
         })
-          .then(() => console.log("Customer contact confirmation email sent (background)."))
+          .then(() =>
+            console.log(
+              "Customer contact confirmation email sent (background).",
+            ),
+          )
           .catch((err) =>
-            console.error("CUSTOMER CONTACT EMAIL FAILED (background):", err.message),
+            console.error(
+              "CUSTOMER CONTACT EMAIL FAILED (background):",
+              err.message,
+            ),
           );
       }
     } catch (error) {
@@ -117,9 +128,13 @@ exports.deleteContact = async (req, res) => {
     const { id } = req.params;
     const contact = await Contact.findByIdAndDelete(id);
     if (!contact) {
-      return res.status(404).json({ success: false, message: "Contact inquiry not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Contact inquiry not found" });
     }
-    res.status(200).json({ success: true, message: "Contact inquiry deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Contact inquiry deleted successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

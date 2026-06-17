@@ -62,7 +62,8 @@ export default function ViewOrderPage() {
           </p>
         </div>
         <span
-          className={`text-sm font-semibold px-4 py-2 rounded-full border ${statusColors[order.orderStatus] || "bg-gray-100 text-gray-600"}`}>
+          className={`text-sm font-semibold px-4 py-2 rounded-full border ${statusColors[order.orderStatus] || "bg-gray-100 text-gray-600"}`}
+        >
           {order.orderStatus}
         </span>
       </div>
@@ -122,7 +123,8 @@ export default function ViewOrderPage() {
           {order.orderItems?.map((item, idx) => (
             <div
               key={idx}
-              className="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
+              className="flex items-center gap-4 py-4 first:pt-0 last:pb-0"
+            >
               {item.image && (
                 <img
                   src={item.image}

@@ -59,7 +59,8 @@ export default function CollectionsPage() {
         <h1 className="text-2xl font-bold text-gray-800">Collections</h1>
         <button
           onClick={() => navigateTo(router, "/add-collections")}
-          className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition shadow-md flex items-center gap-2 text-sm font-medium w-fit cursor-pointer">
+          className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition shadow-md flex items-center gap-2 text-sm font-medium w-fit cursor-pointer"
+        >
           <span className="text-lg">+</span> Add Collection
         </button>
       </div>
@@ -74,7 +75,8 @@ export default function CollectionsPage() {
           {collections.map((item) => (
             <div
               key={item._id}
-              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-0 relative group border border-gray-100">
+              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-0 relative group border border-gray-100"
+            >
               {/* Image container */}
               <div className="h-40 w-full relative overflow-hidden">
                 <img
@@ -102,7 +104,8 @@ export default function CollectionsPage() {
                     onClick={() =>
                       setOpenMenu(openMenu === item._id ? null : item._id)
                     }
-                    className="text-gray-400 hover:text-black p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer">
+                    className="text-gray-400 hover:text-black p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
+                  >
                     <FaEllipsisV size={16} />
                   </button>
 
@@ -113,12 +116,14 @@ export default function CollectionsPage() {
                         onClick={() =>
                           navigateTo(router, `/edit-collections/${item._id}`)
                         }
-                        className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 cursor-pointer flex items-center gap-3">
+                        className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 cursor-pointer flex items-center gap-3"
+                      >
                         <FaEdit className="text-blue-500" /> Edit
                       </button>
                       <button
                         onClick={() => collectionDelete(item._id)}
-                        className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 text-sm font-medium border-t border-gray-100 cursor-pointer flex items-center gap-3">
+                        className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 text-sm font-medium border-t border-gray-100 cursor-pointer flex items-center gap-3"
+                      >
                         <FaTrash className="text-red-500" /> Delete
                       </button>
                     </div>

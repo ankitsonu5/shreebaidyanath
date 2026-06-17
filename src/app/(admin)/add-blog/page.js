@@ -7,9 +7,11 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { navigateTo } from "../../lib/navigation";
 
-const TiptapEditor = dynamic(() => import("../../components/TiptapEditor"), { 
+const TiptapEditor = dynamic(() => import("../../components/TiptapEditor"), {
   ssr: false,
-  loading: () => <div className="h-[400px] bg-gray-50 animate-pulse rounded-xl" />
+  loading: () => (
+    <div className="h-[400px] bg-gray-50 animate-pulse rounded-xl" />
+  ),
 });
 
 export default function AddBlog() {
@@ -200,7 +202,8 @@ export default function AddBlog() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 disabled:bg-blue-300 disabled:cursor-not-allowed">
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 disabled:bg-blue-300 disabled:cursor-not-allowed"
+            >
               {loading ? "Publishing..." : "Publish Blog Post"}
             </button>
           </div>

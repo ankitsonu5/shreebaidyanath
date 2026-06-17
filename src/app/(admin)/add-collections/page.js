@@ -101,7 +101,8 @@ export default function AddCollection() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg cursor-pointer">
+            className="w-full bg-blue-600 text-white py-2 rounded-lg cursor-pointer"
+          >
             {loading ? "Adding..." : "Add Collection"}
           </button>
         </form>

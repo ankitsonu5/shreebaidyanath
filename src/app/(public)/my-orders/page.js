@@ -5,7 +5,13 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
-import { FaClock, FaTruck, FaCheckCircle, FaTimesCircle, FaBoxOpen } from "react-icons/fa";
+import {
+  FaClock,
+  FaTruck,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaBoxOpen,
+} from "react-icons/fa";
 import { FaChevronRight } from "react-icons/fa";
 import { navigateTo } from "../../lib/navigation";
 
@@ -80,7 +86,8 @@ export default function MyOrdersPage() {
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <span
               onClick={() => navigateTo(router, "/")}
-              className="hover:text-amber-600 cursor-pointer transition-colors">
+              className="hover:text-amber-600 cursor-pointer transition-colors"
+            >
               Home
             </span>
             <FaChevronRight size={10} className="text-gray-400" />
@@ -110,7 +117,8 @@ export default function MyOrdersPage() {
               </p>
               <button
                 onClick={() => navigateTo(router, "/")}
-                className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors cursor-pointer">
+                className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors cursor-pointer"
+              >
                 Start Shopping
               </button>
             </div>
@@ -119,7 +127,8 @@ export default function MyOrdersPage() {
               {orders.map((order) => (
                 <div
                   key={order._id}
-                  className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                  className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+                >
                   {/* Order Header */}
                   <div className="px-5 py-4 bg-gray-50 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <div className="flex items-center gap-3">
@@ -127,7 +136,8 @@ export default function MyOrdersPage() {
                         Order #{order._id.slice(-8).toUpperCase()}
                       </p>
                       <span
-                        className={`text-xs font-semibold px-2.5 py-1 rounded-full ${statusColors[order.orderStatus]}`}>
+                        className={`text-xs font-semibold px-2.5 py-1 rounded-full ${statusColors[order.orderStatus]}`}
+                      >
                         {statusIcons[order.orderStatus]} {order.orderStatus}
                       </span>
                     </div>
@@ -146,7 +156,8 @@ export default function MyOrdersPage() {
                       {order.orderItems?.map((item, idx) => (
                         <div
                           key={idx}
-                          className="flex items-center gap-4 py-3 first:pt-0 last:pb-0">
+                          className="flex items-center gap-4 py-3 first:pt-0 last:pb-0"
+                        >
                           {item.image && (
                             <img
                               src={item.image}
@@ -193,7 +204,8 @@ export default function MyOrdersPage() {
                         {order.orderStatus === "Processing" && (
                           <button
                             onClick={() => handleCancelOrder(order._id)}
-                            className="text-xs text-red-600 border border-red-200 px-3 py-1 rounded hover:bg-red-50 transition-colors font-medium">
+                            className="text-xs text-red-600 border border-red-200 px-3 py-1 rounded hover:bg-red-50 transition-colors font-medium"
+                          >
                             Cancel Order
                           </button>
                         )}

@@ -145,9 +145,7 @@ export default function ProductsByTag() {
                   product.productSellingPrice || product.productPrice;
                 const mrp = product.productMrpPrice || selling;
                 const discount =
-                  mrp > selling
-                    ? Math.round(((mrp - selling) / mrp) * 100)
-                    : 0;
+                  mrp > selling ? Math.round(((mrp - selling) / mrp) * 100) : 0;
 
                 return (
                   <div
