@@ -2,7 +2,7 @@ const Blog = require("../models/Blog");
 
 exports.createBlog = async (req, res) => {
   try {
-    const { title, content, description, slug, author } = req.body;
+    const { title, content, description, slug, author, category } = req.body;
     const image = req.file ? req.file.path : "";
 
     const blog = new Blog({
@@ -12,6 +12,7 @@ exports.createBlog = async (req, res) => {
       slug,
       image,
       author,
+      category,
     });
 
     await blog.save();
@@ -56,7 +57,7 @@ exports.getBlogBySlug = async (req, res) => {
 exports.updateBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content, description, slug, author, isActive } = req.body;
+    const { title, content, description, slug, author, category, isActive } = req.body;
     const updateData = {};
 
     if (title) updateData.title = title;
@@ -64,6 +65,7 @@ exports.updateBlog = async (req, res) => {
     if (description) updateData.description = description;
     if (slug) updateData.slug = slug;
     if (author) updateData.author = author;
+    if (category) updateData.category = category;
     if (isActive !== undefined) updateData.isActive = isActive;
     if (req.file) updateData.image = req.file.path;
 

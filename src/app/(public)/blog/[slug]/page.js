@@ -23,6 +23,7 @@ export default function BlogDetailsPage() {
   const [recentBlogs, setRecentBlogs] = useState([]);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
 
   // Comment Form State
   const [commentName, setCommentName] = useState("");
@@ -34,15 +35,6 @@ export default function BlogDetailsPage() {
   const [formError, setFormError] = useState("");
 
   const API = process.env.NEXT_PUBLIC_API_URL;
-
-  // Sidebar Categories (Ayurvedic theme)
-  const categories = [
-    { name: "Immunity Boosters", count: 4 },
-    { name: "Respiratory Care", count: 3 },
-    { name: "Digestive Health", count: 5 },
-    { name: "Vitality & Strength", count: 4 },
-    { name: "General Wellness", count: 6 },
-  ];
 
   // Fetch Blog, Comments, and Recent Blogs
   useEffect(() => {
@@ -62,10 +54,24 @@ export default function BlogDetailsPage() {
             setComments(commentsRes.data.comments || []);
           }
 
-          // 3. Fetch Recent Blogs (for sidebar)
+          // 3. Fetch Recent Blogs (for sidebar) and compute categories
           const allRes = await axios.get(`${API}/blogs`);
           if (allRes.data.success) {
-            const filtered = (allRes.data.blogs || [])
+            const allBlogs = allRes.data.blogs || [];
+            
+            // Compute categories dynamically
+            const catMap = {};
+            allBlogs.forEach(b => {
+              const cat = b.category || "General Wellness";
+              if (!catMap[cat]) catMap[cat] = 0;
+              catMap[cat]++;
+            });
+            const dynCategories = Object.keys(catMap).map(k => ({ name: k, count: catMap[k] }));
+            // Optional: Sort categories by count descending
+            dynCategories.sort((a, b) => b.count - a.count);
+            setCategories(dynCategories);
+
+            const filtered = allBlogs
               .filter((b) => b.slug !== slug)
               .slice(0, 3);
             setRecentBlogs(filtered);

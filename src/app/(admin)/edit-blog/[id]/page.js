@@ -24,12 +24,28 @@ export default function EditBlog() {
     content: "",
     slug: "",
     author: "",
+    category: "General Wellness",
     isActive: true,
   });
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState("");
+  const [collections, setCollections] = useState([]);
 
   const API = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    const fetchCollections = async () => {
+      try {
+        const res = await axios.get(`${API}/collection`);
+        if (res.data.success) {
+          setCollections(res.data.collections || []);
+        }
+      } catch (err) {
+        console.error("Failed to load collections:", err);
+      }
+    };
+    fetchCollections();
+  }, [API]);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -47,6 +63,7 @@ export default function EditBlog() {
               content: blog.content,
               slug: blog.slug,
               author: blog.author,
+              category: blog.category || "General Wellness",
               isActive: blog.isActive,
             });
             setPreview(
@@ -93,6 +110,7 @@ export default function EditBlog() {
     formData.append("content", form.content);
     formData.append("slug", form.slug);
     formData.append("author", form.author);
+    formData.append("category", form.category);
     formData.append("isActive", form.isActive);
     if (imageFile) {
       formData.append("image", imageFile);
@@ -203,6 +221,32 @@ export default function EditBlog() {
                   onChange={handleChange}
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition"
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Category
+                </label>
+                <select
+                  name="category"
+                  value={form.category}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition"
+                >
+                  <option value="" disabled>
+                    Select Category
+                  </option>
+                  {collections.length > 0 ? (
+                    collections.map((col) => (
+                      <option key={col._id} value={col.collectionName}>
+                        {col.collectionName}
+                      </option>
+                    ))
+                  ) : (
+                    <option value={form.category || "General Wellness"}>
+                      {form.category || "General Wellness"}
+                    </option>
+                  )}
+                </select>
               </div>
               <div className="flex items-center gap-3">
                 <input

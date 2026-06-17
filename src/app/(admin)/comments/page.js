@@ -36,7 +36,12 @@ export default function CommentsPage() {
         setComments(res.data.comments || []);
       }
     } catch (err) {
-      console.error("Failed to fetch blog comments:", err);
+      console.error("Failed to fetch comments:", err);
+      if (err.response && err.response.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        router.push("/signin");
+      }
     } finally {
       setLoading(false);
     }

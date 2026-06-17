@@ -27,6 +27,11 @@ export default function AdminBlogsPage() {
       }
     } catch (err) {
       console.error("Failed to fetch blogs:", err);
+      if (err.response && err.response.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        router.push("/signin");
+      }
     } finally {
       setLoading(false);
     }
@@ -83,6 +88,9 @@ export default function AdminBlogsPage() {
                 <th className="p-3 sm:p-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">
                   Title
                 </th>
+                <th className="hidden lg:table-cell p-3 sm:p-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">
+                  Category
+                </th>
                 <th className="hidden md:table-cell p-3 sm:p-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">
                   Author
                 </th>
@@ -120,6 +128,9 @@ export default function AdminBlogsPage() {
                         /{blog.slug}
                       </div>
                     </td>
+                    <td className="hidden lg:table-cell p-3 sm:p-4 text-sm text-gray-600">
+                      {blog.category || "General Wellness"}
+                    </td>
                     <td className="hidden md:table-cell p-3 sm:p-4 text-sm text-gray-600">
                       {blog.author}
                     </td>
@@ -134,22 +145,11 @@ export default function AdminBlogsPage() {
                             : "bg-red-100 text-red-700"
                         }`}
                       >
-                        {blog.isActive ? "Active" : "Hidden"}
+                        {blog.isActive ? "Published" : "Unpublished"}
                       </span>
                     </td>
                     <td className="p-3 sm:p-4 text-right">
                       <div className="flex justify-end gap-1 sm:gap-2">
-                        <Link
-                          href={`/blog/${blog.slug}`}
-                          target="_blank"
-                          className="p-1.5 sm:p-2 text-gray-400 hover:text-blue-500 transition"
-                          title="View Blog"
-                        >
-                          <IoEye
-                            size={18}
-                            className="w-4 h-4 sm:w-[18px] sm:h-[18px]"
-                          />
-                        </Link>
                         <Link
                           href={`/edit-blog/${blog._id}`}
                           className="p-1.5 sm:p-2 text-gray-400 hover:text-green-500 transition"

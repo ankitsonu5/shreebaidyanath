@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaCamera } from "react-icons/fa";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -23,9 +23,30 @@ export default function AddBlog() {
     content: "",
     slug: "",
     author: "Shree Baidyanath",
+    category: "",
   });
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState("");
+  const [collections, setCollections] = useState([]);
+
+  const API = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    const fetchCollections = async () => {
+      try {
+        const res = await axios.get(`${API}/collection`);
+        if (res.data.success) {
+          setCollections(res.data.collections || []);
+          if (res.data.collections && res.data.collections.length > 0) {
+            setForm((prev) => ({ ...prev, category: res.data.collections[0].collectionName }));
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load collections:", err);
+      }
+    };
+    fetchCollections();
+  }, [API]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,7 +86,6 @@ export default function AddBlog() {
 
     setLoading(true);
     const token = localStorage.getItem("token");
-    const API = process.env.NEXT_PUBLIC_API_URL;
 
     const formData = new FormData();
     formData.append("title", form.title);
@@ -73,6 +93,7 @@ export default function AddBlog() {
     formData.append("content", form.content);
     formData.append("slug", form.slug);
     formData.append("author", form.author);
+    formData.append("category", form.category);
     formData.append("image", imageFile);
 
     try {
@@ -174,6 +195,9 @@ export default function AddBlog() {
                 )}
               </div>
             </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Author Name
@@ -185,6 +209,30 @@ export default function AddBlog() {
                 onChange={handleChange}
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Category
+              </label>
+              <select
+                name="category"
+                value={form.category}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition"
+              >
+                <option value="" disabled>
+                  Select Category
+                </option>
+                {collections.length > 0 ? (
+                  collections.map((col) => (
+                    <option key={col._id} value={col.collectionName}>
+                      {col.collectionName}
+                    </option>
+                  ))
+                ) : (
+                  <option value="General Wellness">General Wellness</option>
+                )}
+              </select>
             </div>
           </div>
 
