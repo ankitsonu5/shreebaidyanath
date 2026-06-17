@@ -44,13 +44,6 @@ export default function ForgotPassword() {
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
           <div
             onClick={() => navigateTo(router, "/")}
-<<<<<<< HEAD
-            className="flex items-center justify-center cursor-pointer mb-4"
-          >
-            <h1 className="text-2xl font-bold text-red-600">
-              Shree Baidyanath
-            </h1>
-=======
             className="flex items-center justify-center cursor-pointer mb-4">
             <Image
               src="/logo.png"
@@ -60,7 +53,6 @@ export default function ForgotPassword() {
               className="w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px] h-auto rounded-lg shadow-sm"
               priority
             />
->>>>>>> b0dd3c5a17da578c15f8296a40a244119b217317
           </div>
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
             Forgot Password

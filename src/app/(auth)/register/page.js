@@ -61,16 +61,9 @@ function RegisterForm() {
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
           <div
             onClick={() => router.push("/")}
-<<<<<<< HEAD
-            className="flex items-center justify-center cursor-pointer mb-4"
-          >
-            {/* <Image
-            src=""
-=======
-            className="flex items-center justify-center cursor-pointer mb-4">
+            className="flex items-c enter justify-center cursor-pointer mb-4">
             <Image
             src="/logo.png"
->>>>>>> b0dd3c5a17da578c15f8296a40a244119b217317
             alt="Logo"
             width={160}
             height={50}
