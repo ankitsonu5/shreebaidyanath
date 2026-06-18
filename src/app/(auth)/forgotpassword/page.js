@@ -44,7 +44,8 @@ export default function ForgotPassword() {
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
           <div
             onClick={() => navigateTo(router, "/")}
-            className="flex items-center justify-center cursor-pointer mb-4">
+            className="flex items-center justify-center cursor-pointer mb-4"
+          >
             <Image
               src="/logo.png"
               alt="Logo"

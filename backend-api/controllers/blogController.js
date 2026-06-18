@@ -57,7 +57,8 @@ exports.getBlogBySlug = async (req, res) => {
 exports.updateBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content, description, slug, author, category, isActive } = req.body;
+    const { title, content, description, slug, author, category, isActive } =
+      req.body;
     const updateData = {};
 
     if (title) updateData.title = title;
