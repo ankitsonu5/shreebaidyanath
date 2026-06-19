@@ -26,6 +26,7 @@ export default function HomePage() {
   const API = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchBanners();
     fetchCollections();
     fetchProducts();
