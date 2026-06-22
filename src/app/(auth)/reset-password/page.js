@@ -72,12 +72,8 @@ function ResetPasswordForm() {
     <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
       <div
         onClick={() => navigateTo(router, "/")}
-<<<<<<< HEAD
         className="flex items-center justify-center cursor-pointer mb-4"
       >
-        <h1 className="text-2xl font-bold text-red-600">Shree Baidyanath</h1>
-=======
-        className="flex items-center justify-center cursor-pointer mb-4">
         <Image
           src="/logo.png"
           alt="Logo"
@@ -86,7 +82,6 @@ function ResetPasswordForm() {
           className="w-[120px] sm:w-[140px] md:w-[160px] h-auto"
           priority
         />
->>>>>>> b0dd3c5a17da578c15f8296a40a244119b217317
       </div>
       <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
         Reset Password

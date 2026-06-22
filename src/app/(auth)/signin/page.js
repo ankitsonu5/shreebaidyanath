@@ -95,15 +95,16 @@ function SigninForm() {
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
           <div
             onClick={() => router.push("/")}
-            className="flex items-center justify-center cursor-pointer mb-4">
+            className="flex items-center justify-center cursor-pointer mb-4"
+          >
             <Image
-            src="/logo.png"
-            alt="Logo"
-            width={160}
-            height={50}
-            className="w-[120px] sm:w-[140px] md:w-[160px] h-auto"
-            priority
-          />
+              src="/logo.png"
+              alt="Logo"
+              width={160}
+              height={50}
+              className="w-[120px] sm:w-[140px] md:w-[160px] h-auto"
+              priority
+            />
           </div>
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
             Sign In

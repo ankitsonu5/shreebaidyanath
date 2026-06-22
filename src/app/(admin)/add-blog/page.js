@@ -38,7 +38,10 @@ export default function AddBlog() {
         if (res.data.success) {
           setCollections(res.data.collections || []);
           if (res.data.collections && res.data.collections.length > 0) {
-            setForm((prev) => ({ ...prev, category: res.data.collections[0].collectionName }));
+            setForm((prev) => ({
+              ...prev,
+              category: res.data.collections[0].collectionName,
+            }));
           }
         }
       } catch (err) {

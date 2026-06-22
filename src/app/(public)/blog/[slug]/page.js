@@ -58,15 +58,18 @@ export default function BlogDetailsPage() {
           const allRes = await axios.get(`${API}/blogs`);
           if (allRes.data.success) {
             const allBlogs = allRes.data.blogs || [];
-            
+
             // Compute categories dynamically
             const catMap = {};
-            allBlogs.forEach(b => {
+            allBlogs.forEach((b) => {
               const cat = b.category || "General Wellness";
               if (!catMap[cat]) catMap[cat] = 0;
               catMap[cat]++;
             });
-            const dynCategories = Object.keys(catMap).map(k => ({ name: k, count: catMap[k] }));
+            const dynCategories = Object.keys(catMap).map((k) => ({
+              name: k,
+              count: catMap[k],
+            }));
             // Optional: Sort categories by count descending
             dynCategories.sort((a, b) => b.count - a.count);
             setCategories(dynCategories);
