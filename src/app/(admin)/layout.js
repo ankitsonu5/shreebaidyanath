@@ -90,6 +90,9 @@ export default function AdminLayout({ children }) {
     if (pathname.startsWith("/consultations")) return "Expert Consultations";
     if (pathname.startsWith("/contacts")) return "Contact Inquiries";
     if (pathname.startsWith("/comments")) return "Blog Comments";
+    if (pathname.startsWith("/manage-pages")) return "Manage Pages CMS";
+    if (pathname.startsWith("/manage-gallery") || pathname.startsWith("/add-gallery")) return "Gallery";
+    if (pathname.startsWith("/settings")) return "Settings";
     return "Admin";
   };
 
@@ -184,6 +187,24 @@ export default function AdminLayout({ children }) {
           >
             Blog Comments
           </li>
+          <li
+            className={navItemClass(isActiveGroup(["/manage-gallery", "/add-gallery"]))}
+            onClick={() => handleNavigation("/manage-gallery")}
+          >
+            Gallery
+          </li>
+          <li
+            className={navItemClass(isActiveGroup(["/manage-pages"]))}
+            onClick={() => handleNavigation("/manage-pages")}
+          >
+            Pages CMS
+          </li>
+          <li
+            className={navItemClass(isActiveGroup(["/settings"]))}
+            onClick={() => handleNavigation("/settings")}
+          >
+            Settings
+          </li>
           <li className="rounded">
             <button
               onClick={() => setOpen(!open)}
@@ -239,12 +260,6 @@ export default function AdminLayout({ children }) {
                 </p>
               </div>
             )}
-          </li>
-          <li
-            className={navItemClass(false)}
-            onClick={() => setIsSidebarOpen(false)}
-          >
-            Settings
           </li>
           <li
             className="hover:bg-red-500 p-2 rounded cursor-pointer transition-colors"

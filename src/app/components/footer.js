@@ -6,6 +6,20 @@ import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 
 export default function Footer() {
   const [user, setUser] = useState(null);
+  const [settings, setSettings] = useState(null);
+  const API = process.env.NEXT_PUBLIC_API_URL;
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch(`${API}/settings`);
+      const data = await res.json();
+      if (data.success) {
+        setSettings(data.settings);
+      }
+    } catch (err) {
+      console.error("Failed to fetch settings:", err);
+    }
+  };
 
   const updateUser = () => {
     try {
@@ -37,6 +51,7 @@ export default function Footer() {
 
   useEffect(() => {
     updateUser();
+    fetchSettings();
     window.addEventListener("userUpdated", updateUser);
     window.addEventListener("storage", updateUser);
 
@@ -71,22 +86,20 @@ export default function Footer() {
       {/* Footer Links Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Contact */}
           <div className="sm:text-left">
             <h3 className="font-semibold mb-3 sm:mb-4 text-lg">Contact Us</h3>
-            <p className="text-sm leading-6">
-              B.H.U, BLW Road, Sundarpur, Newada, Varanasi, Uttar Pradesh 221005
+            <p className="text-sm leading-6 whitespace-pre-line">
+              {settings?.contactAddress || "B.H.U, BLW Road, Sundarpur, Newada, Varanasi, Uttar Pradesh 221005"}
             </p>
             <p className="mt-3 text-sm break-all sm:break-normal">
               <a
-                href="mailto:shreebaidyanathayurvedicclinic@gmail.com"
+                href={`mailto:${settings?.contactEmail || "shreebaidyanathayurvedicclinic@gmail.com"}`}
                 className="hover:text-red-600 transition-colors"
               >
-                shreebaidyanathayurvedicclinic@gmail.com
+                {settings?.contactEmail || "shreebaidyanathayurvedicclinic@gmail.com"}
               </a>
             </p>
-            <p className="text-sm">+91 94735 21779</p>
-            <p className="text-sm">+91 93363 25001</p>
+            <p className="text-sm mt-2 whitespace-pre-line">{settings?.contactPhone || "+91 94735 21779\n+91 93363 25001"}</p>
           </div>
 
           {/* About */}
@@ -186,21 +199,21 @@ export default function Footer() {
             <h4 className="font-semibold mb-3">Follow Us</h4>
             <div className="flex flex-wrap sm:justify-start gap-3 sm:gap-4">
               <Link
-                href="https://www.instagram.com/shreebaidyanathayurveda/"
+                href={settings?.instagramUrl || "https://www.instagram.com/shreebaidyanathayurveda/"}
                 className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-600 hover:bg-red-600 hover:text-white transition-all shadow-sm duration-300"
                 aria-label="Instagram"
               >
                 <FaInstagram size={30} />
               </Link>
               <Link
-                href="https://www.facebook.com/people/Shree-Baidyanath-Ayurvedic-Clinic/61584680139773/"
+                href={settings?.facebookUrl || "https://www.facebook.com/people/Shree-Baidyanath-Ayurvedic-Clinic/61584680139773/"}
                 className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-600 hover:bg-red-600 hover:text-white transition-all shadow-sm duration-300"
                 aria-label="Facebook"
               >
                 <FaFacebook size={30} />
               </Link>
               <Link
-                href="https://www.youtube.com/@ShreeBaidyanathAyurvedicClinic"
+                href={settings?.youtubeUrl || "https://www.youtube.com/@ShreeBaidyanathAyurvedicClinic"}
                 className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-600 hover:bg-red-600 hover:text-white transition-all shadow-sm duration-300"
                 aria-label="YouTube"
               >

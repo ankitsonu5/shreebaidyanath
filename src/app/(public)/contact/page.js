@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 import {
@@ -31,8 +31,44 @@ export default function ContactUs() {
     type: "success", // 'success' | 'error'
     message: "",
   });
+  const [pageData, setPageData] = useState(null);
+  const [settings, setSettings] = useState(null);
 
   const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+
+  useEffect(() => {
+    fetchPageData();
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await axios.get(`${API}/settings`);
+      if (res.data.success) {
+        setSettings(res.data.settings);
+      }
+    } catch (err) {
+      console.error("Failed to fetch settings:", err);
+    }
+  };
+
+  const fetchPageData = async () => {
+    try {
+      const res = await axios.get(`${API}/page-cms/contact`);
+      if (res.data.success) {
+        setPageData(res.data.page);
+      }
+    } catch (err) {
+      if (err.response?.status !== 404) {
+        console.error("Failed to fetch page cms data:", err);
+      }
+    }
+  };
+
+  const getImgUrl = (path) => {
+    if (!path) return "";
+    return path.startsWith("http") ? path : `${API}/${path}`;
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -120,8 +156,11 @@ export default function ContactUs() {
       <section
         className="relative bg-cover bg-center py-16 sm:py-24 text-white text-center px-4 overflow-hidden"
         style={{
-          backgroundImage:
-            "linear-gradient(to right, rgba(153, 27, 27, 0.5), rgba(120, 53, 4, 0.5), rgba(66, 32, 6, 0.1)), url('/contactbanner.jpg')",
+          backgroundImage: `linear-gradient(to right, rgba(153, 27, 27, 0.5), rgba(120, 53, 4, 0.5), rgba(66, 32, 6, 0.1)), url('${
+            pageData?.bannerImage
+              ? getImgUrl(pageData.bannerImage)
+              : "/contactbanner.jpg"
+          }')`,
         }}
       >
         {/* Background Decorative Circles */}
@@ -133,12 +172,10 @@ export default function ContactUs() {
             Feel Free to Reach Out
           </span>
           <h1 className="text-3xl sm:text-5xl font-extrabold mt-2 tracking-tight text-white">
-            Contact Us
+            {pageData?.heroHeading || "Contact Us"}
           </h1>
           <p className="mt-4 text-sm sm:text-lg text-gray-200 font-medium max-w-2xl mx-auto leading-relaxed">
-            Have queries about our Ayurvedic products or need help with your
-            orders? Our support team is always here to guide you toward
-            wellness.
+            {pageData?.heroSubheading || "Have queries about our Ayurvedic products or need help with your orders? Our support team is always here to guide you toward wellness."}
           </p>
         </div>
       </section>
@@ -169,8 +206,8 @@ export default function ContactUs() {
                     <h3 className="font-bold text-gray-800 text-sm uppercase tracking-wide">
                       Location
                     </h3>
-                    <p className="mt-1 text-xs sm:text-sm text-gray-600 leading-relaxed font-medium">
-                      B.H.U, BLW Road, Sundarpur, Newada, Varanasi, UP 221005
+                    <p className="mt-1 text-xs sm:text-sm text-gray-600 leading-relaxed font-medium whitespace-pre-line">
+                      {settings?.contactAddress || "B.H.U, BLW Road, Sundarpur, Newada, Varanasi, UP 221005"}
                     </p>
                   </div>
                 </div>
@@ -184,13 +221,10 @@ export default function ContactUs() {
                     <h3 className="font-bold text-gray-800 text-sm uppercase tracking-wide">
                       Call Us
                     </h3>
-                    <p className="mt-1 text-xs sm:text-sm text-gray-600 leading-relaxed font-medium">
-                      +91 94735 21779
+                    <p className="mt-1 text-xs sm:text-sm text-gray-600 leading-relaxed font-medium whitespace-pre-line">
+                      {settings?.contactPhone || "+91 94735 21779\n+91 9336325001"}
                     </p>
-                    <p className="mt-1 text-xs sm:text-sm text-gray-600 leading-relaxed font-medium">
-                      +91 9336325001
-                    </p>
-                    <p className="text-[10px] text-gray-400 font-medium">
+                    <p className="text-[10px] text-gray-400 font-medium mt-1">
                       Mon - Sat (10am - 6pm)
                     </p>
                   </div>
@@ -207,10 +241,10 @@ export default function ContactUs() {
                     </h3>
                     <p className="mt-1 text-xs sm:text-sm text-gray-600 leading-relaxed font-medium break-all">
                       <a
-                        href="mailto:shreebaidyanathayurvedicclinic@gmail.com"
+                        href={`mailto:${settings?.contactEmail || "shreebaidyanathayurvedicclinic@gmail.com"}`}
                         className="hover:text-red-600 transition-colors"
                       >
-                        shreebaidyanathayurvedicclinic@gmail.com
+                        {settings?.contactEmail || "shreebaidyanathayurvedicclinic@gmail.com"}
                       </a>
                     </p>
                   </div>

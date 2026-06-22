@@ -15,6 +15,9 @@ const blogRoutes = require("./routes/blogRoutes");
 const consultRoutes = require("./routes/consultRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const commentRoutes = require("./routes/commentRoutes");
+const galleryRoutes = require("./routes/galleryRoutes");
+const pageCmsRoutes = require("./routes/pageCmsRoutes");
+const settingsRoutes = require("./routes/settingsRoutes");
 
 const path = require("path");
 
@@ -59,3 +62,6 @@ app.use("/", blogRoutes);
 app.use("/", consultRoutes);
 app.use("/", contactRoutes);
 app.use("/", commentRoutes);
+app.use("/", galleryRoutes);
+app.use("/", pageCmsRoutes);
+app.use("/", settingsRoutes);

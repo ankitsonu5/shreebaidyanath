@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 import { FaMapMarkerAlt, FaPhone, FaClock } from "react-icons/fa";
@@ -12,8 +12,44 @@ export default function Consult() {
     mobile: "",
     problem: "",
   });
+  const [pageData, setPageData] = useState(null);
+  const [settings, setSettings] = useState(null);
 
   const API = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    fetchPageData();
+    fetchSettings();
+  }, []);
+
+  const fetchPageData = async () => {
+    try {
+      const res = await axios.get(`${API}/page-cms/consultations`);
+      if (res.data.success) {
+        setPageData(res.data.page);
+      }
+    } catch (err) {
+      if (err.response?.status !== 404) {
+        console.error("Failed to fetch page cms data:", err);
+      }
+    }
+  };
+
+  const fetchSettings = async () => {
+    try {
+      const res = await axios.get(`${API}/settings`);
+      if (res.data.success) {
+        setSettings(res.data.settings);
+      }
+    } catch (err) {
+      console.error("Failed to fetch settings:", err);
+    }
+  };
+
+  const getImgUrl = (path) => {
+    if (!path) return "";
+    return path.startsWith("http") ? path : `${API}/${path}`;
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -48,10 +84,32 @@ export default function Consult() {
   return (
     <>
       <Navbar />
+
+      {/* Hero Section */}
+      <section
+        className="relative bg-cover bg-center py-16 sm:py-24 text-white text-center px-4 overflow-hidden"
+        style={{
+          backgroundImage: `linear-gradient(to right, rgba(21, 128, 61, 0.6), rgba(21, 128, 61, 0.4)), url('${
+            pageData?.bannerImage
+              ? getImgUrl(pageData.bannerImage)
+              : "/consultbanner.jpg"
+          }')`,
+          backgroundColor: "#166534"
+        }}
+      >
+        <div className="max-w-4xl mx-auto relative z-10">
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white drop-shadow-md">
+            {pageData?.heroHeading || "Consult by Ayurvedic Expert"}
+          </h1>
+          {pageData?.heroSubheading && (
+            <p className="mt-4 text-sm sm:text-lg text-green-50 font-medium max-w-2xl mx-auto leading-relaxed drop-shadow">
+              {pageData.heroSubheading}
+            </p>
+          )}
+        </div>
+      </section>
+
       <div className="min-h-screen bg-green-50 p-6">
-        <h1 className="text-3xl font-bold text-center text-green-700 mb-8">
-          Consult by Ayurvedic Expert
-        </h1>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {/* Doctor Info */}
@@ -72,21 +130,23 @@ export default function Consult() {
             <div className="text-sm text-gray-700 space-y-3 mt-6 border-t pt-4 border-gray-100">
               <div className="flex items-start gap-3">
                 <FaMapMarkerAlt className="text-green-600 mt-1 flex-shrink-0" />
-                <p>
-                  <strong>Address:</strong> Sundarpur, Newada- B.H.U, BLW Road,
-                  Varanasi, Uttar Pradesh 221005
+                <p className="whitespace-pre-line">
+                  <strong>Address:</strong><br/>
+                  {settings?.contactAddress || "Sundarpur, Newada- B.H.U, BLW Road, Varanasi, Uttar Pradesh 221005"}
                 </p>
               </div>
-              <div className="flex items-center gap-3">
-                <FaPhone className="text-green-600 flex-shrink-0" />
-                <p>
-                  <strong>Phone:</strong> +91 94735 21779, +91 93363 25001
+              <div className="flex items-start gap-3">
+                <FaPhone className="text-green-600 flex-shrink-0 mt-1" />
+                <p className="whitespace-pre-line">
+                  <strong>Phone:</strong><br/>
+                  {settings?.contactPhone || "+91 94735 21779, +91 93363 25001"}
                 </p>
               </div>
-              <div className="flex items-center gap-3">
-                <FaClock className="text-green-600 flex-shrink-0" />
+              <div className="flex items-start gap-3">
+                <FaClock className="text-green-600 flex-shrink-0 mt-1" />
                 <p>
-                  <strong>Timing:</strong> 10 AM - 6 PM
+                  <strong>Timing:</strong><br/>
+                  10 AM - 6 PM
                 </p>
               </div>
             </div>

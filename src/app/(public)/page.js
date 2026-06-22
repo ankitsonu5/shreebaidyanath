@@ -388,7 +388,7 @@ export default function HomePage() {
       </section>
 
       {/* Baidyanath Section */}
-      <section>
+      {/* <section>
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h2 className="text-base md:text-2xl font-bold">
@@ -396,7 +396,7 @@ export default function HomePage() {
             </h2>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Shop By Collections - Dynamic */}
       {collections.length > 0 && (

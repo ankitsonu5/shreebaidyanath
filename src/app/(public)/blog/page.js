@@ -15,6 +15,7 @@ export default function BlogPage() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageData, setPageData] = useState(null);
   const blogsPerPage = 3; // 3 blogs per page as requested
 
   const API = process.env.NEXT_PUBLIC_API_URL;
@@ -32,7 +33,20 @@ export default function BlogPage() {
         setLoading(false);
       }
     };
+    const fetchPageData = async () => {
+      try {
+        const res = await axios.get(`${API}/page-cms/blog`);
+        if (res.data.success) {
+          setPageData(res.data.page);
+        }
+      } catch (err) {
+        if (err.response?.status !== 404) {
+          console.error("Failed to fetch page data:", err);
+        }
+      }
+    };
     fetchBlogs();
+    fetchPageData();
   }, [API]);
 
   if (loading) {
@@ -94,8 +108,13 @@ export default function BlogPage() {
         <div
           className="relative bg-cover bg-center py-16 px-4 text-center overflow-hidden shadow-md text-white"
           style={{
-            backgroundImage:
-              "linear-gradient(to right, rgba(180, 83, 9, 0.5), rgba(120, 53, 4, 0.5), rgba(66, 32, 6, 0.1)), url('/blogbanner.jpg')",
+            backgroundImage: `linear-gradient(to right, rgba(180, 83, 9, 0.5), rgba(120, 53, 4, 0.5), rgba(66, 32, 6, 0.1)), url('${
+              pageData?.bannerImage
+                ? pageData.bannerImage.startsWith("http")
+                  ? pageData.bannerImage
+                  : `${API}/${pageData.bannerImage}`
+                : "/blogbanner.jpg"
+            }')`,
           }}
         >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.08)_0%,transparent_70%)]"></div>
@@ -104,11 +123,10 @@ export default function BlogPage() {
               Shree Baidyanath Knowledge Center
             </span>
             <h1 className="text-4xl md:text-5xl font-extrabold mt-3 tracking-tight">
-              Our Ayurvedic Blog
+              {pageData?.heroHeading || "Our Ayurvedic Blog"}
             </h1>
             <p className="text-amber-100/80 mt-4 max-w-xl mx-auto text-base leading-relaxed">
-              Explore timeless wisdom, home remedies, and lifestyle practices
-              for holistic health, immune vitality, and longevity.
+              {pageData?.heroSubheading || "Explore timeless wisdom, home remedies, and lifestyle practices for holistic health, immune vitality, and longevity."}
             </p>
           </div>
         </div>

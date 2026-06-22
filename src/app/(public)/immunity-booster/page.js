@@ -20,12 +20,27 @@ export default function ImmunityBoosterPage() {
   const [loading, setLoading] = useState(true);
   const [quantities, setQuantities] = useState({});
   const [collectionInfo, setCollectionInfo] = useState(null);
+  const [pageData, setPageData] = useState(null);
 
   const API = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     fetchImmunityProducts();
+    fetchPageData();
   }, []);
+
+  const fetchPageData = async () => {
+    try {
+      const res = await axios.get(`${API}/page-cms/immunity-booster`);
+      if (res.data.success) {
+        setPageData(res.data.page);
+      }
+    } catch (err) {
+      if (err.response?.status !== 404) {
+        console.error("Failed to fetch page cms data:", err);
+      }
+    }
+  };
 
   const fetchImmunityProducts = async () => {
     setLoading(true);
@@ -150,13 +165,10 @@ export default function ImmunityBoosterPage() {
                 <FaShieldAlt className="text-sm" /> 100% Authentic Ayurveda
               </div>
               <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-200 to-amber-300 leading-tight">
-                Shield Your Health with Ayurveda
+                {pageData?.heroHeading || "Shield Your Health with Ayurveda"}
               </h1>
               <p className="text-emerald-100/90 text-sm md:text-lg max-w-xl font-light leading-relaxed">
-                Elevate your body's natural defenses. Discover Shree
-                Baidyanath's premium range of Immunity Boosters, crafted
-                meticulously with time-tested organic herbs, pure honey, and
-                Swarna Bhasma (Gold).
+                {pageData?.heroSubheading || "Elevate your body's natural defenses. Discover Shree Baidyanath's premium range of Immunity Boosters, crafted meticulously with time-tested organic herbs, pure honey, and Swarna Bhasma (Gold)."}
               </p>
               <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full mx-auto md:mx-0"></div>
             </div>
@@ -169,7 +181,9 @@ export default function ImmunityBoosterPage() {
               ></div>
               <img
                 src={
-                  collectionInfo?.collectionImage?.[0]
+                  pageData?.bannerImage
+                    ? getImgUrl(pageData.bannerImage)
+                    : collectionInfo?.collectionImage?.[0]
                     ? getImgUrl(collectionInfo.collectionImage[0])
                     : "/shopbycolletions/immunitybooster.webp"
                 }

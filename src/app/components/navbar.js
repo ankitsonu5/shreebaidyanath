@@ -28,6 +28,7 @@ export default function Navbar() {
   });
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [settings, setSettings] = useState(null);
   const searchRef = useRef(null);
   const router = useRouter();
   const API = process.env.NEXT_PUBLIC_API_URL;
@@ -155,6 +156,17 @@ export default function Navbar() {
     }
   };
 
+  const fetchSettings = async () => {
+    try {
+      const res = await axios.get(`${API}/settings`);
+      if (res.data.success) {
+        setSettings(res.data.settings);
+      }
+    } catch (err) {
+      console.error("Failed to fetch settings:", err);
+    }
+  };
+
   const updateCartCount = () => {
     try {
       const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -174,6 +186,7 @@ export default function Navbar() {
   useEffect(() => {
     updateCartCount();
     updateUser();
+    fetchSettings();
 
     window.addEventListener("cartUpdated", updateCartCount);
     window.addEventListener("userUpdated", updateUser);
@@ -200,14 +213,22 @@ export default function Navbar() {
           onClick={() => navigateTo(router, "/")}
           className="flex items-center cursor-pointer"
         >
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={240}
-            height={60}
-            className="w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px] h-auto rounded-lg shadow-sm"
-            priority
-          />
+          {settings?.logo ? (
+            <img
+              src={settings.logo.startsWith("http") ? settings.logo : `${API}/${settings.logo}`}
+              alt={settings.siteName || "Logo"}
+              className="max-h-16 w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px] object-contain rounded-lg shadow-sm"
+            />
+          ) : (
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              width={240}
+              height={60}
+              className="w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px] h-auto rounded-lg shadow-sm"
+              priority
+            />
+          )}
           {/* <h1 className="text-2xl font-bold text-red-600">Shree Baidyanath</h1> */}
         </div>
 
@@ -291,6 +312,11 @@ export default function Navbar() {
           <li>
             <Link href="/blog" className="hover:text-red-600">
               Blogs
+            </Link>
+          </li>
+          <li>
+            <Link href="/gallery" className="hover:text-red-600">
+              Gallery
             </Link>
           </li>
         </ul>
