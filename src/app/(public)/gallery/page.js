@@ -59,7 +59,7 @@ export default function PublicGalleryPage() {
       <div className="min-h-screen bg-gray-50 pb-12">
         {/* Banner Section */}
         <div
-          className="relative bg-cover bg-center py-16 px-4 text-center overflow-hidden shadow-md text-white mb-12"
+          className="relative bg-cover bg-center py-30 px-4 text-center overflow-hidden shadow-md text-white mb-12"
           style={{
             backgroundImage: `linear-gradient(to right, rgba(153, 27, 27, 0.7), rgba(120, 53, 4, 0.7), rgba(66, 32, 6, 0.4))${
               pageData?.bannerImage

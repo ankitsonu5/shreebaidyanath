@@ -211,7 +211,7 @@ export default function Navbar() {
         {/* Logo */}
         <div
           onClick={() => navigateTo(router, "/")}
-          className="flex items-center cursor-pointer"
+          className="flex items-center cursor-pointer flex-shrink-0"
         >
           {settings?.logo ? (
             <img
@@ -233,7 +233,7 @@ export default function Navbar() {
         </div>
 
         {/* Center Menu - Desktop */}
-        <ul className="hidden lg:flex items-center gap-6 xl:gap-6 text-[15px] font-medium text-black">
+        <ul className="hidden xl:flex items-center gap-4 xl:gap-6 text-sm xl:text-[15px] font-medium text-black whitespace-nowrap">
           <li
             className="relative"
             onMouseEnter={() => {

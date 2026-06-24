@@ -3,13 +3,17 @@ const Banner = require("../models/Banner");
 exports.createBanner = async (req, res) => {
   try {
     const bannerImage = req.file ? req.file.path : "";
-    const { bannerType, bannerOrder } = req.body;
+    const { bannerType, bannerOrder, buttonText, bannerLink, buttonText2, bannerLink2 } = req.body;
     const createdBy = req.user.id;
 
     const banner = new Banner({
       bannerImage,
       bannerType: bannerType || "hero",
       bannerOrder: bannerOrder || 0,
+      buttonText: buttonText || "",
+      bannerLink: bannerLink || "",
+      buttonText2: buttonText2 || "",
+      bannerLink2: bannerLink2 || "",
       createdBy,
     });
 
@@ -65,12 +69,16 @@ exports.getBannerById = async (req, res) => {
 exports.updateBanner = async (req, res) => {
   try {
     const { id } = req.params;
-    const { bannerType, bannerOrder, isActive } = req.body;
+    const { bannerType, bannerOrder, isActive, buttonText, bannerLink, buttonText2, bannerLink2 } = req.body;
     const updateData = {};
 
     if (bannerType !== undefined) updateData.bannerType = bannerType;
     if (bannerOrder !== undefined) updateData.bannerOrder = bannerOrder;
     if (isActive !== undefined) updateData.isActive = isActive;
+    if (buttonText !== undefined) updateData.buttonText = buttonText;
+    if (bannerLink !== undefined) updateData.bannerLink = bannerLink;
+    if (buttonText2 !== undefined) updateData.buttonText2 = buttonText2;
+    if (bannerLink2 !== undefined) updateData.bannerLink2 = bannerLink2;
     if (req.file) updateData.bannerImage = req.file.path;
 
     const banner = await Banner.findByIdAndUpdate(id, updateData, {

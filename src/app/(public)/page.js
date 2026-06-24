@@ -327,45 +327,69 @@ export default function HomePage() {
       {/* Banner Section — Full Width */}
       <section className="w-full">
         {heroBanners.length > 0 && (
-          <div className="relative w-full h-[220px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[500px] overflow-hidden bg-gray-100">
+          <div className="relative w-full overflow-hidden bg-gray-100">
             {heroBanners.map((banner, idx) => {
               const isVideo = isVideoFile(banner.bannerImage);
               return (
                 <div
                   key={banner._id}
-                  className={`w-full h-full transition-all duration-700 ${
+                  className={`w-full transition-all duration-700 ${
                     idx === currentBanner % heroBanners.length
                       ? "relative opacity-100 z-10"
-                      : "absolute inset-0 opacity-0 z-0"
+                      : "absolute inset-0 opacity-0 z-0 h-full"
                   }`}
                 >
-                  {isVideo ? (
-                    <video
-                      src={getImgUrl(banner.bannerImage)}
-                      className="w-full h-full object-cover block"
-                      autoPlay
-                      muted
-                      playsInline
-                      controls={false}
-                      controlsList="nodownload nofullscreen noremoteplayback"
-                      disablePictureInPicture
-                      disableRemotePlayback
-                      loop={heroBanners.length <= 1}
-                      onEnded={() => {
-                        if (heroBanners.length > 1) {
-                          setCurrentBanner(
-                            (prev) => (prev + 1) % heroBanners.length,
-                          );
-                        }
-                      }}
-                    />
-                  ) : (
-                    <img
-                      src={getImgUrl(banner.bannerImage)}
-                      alt="banner"
-                      className="w-full h-full object-cover block"
-                    />
-                  )}
+                  <div className="w-full h-full relative">
+                    {/* The Media */}
+                    {isVideo ? (
+                      <video
+                        src={getImgUrl(banner.bannerImage)}
+                        className="w-full h-auto block"
+                        autoPlay
+                        muted
+                        playsInline
+                        controls={false}
+                        controlsList="nodownload nofullscreen noremoteplayback"
+                        disablePictureInPicture
+                        disableRemotePlayback
+                        loop={heroBanners.length <= 1}
+                        onEnded={() => {
+                          if (heroBanners.length > 1) {
+                            setCurrentBanner(
+                              (prev) => (prev + 1) % heroBanners.length,
+                            );
+                          }
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={getImgUrl(banner.bannerImage)}
+                        alt="banner"
+                        className="w-full h-auto block"
+                      />
+                    )}
+
+                    {/* The Background Link (covers entire image if bannerLink exists) */}
+                    {(banner.bannerLink || banner.buttonLink) && (
+                      <a href={banner.bannerLink || banner.buttonLink} className="absolute inset-0 z-10" aria-label="Banner Link"></a>
+                    )}
+
+                    {/* The Buttons Container (z-20 so it's above the background link) */}
+                    {(banner.buttonText || banner.buttonText2) && (
+                      <div className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-wrap justify-center gap-3 sm:gap-4 w-full px-4">
+                        {banner.buttonText && (
+                          <a href={banner.bannerLink || banner.buttonLink || "#"} className="inline-block bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-6 sm:py-3 sm:px-8 rounded-full shadow-lg transition-transform transform hover:scale-105 text-sm sm:text-base whitespace-nowrap cursor-pointer">
+                            {banner.buttonText}
+                          </a>
+                        )}
+                        {banner.buttonText2 && (
+                          <a href={banner.bannerLink2 || "#"} className="inline-block bg-white hover:bg-gray-100 text-amber-700 border-2 border-amber-600 font-semibold py-2 px-6 sm:py-3 sm:px-8 rounded-full shadow-lg transition-transform transform hover:scale-105 text-sm sm:text-base whitespace-nowrap cursor-pointer">
+                            {banner.buttonText2}
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })}
@@ -483,26 +507,50 @@ export default function HomePage() {
                 return (
                   <div
                     key={banner._id}
-                    className="cursor-pointer w-full sm:flex-1 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                    className="w-full sm:flex-1 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow relative"
                   >
-                    {isVideo ? (
-                      <video
-                        src={getImgUrl(banner.bannerImage)}
-                        className="w-full h-32 sm:h-40 md:h-80 object-cover"
-                        controls
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                      />
-                    ) : (
-                      <img
-                        src={getImgUrl(banner.bannerImage)}
-                        alt="Offer"
-                        className="w-full h-32 sm:h-40 md:h-80 object-cover"
-                        loading="lazy"
-                      />
-                    )}
+                    <div className="w-full h-full relative">
+                      {/* The Media */}
+                      {isVideo ? (
+                        <video
+                          src={getImgUrl(banner.bannerImage)}
+                          className="w-full h-auto object-contain"
+                          controls
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                        />
+                      ) : (
+                        <img
+                          src={getImgUrl(banner.bannerImage)}
+                          alt="Offer"
+                          className="w-full h-auto object-contain"
+                          loading="lazy"
+                        />
+                      )}
+
+                      {/* The Background Link (covers entire image if bannerLink exists) */}
+                      {(banner.bannerLink || banner.buttonLink) && (
+                        <a href={banner.bannerLink || banner.buttonLink} className="absolute inset-0 z-10" aria-label="Offer Link"></a>
+                      )}
+
+                      {/* The Buttons Container (z-20 so it's above the background link) */}
+                      {(banner.buttonText || banner.buttonText2) && (
+                        <div className="absolute bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-wrap justify-center gap-2 sm:gap-4 w-full px-2">
+                          {banner.buttonText && (
+                            <a href={banner.bannerLink || banner.buttonLink || "#"} className="inline-block bg-amber-600 hover:bg-amber-700 text-white font-semibold py-1.5 px-4 sm:py-2 sm:px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap cursor-pointer">
+                              {banner.buttonText}
+                            </a>
+                          )}
+                          {banner.buttonText2 && (
+                            <a href={banner.bannerLink2 || "#"} className="inline-block bg-white hover:bg-gray-100 text-amber-700 border border-amber-600 font-semibold py-1.5 px-4 sm:py-2 sm:px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap cursor-pointer">
+                              {banner.buttonText2}
+                            </a>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 );
               })}

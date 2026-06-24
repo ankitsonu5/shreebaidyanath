@@ -12,6 +12,10 @@ export default function EditBanner() {
   const [bannerOrder, setBannerOrder] = useState(0);
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [buttonText, setButtonText] = useState("");
+  const [bannerLink, setBannerLink] = useState("");
+  const [buttonText2, setButtonText2] = useState("");
+  const [bannerLink2, setBannerLink2] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -28,6 +32,10 @@ export default function EditBanner() {
         const b = data.banner;
         setBannerType(b.bannerType || "hero");
         setBannerOrder(b.bannerOrder || 0);
+        setButtonText(b.buttonText || "");
+        setBannerLink(b.bannerLink || "");
+        setButtonText2(b.buttonText2 || "");
+        setBannerLink2(b.bannerLink2 || "");
         const img = b.bannerImage;
         setPreview(
           img.startsWith("http")
@@ -56,6 +64,10 @@ export default function EditBanner() {
     const formData = new FormData();
     formData.append("bannerType", bannerType);
     formData.append("bannerOrder", bannerOrder);
+    formData.append("buttonText", buttonText);
+    formData.append("bannerLink", bannerLink);
+    formData.append("buttonText2", buttonText2);
+    formData.append("bannerLink2", bannerLink2);
     if (imageFile) {
       formData.append("bannerImage", imageFile);
     }
@@ -114,6 +126,50 @@ export default function EditBanner() {
             <p className="text-xs text-gray-400 mt-1">
               Lower number = shown first
             </p>
+          </div>
+
+          <div>
+            <label className="block mb-2 font-medium">Button Text (Optional)</label>
+            <input
+              type="text"
+              value={buttonText}
+              onChange={(e) => setButtonText(e.target.value)}
+              className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="e.g. Shop Now"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 font-medium">Banner/Button Link (Optional)</label>
+            <input
+              type="text"
+              value={bannerLink}
+              onChange={(e) => setBannerLink(e.target.value)}
+              className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="e.g. /products or https://example.com"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 font-medium">Button Text 2 (Optional)</label>
+            <input
+              type="text"
+              value={buttonText2}
+              onChange={(e) => setButtonText2(e.target.value)}
+              className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="e.g. Know More"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 font-medium">Banner/Button Link 2 (Optional)</label>
+            <input
+              type="text"
+              value={bannerLink2}
+              onChange={(e) => setBannerLink2(e.target.value)}
+              className="w-full border border-gray-200 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="e.g. /about-us"
+            />
           </div>
 
           <div>

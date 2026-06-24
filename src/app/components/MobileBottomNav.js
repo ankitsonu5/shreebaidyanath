@@ -249,7 +249,7 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
     <>
       {/* Main Menu Bottom Sheet */}
       {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-[110] flex items-end">
+        <div className="xl:hidden fixed inset-0 z-[110] flex items-end">
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setIsMenuOpen(false)}
@@ -410,7 +410,7 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
 
       {/* Profile Menu Popup for Mobile */}
       {isProfileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-[110] flex items-end">
+        <div className="xl:hidden fixed inset-0 z-[110] flex items-end">
           <div
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setIsProfileMenuOpen(false)}
@@ -465,7 +465,7 @@ export default function MobileBottomNav({ user, cartCount, handleLogout }) {
         </div>
       )}
 
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-[100] shadow-[0_-4px_20px_rgba(0,0,0,0.05)] h-14">
+      <div className="xl:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-[100] shadow-[0_-4px_20px_rgba(0,0,0,0.05)] h-14">
         <div className="flex justify-around items-center h-full">
           {navItems.map((item) => {
             const isActive = pathname === item.path;

@@ -24,6 +24,22 @@ const bannerSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  buttonText: {
+    type: String,
+    default: "",
+  },
+  bannerLink: {
+    type: String,
+    default: "",
+  },
+  buttonText2: {
+    type: String,
+    default: "",
+  },
+  bannerLink2: {
+    type: String,
+    default: "",
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

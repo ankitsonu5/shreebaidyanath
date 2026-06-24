@@ -87,7 +87,7 @@ export default function Consult() {
 
       {/* Hero Section */}
       <section
-        className="relative bg-cover bg-center py-16 sm:py-24 text-white text-center px-4 overflow-hidden"
+        className="relative bg-cover bg-center py-16 sm:py-30 text-white text-center px-4 overflow-hidden"
         style={{
           backgroundImage: `linear-gradient(to right, rgba(21, 128, 61, 0.6), rgba(21, 128, 61, 0.4)), url('${
             pageData?.bannerImage

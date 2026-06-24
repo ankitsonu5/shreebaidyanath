@@ -106,7 +106,7 @@ export default function BlogPage() {
       <div className="bg-gray-50 min-h-screen pb-16">
         {/* Banner Section */}
         <div
-          className="relative bg-cover bg-center py-16 px-4 text-center overflow-hidden shadow-md text-white"
+          className="relative bg-cover bg-center py-25 px-4 text-center overflow-hidden shadow-md text-white"
           style={{
             backgroundImage: `linear-gradient(to right, rgba(180, 83, 9, 0.5), rgba(120, 53, 4, 0.5), rgba(66, 32, 6, 0.1)), url('${
               pageData?.bannerImage
