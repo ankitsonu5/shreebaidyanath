@@ -139,3 +139,49 @@ exports.deleteContact = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.replyToContact = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { replyMessage } = req.body;
+
+    if (!replyMessage) {
+      return res.status(400).json({ success: false, message: "Reply message is required" });
+    }
+
+    const contact = await Contact.findById(id);
+    if (!contact) {
+      return res.status(404).json({ success: false, message: "Contact inquiry not found" });
+    }
+
+    const replyHtml = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden;">
+            <div style="background-color: #c53030; padding: 20px; text-align: center; color: #ffffff;">
+                <h2 style="margin: 0;">Reply from Shree Baidyanath</h2>
+            </div>
+            <div style="padding: 20px;">
+                <p>Dear ${contact.name},</p>
+                <div style="margin: 20px 0; padding: 15px; background-color: #f7fafc; border-left: 4px solid #c53030;">
+                    ${replyMessage.replace(/\n/g, '<br>')}
+                </div>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p style="font-size: 12px; color: #666;">On ${new Date(contact.createdAt).toLocaleDateString()}, you wrote:</p>
+                <div style="font-size: 13px; color: #555; background-color: #f0f0f0; padding: 10px; border-radius: 5px; font-style: italic;">
+                    "${contact.message}"
+                </div>
+                <p style="margin-top: 20px;">Stay Healthy,<br><strong>Shree Baidyanath Team</strong></p>
+            </div>
+        </div>
+    `;
+
+    await sendEmail({
+      email: contact.email,
+      subject: `Re: ${contact.subject}`,
+      html: replyHtml,
+    });
+
+    res.status(200).json({ success: true, message: "Reply sent successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

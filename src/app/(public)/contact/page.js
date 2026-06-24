@@ -323,29 +323,6 @@ export default function ContactUs() {
                 </p>
               </div>
 
-              {/* Form Feedback Alerts */}
-              {alertState.show && (
-                <div
-                  className={`p-4 mb-6 rounded-xl border flex items-start gap-3 animate-in fade-in duration-300 ${
-                    alertState.type === "success"
-                      ? "bg-green-50 text-green-800 border-green-200"
-                      : "bg-red-50 text-red-800 border-red-200"
-                  }`}
-                >
-                  <div className="flex-1 text-sm font-semibold">
-                    {alertState.message}
-                  </div>
-                  <button
-                    onClick={() =>
-                      setAlertState({ ...alertState, show: false })
-                    }
-                    className="text-xs uppercase tracking-wide font-bold hover:underline cursor-pointer"
-                  >
-                    Dismiss
-                  </button>
-                </div>
-              )}
-
               {/* Contact Form */}
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -472,6 +449,29 @@ export default function ContactUs() {
                 </button>
               </form>
             </div>
+
+            {/* Form Feedback Alerts */}
+            {alertState.show && (
+              <div
+                className={`p-4 mt-6 rounded-xl border flex items-start gap-3 animate-in fade-in duration-300 ${
+                  alertState.type === "success"
+                    ? "bg-green-50 text-green-800 border-green-200"
+                    : "bg-red-50 text-red-800 border-red-200"
+                }`}
+              >
+                <div className="flex-1 text-sm font-semibold">
+                  {alertState.message}
+                </div>
+                <button
+                  onClick={() =>
+                    setAlertState({ ...alertState, show: false })
+                  }
+                  className="text-xs uppercase tracking-wide font-bold hover:underline cursor-pointer"
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
 
             {/* Small trust banner inside form */}
             <div className="mt-8 pt-6 border-t border-gray-100 flex items-center justify-center gap-2 text-gray-400 text-xs font-bold">

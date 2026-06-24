@@ -18,6 +18,9 @@ export default function ContactsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedContact, setSelectedContact] = useState(null);
+  const [replyMessage, setReplyMessage] = useState("");
+  const [isReplying, setIsReplying] = useState(false);
+  const [replyingTo, setReplyingTo] = useState(null);
 
   const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -63,6 +66,34 @@ export default function ContactsPage() {
     } catch (err) {
       console.error("Failed to delete contact:", err);
       alert("Failed to delete contact message.");
+    }
+  };
+
+  const handleReply = async () => {
+    if (!replyMessage.trim()) {
+      alert("Please enter a reply message.");
+      return;
+    }
+
+    setIsReplying(true);
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.post(
+        `${API}/contact/${replyingTo._id}/reply`,
+        { replyMessage },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      if (res.data.success) {
+        alert("Reply sent successfully via email!");
+        setReplyMessage("");
+        setReplyingTo(null);
+      }
+    } catch (err) {
+      console.error("Failed to send reply:", err);
+      alert(err.response?.data?.message || "Failed to send reply.");
+    } finally {
+      setIsReplying(false);
     }
   };
 
@@ -292,22 +323,55 @@ export default function ContactsPage() {
             </div>
 
             {/* Modal Footer */}
-            <div className="bg-gray-50 border-t border-gray-100 px-6 py-4 flex justify-between items-center gap-3">
-              <button
-                onClick={() => handleDelete(selectedContact._id)}
-                className="bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-lg text-sm font-semibold transition cursor-pointer flex items-center gap-2"
-              >
-                <FaTrash size={13} /> Delete
-              </button>
+            <div className="bg-gray-50 border-t border-gray-100 px-6 py-4">
+              {replyingTo?._id === selectedContact._id ? (
+                <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2">
+                  <textarea
+                    rows="4"
+                    className="w-full p-3 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500"
+                    placeholder="Type your reply message here..."
+                    value={replyMessage}
+                    onChange={(e) => setReplyMessage(e.target.value)}
+                  ></textarea>
+                  <div className="flex justify-end gap-2">
+                    <button
+                      onClick={() => {
+                        setReplyingTo(null);
+                        setReplyMessage("");
+                      }}
+                      className="px-4 py-2 text-sm font-semibold text-gray-500 hover:text-gray-700 transition"
+                      disabled={isReplying}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleReply}
+                      disabled={isReplying}
+                      className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-sm disabled:opacity-50"
+                    >
+                      {isReplying ? "Sending..." : <><FaPaperPlane size={11} /> Send Reply</>}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-between items-center gap-3">
+                  <button
+                    onClick={() => handleDelete(selectedContact._id)}
+                    className="bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-lg text-sm font-semibold transition cursor-pointer flex items-center gap-2"
+                  >
+                    <FaTrash size={13} /> Delete
+                  </button>
 
-              <div className="flex gap-2">
-                <a
-                  href={`mailto:${selectedContact.email}?subject=Re: ${encodeURIComponent(selectedContact.subject)}`}
-                  className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-sm"
-                >
-                  <FaPaperPlane size={11} /> Reply by Email
-                </a>
-              </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setReplyingTo(selectedContact)}
+                      className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-sm cursor-pointer"
+                    >
+                      <FaPaperPlane size={11} /> Reply by Email
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
